@@ -24,7 +24,8 @@ type Analyser struct {
 
 	pkg *packages.Package
 
-	// Tables contains the resolved struct definitions, coming from [Sources]
+	// Tables contains the resolved struct definitions, coming from the
+	// go source file [Source] and its dependencies.
 	Tables map[*types.Named]Struct
 
 	// additional information used to retrieve aliases
