@@ -153,6 +153,8 @@ type commments struct {
 
 // parse the type documentation looking for special comments
 // of the following form :
+//
+//	// binarygen: argument=<name> <type>
 func parseComments(doc *ast.CommentGroup) (out commments) {
 	if doc == nil {
 		return out
