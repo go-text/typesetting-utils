@@ -1,0 +1,3 @@
+# Binary file used to generate the code for Opentype tables 
+# in go-text/typesetting/opentype
+generators/binarygen/cmd/generator
