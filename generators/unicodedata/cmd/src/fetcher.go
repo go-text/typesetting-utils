@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-// download the database files and save them locally
+// download the database files from the Unicode source
 
 const (
 	version            = "13.0.0"
@@ -59,7 +59,7 @@ type sources struct {
 	derivedCore     []byte
 }
 
-// download and save files in ../data/
+// download and return files in memory
 func fetchAll() (out sources) {
 	out.ucdXML = fetchData(urlUCDXML)
 	out.unicodeData = fetchData(urlUnicodeData)
