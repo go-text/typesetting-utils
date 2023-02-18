@@ -3,7 +3,7 @@
 This script generates lookup function for Unicode properties not
 covered by the standard package `unicode`.
 
-The properties are meant to be consume by text processing libraries, such as segmenters or shapers.
+The properties are meant to be consumed by text processing libraries, such as segmenters or shapers.
 
 ## Usage 
 
