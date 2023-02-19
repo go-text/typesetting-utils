@@ -1,3 +1,6 @@
 # Binary file used to generate the code for Opentype tables 
 # in go-text/typesetting/opentype
 generators/binarygen/cmd/generator
+
+# Apple proprietary fonts, used to test Harfbuzz AAT implementation
+harfbuzz/harfbuzz_reference/in-house/macos/*
