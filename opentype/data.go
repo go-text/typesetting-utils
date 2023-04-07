@@ -77,3 +77,8 @@ var WithFvar = []struct {
 	{"common/SourceSans-VF.ttf", 1},
 	{"toys/Var1.ttf", 15},
 }
+
+var Monospace = map[string]bool{
+	"common/SourceSans-VF.ttf":       true,
+	"common/Go-Mono-Bold-Italic.ttf": true,
+}
