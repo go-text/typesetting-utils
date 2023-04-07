@@ -35,6 +35,8 @@
 
     - FreeSerif.ttf : GNU GENERAL PUBLIC LICENSE  Version 3. The FreeFont collection is being maintained by Steve White <stevan.white AT googlemail.com>
 
+    - Go-Mono-Bold-Italic.ttf : https://go.dev/blog/go-fonts
+
 
 - bitmap:
     - NotoColorEmoji.ttf : SIL Open Font License, Version 1.1.
