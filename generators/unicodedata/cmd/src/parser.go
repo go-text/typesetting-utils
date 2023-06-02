@@ -15,8 +15,13 @@ import (
 const maxUnicode = 0x110000
 
 func parseRune(s string) rune {
+	s = strings.TrimPrefix(s, "0x")
 	i, err := strconv.ParseUint(s, 16, 64)
 	check(err)
+
+	if i > maxUnicode {
+		check(fmt.Errorf("invalid rune value: 0x%x", i))
+	}
 	return rune(i)
 }
 
@@ -41,13 +46,21 @@ func (r runeRange) runes() []rune {
 	return out
 }
 
-// split the file by line, ignore comments, and split each line by ';'
-func splitLines(b []byte) (out [][]string) {
+// split the file by line, ignore comments #
+func getLines(b []byte) (out []string) {
 	for _, l := range bytes.Split(b, []byte{'\n'}) {
 		line := string(bytes.TrimSpace(l))
 		if line == "" || line[0] == '#' { // reading header or comment
 			continue
 		}
+		out = append(out, line)
+	}
+	return out
+}
+
+// split the file by line, ignore comments, and split each line by ';'
+func splitLines(b []byte) (out [][]string) {
+	for _, line := range getLines(b) {
 		cs := strings.Split(line, ";")
 		for i, s := range cs {
 			cs[i] = strings.TrimSpace(s)
@@ -57,125 +70,105 @@ func splitLines(b []byte) (out [][]string) {
 	return
 }
 
-// filled by `parseUnicodeDatabase`
-var (
-	generalCategory = map[rune]string{}
+type unicodeDatabase struct {
+	chars []unicodeEntry
 
-	shapingTable struct {
-		table    [maxUnicode][4]rune
-		min, max rune
+	// deduced from [chars]
+	generalCategory  map[rune]string
+	combiningClasses map[uint8][]rune // class -> runes
+}
+
+func (db *unicodeDatabase) inferMaps() {
+	// initialisation
+	db.generalCategory = make(map[rune]string)
+	db.combiningClasses = make(map[uint8][]rune)
+
+	for _, item := range db.chars {
+		c := item.char
+		// general category
+		db.generalCategory[c] = item.generalCategory
+		// Combining class
+		db.combiningClasses[item.combiningClass] = append(db.combiningClasses[item.combiningClass], c)
 	}
-	equivTable [maxUnicode]rune
+}
 
-	combiningClasses = map[uint8][]rune{} // class -> runes
+type unicodeEntry struct {
+	char            rune
+	generalCategory string
+	combiningClass  uint8
 
-	ligatures = map[[2]rune][4]rune{}
-)
+	// optional
+	shape        shapeT
+	shapingItems []rune // remaining after shape
+}
+
+// assume at least 6 fields
+func parseUnicodeEntry(chunks []string) unicodeEntry {
+	var item unicodeEntry
+
+	// Rune
+	item.char = parseRune(chunks[0])
+
+	// General category
+	item.generalCategory = strings.TrimSpace(chunks[2])
+
+	// Combining class
+	cc, err := strconv.Atoi(chunks[3])
+	check(err)
+	if cc > 0xFF {
+		check(fmt.Errorf("combining class too high %d", cc))
+	}
+	item.combiningClass = uint8(cc)
+
+	// we are now looking for <...> XXXX
+	if chunks[5] == "" {
+		return item
+	}
+
+	if chunks[5][0] != '<' {
+		return item
+	}
+
+	items := strings.Split(chunks[5], " ")
+	if len(items) < 2 {
+		check(fmt.Errorf("invalid line %v", chunks))
+	}
+
+	item.shape = isShape(items[0])
+	for _, r := range items[1:] {
+		item.shapingItems = append(item.shapingItems, parseRune(r))
+	}
+	return item
+}
 
 // rune;comment;General_Category;Canonical_Combining_Class;Bidi_Class;Decomposition_Mapping;...;Bidi_Mirrored
-func parseUnicodeDatabase(b []byte) error {
-	// initialisation
-	for c := range shapingTable.table {
-		for i := range shapingTable.table[c] {
-			shapingTable.table[c][i] = rune(c)
-		}
-	}
-
-	var (
-		min rune = maxUnicode
-		max rune
-	)
-
+func parseUnicodeDatabase(b []byte) unicodeDatabase {
+	chars := make([]unicodeEntry, 0, 10_000)
 	for _, chunks := range splitLines(b) {
 		if len(chunks) < 6 {
 			continue
 		}
-		var (
-			c        rune
-			unshaped rune
-		)
-
-		// Rune
-		ci, err := strconv.ParseInt(chunks[0], 16, 32)
-		if err != nil {
-			return fmt.Errorf("invalid line %s: %s", chunks[0], err)
-		}
-		c = rune(ci)
-		if c >= maxUnicode || unshaped >= maxUnicode {
-			return fmt.Errorf("invalid rune value: %s", chunks[0])
-		}
-
-		// general category
-		generalCategory[c] = strings.TrimSpace(chunks[2])
-
-		// Combining class
-		cc, err := strconv.Atoi(chunks[3])
-		if err != nil {
-			return fmt.Errorf("invalid combining class %s: %s", chunks[3], err)
-		}
-		if cc >= 256 {
-			return fmt.Errorf("combining class too high %d", cc)
-		}
-		combiningClasses[uint8(cc)] = append(combiningClasses[uint8(cc)], c)
-
-		// we are now looking for <...> XXXX
-		if chunks[5] == "" {
-			continue
-		}
-
-		if chunks[5][0] != '<' {
-			_, err = fmt.Sscanf(chunks[5], "%x", &unshaped)
-			check(err)
-
-			// equiv table
-			equivTable[c] = unshaped
-
-			continue
-		}
-
-		items := strings.Split(chunks[5], " ")
-		if len(items) < 2 {
-			check(fmt.Errorf("invalid line %v", chunks))
-		}
-
-		unshaped = parseRune(items[1])
-		equivTable[c] = unshaped // equiv table
-
-		shape := isShape(items[0])
-		if shape == -1 {
-			continue
-		}
-
-		if len(items) == 3 { // ligatures
-			r2 := parseRune(items[2])
-			// we only care about lam-alef ligatures
-			if unshaped != 0x0644 || !(r2 == 0x0622 || r2 == 0x0623 || r2 == 0x0625 || r2 == 0x0627) {
-				continue
-			}
-			// save ligature
-			// names[c] = fields[1]
-			v := ligatures[[2]rune{unshaped, r2}]
-			v[shape] = c
-			ligatures[[2]rune{unshaped, r2}] = v
-		}
-
-		// shape table: only single unshaped rune are considered
-		if len(items) == 2 {
-			shapingTable.table[unshaped][shape] = c
-			if unshaped < min {
-				min = unshaped
-			}
-			if unshaped > max {
-				max = unshaped
-			}
-		}
+		chars = append(chars, parseUnicodeEntry(chunks))
 	}
-	shapingTable.min, shapingTable.max = min, max
 
-	return nil
+	out := unicodeDatabase{chars: chars}
+	out.inferMaps()
+
+	return out
 }
 
-func isShape(s string) int {
+// -1 for no shapeT
+type shapeT int8
+
+const (
+	none shapeT = iota
+	isolated
+	final
+	initial
+	medial
+)
+
+func isShape(s string) shapeT {
 	for i, tag := range [...]string{
 		"<isolated>",
 		"<final>",
@@ -183,10 +176,10 @@ func isShape(s string) int {
 		"<medial>",
 	} {
 		if tag == s {
-			return i
+			return shapeT(i + 1)
 		}
 	}
-	return -1
+	return 0
 }
 
 func parseAnnexTablesAsRanges(b []byte) (map[string][]runeRange, error) {
@@ -437,6 +430,7 @@ func parseEmojisTest(b []byte) (sequences [][]rune) {
 	return sequences
 }
 
+// replace spaces by _
 func parseScriptNames(b []byte) (map[string]uint32, error) {
 	m := map[string]uint32{}
 	for _, chunks := range splitLines(b) {
@@ -450,16 +444,20 @@ func parseScriptNames(b []byte) (map[string]uint32, error) {
 		}
 		tag := binary.BigEndian.Uint32([]byte(strings.ToLower(code)))
 
-		pva := chunks[4]
-		if pva == "" {
+		name := chunks[4]
+		if name == "" {
+			// use English name as default
+			name = strings.ReplaceAll(chunks[2], " ", "_")
+		}
+		if strings.ContainsAny(name, "(-") {
 			continue
 		}
-		m[pva] = tag
+		m[name] = tag
 	}
 	return m, nil
 }
 
-// copy of unicodedata.ArabicJoining
+// copy of harfbuzz.arabicJoining
 type ArabicJoining byte
 
 const (
@@ -473,3 +471,14 @@ const (
 	T          ArabicJoining = 'T' // Transparent, e.g. Arabic Fatha
 	G          ArabicJoining = 'G' // Ignored, e.g. LRE, RLE, ZWNBSP
 )
+
+// ----------------------------- PUA remap -----------------------------
+
+func parsePUAMapping(b []byte) (out [][2]rune) {
+	for _, line := range getLines(b) {
+		words := strings.Fields(line)
+		r1, r2 := parseRune(words[0]), parseRune(words[1])
+		out = append(out, [2]rune{r1, r2})
+	}
+	return out
+}
