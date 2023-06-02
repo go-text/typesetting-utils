@@ -162,18 +162,18 @@ type shapeT int8
 
 const (
 	none shapeT = iota
-	isolated
-	final
 	initial
 	medial
+	final
+	isolated
 )
 
 func isShape(s string) shapeT {
 	for i, tag := range [...]string{
-		"<isolated>",
-		"<final>",
 		"<initial>",
 		"<medial>",
+		"<final>",
+		"<isolated>",
 	} {
 		if tag == s {
 			return shapeT(i + 1)

@@ -137,15 +137,15 @@ func generateArabicShaping(db unicodeDatabase, joining map[rune]ArabicJoining, w
 	fmt.Fprintln(w, `
 	// arabicShaping defines the shaping for arabic runes. Each entry is indexed by
 	// the shape, between 0 and 3:
-	//   - 0: isolated
-	//   - 1: final
-	//   - 2: initial
-	//   - 3: medial
+	//   - 0: initial
+	//   - 1: medial
+	//   - 2: final
+	//   - 3: isolated
 	// See also the bounds given by [firstArabicShape] and [lastArabicShape].`)
 	fmt.Fprintf(w, "var arabicShaping = [...][4]uint16{ // required memory: %d KB \n", (shapingTable.max-shapingTable.min+1)*4*4/1000)
 	for c := shapingTable.min; c <= shapingTable.max; c++ {
 		fmt.Fprintf(w, "{0x%04x,0x%04x,0x%04x,0x%04x},\n",
-			shapingTable.table[c][0], shapingTable.table[c][1], shapingTable.table[c][2], shapingTable.table[c][3])
+			shapingTable.table[c][initial], shapingTable.table[c][medial], shapingTable.table[c][final], shapingTable.table[c][isolated])
 	}
 	fmt.Fprintln(w, "}")
 
