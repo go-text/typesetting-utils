@@ -79,9 +79,10 @@ func generateCombiningClasses(classes map[uint8][]rune, w io.Writer) {
 }
 
 func generateEmojis(runes map[string][]rune, w io.Writer) {
+	// among "Emoji", "Emoji_Presentation", "Emoji_Modifier", "Emoji_Modifier_Base", "Extended_Pictographic"
+	// only Extended_Pictographic is actually used
 	fmt.Fprint(w, unicodedataheader)
-	classes := [...]string{"Emoji", "Emoji_Presentation", "Emoji_Modifier", "Emoji_Modifier_Base", "Extended_Pictographic"}
-	for _, class := range classes {
+	for _, class := range [...]string{"Extended_Pictographic"} {
 		table := rangetable.New(runes[class]...)
 		s := printTable(table, false)
 		fmt.Fprintf(w, "var %s = %s\n\n", class, s)
