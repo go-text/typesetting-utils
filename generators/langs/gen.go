@@ -353,7 +353,7 @@ func generate(out string) {
 		possible_bcp_47_tag := strings.ToLower(tag)
 		if _, in := bcp47.names[possible_bcp_47_tag]; in && len(ot.fromBCP47[possible_bcp_47_tag]) == 0 {
 			ot.addLanguage(possible_bcp_47_tag, DEFAULT_LANGUAGE_SYSTEM)
-			bcp47.macrolanguages[possible_bcp_47_tag] = set()
+			bcp47.macrolanguages[possible_bcp_47_tag] = newSet()
 		}
 	}
 
@@ -442,19 +442,23 @@ type OpenTypeRegistryParser struct {
 	// rank. The rank is based on the number of BCP 47 tags
 	// associated with a tag, though it may be manually modified.
 	ranks   map[string]int
-	toBCP47 map[string]map[string]bool // A map of OpenType language system tags to sets of BCP 47 tags.
-	// ``to_bcp_47`` inverted. Its values start as unsorted sets;
-	// ``sortLanguages`` converts them to sorted lists.
-	fromBCP47 map[string]map[string]bool
-	header    string // The "last updated" line of the registry.
+	toBCP47 map[string]set // A map of OpenType language system tags to sets of BCP 47 tags.
+	// 'toBCP47' inverted. Its values start as unsorted sets;
+	// 'sortLanguages' converts them to sorted lists.
+	fromBCP47 map[string]set
+	// A copy of 'fromBCP47'. It starts as 'nil' and is
+	// populated at the beginning of the first call to
+	// 'inheritFromMacrolanguages'.
+	fromBCP47Uninherited map[string]set
+	header               string // The "last updated" line of the registry.
 }
 
 func newOpenTypeRegistryParser() OpenTypeRegistryParser {
 	var out OpenTypeRegistryParser
 	out.names = make(map[string]string)
 	out.ranks = make(map[string]int)
-	out.toBCP47 = make(map[string]map[string]bool)
-	out.fromBCP47 = make(map[string]map[string]bool)
+	out.toBCP47 = make(map[string]set)
+	out.fromBCP47 = make(map[string]set)
 	return out
 }
 
@@ -528,7 +532,7 @@ func (pr *OpenTypeRegistryParser) handleTr(n *html.Node) {
 	isoCodes := strings.TrimSpace(currentTr[2])
 	s := pr.toBCP47[tag]
 	if s == nil {
-		s = make(map[string]bool)
+		s = make(set)
 	}
 	for _, code := range strings.Split(strings.ReplaceAll(isoCodes, " ", ""), ",") {
 		if c, ok := iso_639_3_to_1[code]; ok {
@@ -566,7 +570,7 @@ func (pr *OpenTypeRegistryParser) parse(filename string) {
 		for iso_code := range iso_codes {
 			s := pr.fromBCP47[iso_code]
 			if s == nil {
-				s = make(map[string]bool)
+				s = make(set)
 			}
 			s[tag] = true
 			pr.fromBCP47[iso_code] = s
@@ -583,10 +587,10 @@ func (pr *OpenTypeRegistryParser) parse(filename string) {
 func (pr *OpenTypeRegistryParser) addLanguage(bcp47Tag, otTag string) {
 	to, from := pr.toBCP47[otTag], pr.fromBCP47[bcp47Tag]
 	if to == nil {
-		to = map[string]bool{}
+		to = set{}
 	}
 	if from == nil {
-		from = make(map[string]bool)
+		from = make(set)
 	}
 	to[bcp47Tag] = true
 	from[otTag] = true
@@ -600,7 +604,7 @@ func (pr *OpenTypeRegistryParser) addLanguage(bcp47Tag, otTag string) {
 		}
 		macrolanguage, suffix := splitted[0], splitted[1]
 		if v, ok := bcp47.macrolanguages[macrolanguage]; ok {
-			s := make(map[string]bool)
+			s := make(set)
 			for language := range v {
 				if _, ok := bcp47.grandfathered[strings.ToLower(language)]; !ok {
 					s[fmt.Sprintf("%s-%s", language, suffix)] = true
@@ -611,7 +615,7 @@ func (pr *OpenTypeRegistryParser) addLanguage(bcp47Tag, otTag string) {
 	}
 }
 
-func _remove_language(tag_1 string, dict_1, dict_2 map[string]map[string]bool) {
+func removeLanguage(tag_1 string, dict_1, dict_2 map[string]set) {
 	popped := dict_1[tag_1]
 	delete(dict_1, tag_1)
 	for tag_2 := range popped {
@@ -623,8 +627,8 @@ func _remove_language(tag_1 string, dict_1, dict_2 map[string]map[string]bool) {
 }
 
 // Remove an OpenType tag from the registry.
-func (pr OpenTypeRegistryParser) remove_language_ot(otTag string) {
-	_remove_language(otTag, pr.toBCP47, pr.fromBCP47)
+func (pr OpenTypeRegistryParser) removeLanguageOt(otTag string) {
+	removeLanguage(otTag, pr.toBCP47, pr.fromBCP47)
 }
 
 // Copy mappings from macrolanguages to individual languages.
@@ -635,36 +639,67 @@ func (pr OpenTypeRegistryParser) remove_language_ot(otTag string) {
 // explicit mapping, so it inherits from sq (Albanian) the mapping
 // to SQI.
 //
+// However, if an OpenType tag maps to a BCP 47 macrolanguage and
+// some but not all of its individual languages, the mapping is not
+// inherited from the macrolanguage to the missing individual
+// languages. For example, INUK (Nunavik Inuktitut) is mapped to
+// ike (Eastern Canadian Inuktitut) and iu (Inuktitut) but not to
+// ikt (Inuinnaqtun, which is an individual language of iu), so
+// this method does not add a mapping from ikt to INUK.
+//
 // If a BCP 47 tag for a macrolanguage has no OpenType mapping but
-// all of its individual languages do && they all map to the same
-// tags, the mapping is copied to the macrolanguage.
+// some of its individual languages do, their mappings are copied
+// to the macrolanguage.
 func (pr *OpenTypeRegistryParser) inheritFromMacrolanguages() {
-	originalOtFromBcp_47 := pr.fromBCP47
+	firstTime := pr.fromBCP47Uninherited == nil
+	if firstTime {
+		pr.fromBCP47Uninherited = make(map[string]set, len(pr.fromBCP47))
+		for k, v := range pr.fromBCP47 {
+			pr.fromBCP47Uninherited[k] = v
+		}
+	}
 	for macrolanguage, languages := range bcp47.macrolanguages {
-		otMacrolanguages := make(map[string]bool)
-		for k := range originalOtFromBcp_47[macrolanguage] {
+		otMacrolanguages := make(set)
+		for k := range pr.fromBCP47Uninherited[macrolanguage] {
 			otMacrolanguages[k] = true
+		}
+		blockedOtMacrolanguages := make(set)
+		if !strings.Contains(bcp47.scopes[macrolanguage], "retired code") {
+			for otMacrolanguage := range otMacrolanguages {
+				roundTripMacrolanguages, roundTripLanguages := make(set), make(set)
+				for l := range pr.toBCP47[otMacrolanguage] {
+					if !strings.Contains(bcp47.scopes[l], "retired code") {
+						roundTripMacrolanguages[l] = true
+					}
+				}
+				for l := range languages {
+					if !strings.Contains(bcp47.scopes[l], "retired code") {
+						roundTripMacrolanguages[l] = true
+					}
+				}
+				intersection := setIntersection(roundTripMacrolanguages, roundTripLanguages)
+				if len(intersection) != 0 && !setEqual(intersection, roundTripLanguages) {
+					blockedOtMacrolanguages[otMacrolanguage] = true
+				}
+			}
 		}
 		if len(otMacrolanguages) != 0 {
 			for ot_macrolanguage := range otMacrolanguages {
-				for language := range languages {
-					pr.addLanguage(language, ot_macrolanguage)
-					pr.ranks[ot_macrolanguage] += 1
+				if !blockedOtMacrolanguages[ot_macrolanguage] {
+					for language := range languages {
+						pr.addLanguage(language, ot_macrolanguage)
+						if len(blockedOtMacrolanguages) == 0 {
+							pr.ranks[ot_macrolanguage] += 1
+						}
+					}
 				}
 			}
-		} else {
+		} else if firstTime {
 			for language := range languages {
-				if _, in := originalOtFromBcp_47[language]; in {
-					if len(otMacrolanguages) != 0 {
-						ml := originalOtFromBcp_47[language]
-						if len(ml) != 0 {
-							otMacrolanguages = setIntersection(otMacrolanguages, ml)
-						}
-					} else {
-						otMacrolanguages = setUnion(otMacrolanguages, originalOtFromBcp_47[language])
-					}
+				if s, in := pr.fromBCP47Uninherited[language]; in {
+					otMacrolanguages = setUnion(otMacrolanguages, s)
 				} else {
-					otMacrolanguages = map[string]bool{}
+					otMacrolanguages = set{}
 				}
 				if len(otMacrolanguages) == 0 {
 					break
@@ -711,19 +746,19 @@ type BCP47Parser struct {
 	scopes map[string]string
 	// A map of language subtags to the sets of language subtags which
 	// inherit from them. See  ``OpenTypeRegistryParser.inheritFromMacrolanguages``.
-	macrolanguages map[string]map[string]bool
-	prefixes       map[string]map[string]bool //  A map of variant subtags to their prefixes.
-	grandfathered  map[string]bool            // The set of grandfathered tags, normalized to lowercase.
-	header         string                     // The "File-Date" line of the registry.
+	macrolanguages map[string]set
+	prefixes       map[string]set //  A map of variant subtags to their prefixes.
+	grandfathered  set            // The set of grandfathered tags, normalized to lowercase.
+	header         string         // The "File-Date" line of the registry.
 }
 
 func newBCP47Parser() BCP47Parser {
 	var out BCP47Parser
 	out.names = make(map[string]string)
 	out.scopes = make(map[string]string)
-	out.macrolanguages = make(map[string]map[string]bool)
-	out.prefixes = make(map[string]map[string]bool)
-	out.grandfathered = make(map[string]bool)
+	out.macrolanguages = make(map[string]set)
+	out.prefixes = make(map[string]set)
+	out.grandfathered = make(set)
 	return out
 }
 
@@ -770,7 +805,7 @@ func (pr *BCP47Parser) parse(filename string) {
 				if scope == "macrolanguage" {
 					scope = " [macrolanguage]"
 				} else if scope == "collection" {
-					scope = " [family]"
+					scope = " [collection]"
 				} else {
 					continue
 				}
@@ -801,7 +836,7 @@ func (pr *BCP47Parser) parse(filename string) {
 			} else if strings.HasPrefix(line, "Prefix: ") {
 				pref := pr.prefixes[subtag]
 				if pref == nil {
-					pref = make(map[string]bool)
+					pref = make(set)
 				}
 				pref[strings.Split(line, " ")[1]] = true
 				pr.prefixes[subtag] = pref
@@ -830,7 +865,7 @@ func (pr *BCP47Parser) _add_macrolanguage(macrolanguage, language string) {
 	}
 	ml := pr.macrolanguages[macrolanguage]
 	if ml == nil {
-		ml = make(map[string]bool)
+		ml = make(set)
 	}
 	ml[language] = true
 	pr.macrolanguages[macrolanguage] = ml
@@ -878,7 +913,7 @@ func (pr BCP47Parser) get_name(lt LanguageTag) string {
 	return name
 }
 
-func setEqual(s1, s2 map[string]bool) bool {
+func setEqual(s1, s2 set) bool {
 	if len(s1) != len(s2) {
 		return false
 	}
@@ -890,16 +925,18 @@ func setEqual(s1, s2 map[string]bool) bool {
 	return true
 }
 
-func set(as ...string) map[string]bool {
-	out := make(map[string]bool)
+type set map[string]bool
+
+func newSet(as ...string) set {
+	out := make(set)
 	for _, a := range as {
 		out[a] = true
 	}
 	return out
 }
 
-func setIntersection(s1, s2 map[string]bool) map[string]bool {
-	out := make(map[string]bool)
+func setIntersection(s1, s2 set) set {
+	out := make(set)
 	for v := range s1 {
 		if s2[v] {
 			out[v] = true
@@ -908,8 +945,8 @@ func setIntersection(s1, s2 map[string]bool) map[string]bool {
 	return out
 }
 
-func setUnion(s1, s2 map[string]bool) map[string]bool {
-	out := make(map[string]bool)
+func setUnion(s1, s2 set) set {
+	out := make(set)
 	for v := range s1 {
 		out[v] = true
 	}
@@ -934,14 +971,14 @@ func parse() {
 
 	ot.addLanguage("ber", "BBR")
 
-	ot.remove_language_ot("PGR")
+	ot.removeLanguageOt("PGR")
 	ot.addLanguage("el-polyton", "PGR")
 
-	bcp47.macrolanguages["et"] = set("ekk")
+	bcp47.macrolanguages["et"] = newSet("ekk")
 
 	bcp47.names["flm"] = "Falam Chin"
 	bcp47.scopes["flm"] = " (retired code)"
-	bcp47.macrolanguages["flm"] = set("cfm")
+	bcp47.macrolanguages["flm"] = newSet("cfm")
 
 	ot.ranks["FNE"] = ot.ranks["TNE"] + 1
 
@@ -949,17 +986,17 @@ func parse() {
 
 	ot.addLanguage("und-fonnapa", "APPH")
 
-	ot.remove_language_ot("IRT")
+	ot.removeLanguageOt("IRT")
 	ot.addLanguage("ga-Latg", "IRT")
 
 	ot.addLanguage("hy-arevmda", "HYE")
 
-	ot.remove_language_ot("KGE")
+	ot.removeLanguageOt("KGE")
 	ot.addLanguage("und-Geok", "KGE")
 
-	bcp47.macrolanguages["id"] = set("in")
+	bcp47.macrolanguages["id"] = newSet("in")
 
-	bcp47.macrolanguages["ijo"] = set("ijc")
+	bcp47.macrolanguages["ijo"] = newSet("ijc")
 
 	ot.addLanguage("kht", "KHN")
 	ot.names["KHN"] = ot.names["KHT"] + " (Microsoft fonts)"
@@ -979,6 +1016,7 @@ func parse() {
 
 	ot.addLanguage("oc-provenc", "PRO")
 
+	ot.removeLanguageOt("QUZ")
 	ot.addLanguage("qu", "QUZ")
 	ot.addLanguage("qub", "QWH")
 	ot.addLanguage("qud", "QVI")
@@ -1011,31 +1049,30 @@ func parse() {
 	ot.addLanguage("qxt", "QWH")
 	ot.addLanguage("qxw", "QWH")
 
-	delete(bcp47.macrolanguages["ro"], "mo")
 	s := bcp47.macrolanguages["ro-MD"]
 	if s == nil {
-		s = make(map[string]bool)
+		s = make(set)
 	}
 	s["mo"] = true
 	bcp47.macrolanguages["ro-MD"] = s
 
-	ot.remove_language_ot("SYRE")
-	ot.remove_language_ot("SYRJ")
-	ot.remove_language_ot("SYRN")
+	ot.removeLanguageOt("SYRE")
+	ot.removeLanguageOt("SYRJ")
+	ot.removeLanguageOt("SYRN")
 	ot.addLanguage("und-Syre", "SYRE")
 	ot.addLanguage("und-Syrj", "SYRJ")
 	ot.addLanguage("und-Syrn", "SYRN")
 
 	bcp47.names["xst"] = "Silt'e"
 	bcp47.scopes["xst"] = " (retired code)"
-	bcp47.macrolanguages["xst"] = set("stv", "wle")
+	bcp47.macrolanguages["xst"] = newSet("stv", "wle")
 
 	ot.addLanguage("xwo", "TOD")
 
-	ot.remove_language_ot("ZHH")
-	ot.remove_language_ot("ZHP")
-	ot.remove_language_ot("ZHT")
-	ot.remove_language_ot("ZHTM")
+	ot.removeLanguageOt("ZHH")
+	ot.removeLanguageOt("ZHP")
+	ot.removeLanguageOt("ZHT")
+	ot.removeLanguageOt("ZHTM")
 	delete(bcp47.macrolanguages["zh"], "lzh")
 	delete(bcp47.macrolanguages["zh"], "yue")
 	ot.addLanguage("zh-Hant-MO", "ZHH")
@@ -1052,7 +1089,7 @@ func parse() {
 	ot.addLanguage("yue", "ZHH")
 	ot.addLanguage("yue-Hans", "ZHS")
 
-	bcp47.macrolanguages["zom"] = set("yos")
+	bcp47.macrolanguages["zom"] = newSet("yos")
 }
 
 // Return a delta to apply to a BCP 47 tag's rank.
@@ -1126,7 +1163,7 @@ func hbTag(tag string) string {
 }
 
 // return a set of variant language names from a name, joined on '\\n'.
-func getVariantSet(name string) map[string]bool {
+func getVariantSet(name string) set {
 	variants := strings.FieldsFunc(name, func(r rune) bool {
 		switch r {
 		case '\n', '(', ')', ',':
@@ -1135,7 +1172,7 @@ func getVariantSet(name string) map[string]bool {
 		return false
 	})
 
-	out := make(map[string]bool)
+	out := make(set)
 	for _, n := range variants {
 		if n == "" {
 			continue
@@ -1153,11 +1190,11 @@ func getVariantSet(name string) map[string]bool {
 }
 
 // return the names in common between two language names, joined on '\\n'.
-func languageNameIntersection(a, b string) map[string]bool {
+func languageNameIntersection(a, b string) set {
 	return setIntersection(getVariantSet(a), getVariantSet(b))
 }
 
-func getMatchingLanguageName(intersection map[string]bool, candidates []string) string {
+func getMatchingLanguageName(intersection set, candidates []string) string {
 	for _, c := range candidates {
 		if len(setIntersection(intersection, getVariantSet(c))) != 0 { // not disjoint
 			return c
@@ -1273,7 +1310,7 @@ func printComplexFunc(w io.Writer) {
 
 	var (
 		complexTagsKeys     []string
-		complexTagsKeysSeen = map[string]bool{} // avoid duplicate
+		complexTagsKeysSeen = set{} // avoid duplicate
 	)
 	for _, group := range ltTags {
 		initial := group[0].lt.getGroup()
@@ -1449,16 +1486,22 @@ func verifyDisambiguationDict() []string {
 		} else if len(primaryTags) == 0 {
 			expect(!inDis, fmt.Sprintf("There is no possible valid disambiguation for %s", otTag))
 		} else {
-			var macrolanguages []string
+			var originalLanguages, macrolanguages []string
 			for _, t := range primaryTags {
+				if _, in := ot.fromBCP47Uninherited[t]; in && !strings.Contains(bcp47.scopes[t], "retired code") {
+					originalLanguages = append(originalLanguages, t)
+				}
 				if bcp47.scopes[t] == " [macrolanguage]" {
 					macrolanguages = append(macrolanguages, t)
 				}
 			}
+			if len(originalLanguages) == 1 {
+				macrolanguages = originalLanguages
+			}
 			if len(macrolanguages) != 1 {
 				macrolanguages = nil
 				for _, t := range primaryTags {
-					if bcp47.scopes[t] == " [family]" {
+					if bcp47.scopes[t] == " [collection]" {
 						macrolanguages = append(macrolanguages, t)
 					}
 				}

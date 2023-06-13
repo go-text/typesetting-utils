@@ -2,12 +2,11 @@ package src
 
 import (
 	"bytes"
-	"errors"
+	"encoding/binary"
 	"fmt"
 	"io"
 	"log"
 	"sort"
-	"strings"
 	"unicode"
 
 	"golang.org/x/text/unicode/rangetable"
@@ -80,9 +79,10 @@ func generateCombiningClasses(classes map[uint8][]rune, w io.Writer) {
 }
 
 func generateEmojis(runes map[string][]rune, w io.Writer) {
+	// among "Emoji", "Emoji_Presentation", "Emoji_Modifier", "Emoji_Modifier_Base", "Extended_Pictographic"
+	// only Extended_Pictographic is actually used
 	fmt.Fprint(w, unicodedataheader)
-	classes := [...]string{"Emoji", "Emoji_Presentation", "Emoji_Modifier", "Emoji_Modifier_Base", "Extended_Pictographic"}
-	for _, class := range classes {
+	for _, class := range [...]string{"Extended_Pictographic"} {
 		table := rangetable.New(runes[class]...)
 		s := printTable(table, false)
 		fmt.Fprintf(w, "var %s = %s\n\n", class, s)
@@ -104,7 +104,7 @@ func generateMirroring(runes map[uint16]uint16, w io.Writer) {
 	fmt.Fprintln(w, "}")
 }
 
-func generateDecomposition(dms map[rune][]rune, compExp map[rune]bool, w io.Writer) {
+func generateDecomposition(combiningClasses map[uint8][]rune, dms map[rune][]rune, compExp map[rune]bool, w io.Writer) {
 	var (
 		decompose1 [][2]rune         // length 1 mappings {from, to}
 		decompose2 [][3]rune         // length 2 mappings {from, to1, to2}
@@ -159,138 +159,6 @@ func generateDecomposition(dms map[rune][]rune, compExp map[rune]bool, w io.Writ
 		fmt.Fprintf(w, "{0x%04x,0x%04x}: 0x%04x,\n", vals[0], vals[1], vals[2])
 	}
 	fmt.Fprintln(w, "}")
-}
-
-func generateArabicShaping(joining map[rune]ArabicJoining, w io.Writer) {
-	fmt.Fprint(w, unicodedataheader)
-
-	// Joining
-
-	// sort for determinism
-	var keys []rune
-	for r := range joining {
-		keys = append(keys, r)
-	}
-	sortRunes(keys)
-
-	fmt.Fprintf(w, "var ArabicJoinings = map[rune]ArabicJoining{ // %d entries \n", len(keys))
-	for _, r := range keys {
-		fmt.Fprintf(w, "0x%04x: %q,\n", r, joining[r])
-	}
-	fmt.Fprintln(w, "}")
-
-	// Shaping
-
-	if shapingTable.max < shapingTable.min {
-		check(errors.New("error: no shaping pair found, something wrong with reading input"))
-	}
-
-	fmt.Fprintf(w, "const FirstArabicShape = 0x%04x\n", shapingTable.min)
-	fmt.Fprintf(w, "const LastArabicShape = 0x%04x\n", shapingTable.max)
-
-	fmt.Fprintln(w, `
-	// ArabicShaping defines the shaping for arabic runes. Each entry is indexed by
-	// the shape, between 0 and 3:
-	//   - 0: isolated
-	//   - 1: final
-	//   - 2: initial
-	//   - 3: medial
-	// See also the bounds given by FirstArabicShape and LastArabicShape.`)
-	fmt.Fprintf(w, "var ArabicShaping = [...][4]uint16{ // required memory: %d KB \n", (shapingTable.max-shapingTable.min+1)*4*4/1000)
-	for c := shapingTable.min; c <= shapingTable.max; c++ {
-		fmt.Fprintf(w, "{%d,%d,%d,%d},\n",
-			// fmt.Fprintf(w, "{0x%04x,0x%04x,0x%04x,0x%04x},\n",
-			shapingTable.table[c][0], shapingTable.table[c][1], shapingTable.table[c][2], shapingTable.table[c][3])
-	}
-	fmt.Fprintln(w, "}")
-
-	// Ligatures
-
-	ligas := map[rune][][2]rune{}
-	for pair, shapes := range ligatures {
-		for shape, c := range shapes {
-			if c == 0 {
-				continue
-			}
-			var liga [2]rune
-			if shape == 0 {
-				liga = [2]rune{shapingTable.table[pair[0]][2], shapingTable.table[pair[1]][1]}
-			} else if shape == 1 {
-				liga = [2]rune{shapingTable.table[pair[0]][3], shapingTable.table[pair[1]][1]}
-			} else {
-				check(fmt.Errorf("unexpected shape %d", shape))
-			}
-			ligas[liga[0]] = append(ligas[liga[0]], [2]rune{liga[1], c})
-		}
-	}
-	var (
-		maxI   int
-		sorted []rune
-	)
-	for r, v := range ligas {
-		if len(v) > maxI {
-			maxI = len(v)
-		}
-		sorted = append(sorted, r)
-	}
-	sortRunes(sorted)
-
-	fmt.Fprintln(w)
-	fmt.Fprintf(w, `
-	// ArabicLigatures exposes lam-alef ligatures
-	var ArabicLigatures = [...]struct{
-	 	First rune
-		Ligatures [%d][2]rune // {second, ligature}
-	} {`, maxI)
-	fmt.Fprintln(w)
-	for _, first := range sorted {
-		fmt.Fprintf(w, "  { 0x%04x, [%d][2]rune{\n", first, maxI)
-		ligas := ligas[first]
-		sort.Slice(ligas, func(i, j int) bool {
-			return ligas[i][0] < ligas[j][0]
-		})
-		for _, liga := range ligas {
-			fmt.Fprintf(w, "    { 0x%04x, 0x%04x },\n", liga[0], liga[1])
-		}
-		fmt.Fprintln(w, "  }},")
-	}
-	fmt.Fprintln(w, "};")
-	fmt.Fprintln(w)
-}
-
-func generateHasArabicJoining(joining map[rune]ArabicJoining, scripts map[string][]rune, w io.Writer) {
-	scriptsRev := map[rune]string{}
-	for s, rs := range scripts {
-		for _, r := range rs {
-			scriptsRev[r] = s
-		}
-	}
-	scriptsArabic := map[string]bool{}
-	for r, j := range joining {
-		if j != T && j != U {
-			script := scriptsRev[r]
-			if script != "Common" && script != "Inherited" {
-				scriptsArabic[script] = true
-			}
-		}
-	}
-	var scriptList []string
-	for s := range scriptsArabic {
-		scriptList = append(scriptList, fmt.Sprintf("language.%s", s))
-	}
-	sort.Strings(scriptList) // determinism
-
-	fmt.Fprintf(w, `
-
-	// HasArabicJoining return 'true' if the given script has arabic joining.
-	func HasArabicJoining(script language.Script) bool {
-		switch script {
-		case %s:
-			return true
-		default: 
-			return false
-		}
-	}`, strings.Join(scriptList, ","))
 }
 
 // Supported line breaking classes for Unicode 12.0.0.
@@ -498,6 +366,12 @@ func compactScriptLookupTable(scripts map[string][]runeRange, scriptNames map[st
 	return compacted
 }
 
+func scriptToString(s uint32) string {
+	var buf [4]byte
+	binary.BigEndian.PutUint32(buf[:], s)
+	return string(buf[:])
+}
+
 func generateScriptLookupTable(scripts map[string][]runeRange, scriptNames map[string]uint32, w io.Writer) {
 	crible := compactScriptLookupTable(scripts, scriptNames)
 
@@ -521,7 +395,7 @@ func generateScriptLookupTable(scripts map[string][]runeRange, scriptNames map[s
 
 	for _, k := range sortedKeys {
 		v := scriptNames[k]
-		fmt.Fprintf(w, "%s = Script(0x%08x)\n", k, v)
+		fmt.Fprintf(w, "%s = Script(0x%08x) // %s \n", k, v, scriptToString(v))
 	}
 	fmt.Fprintln(w, ")")
 
@@ -542,4 +416,25 @@ func generateScriptLookupTable(scripts map[string][]runeRange, scriptNames map[s
 		fmt.Fprintf(w, "{start: 0x%x, end: 0x%x, script: 0x%08x},\n", item.start, item.end, item.script)
 	}
 	fmt.Fprintln(w, "}")
+}
+
+func generateGeneralCategories(m map[rune]string, w io.Writer) {
+	// reverse the rune->category mapping
+	cats, keys := map[string][]rune{}, []string{}
+	for r, cat := range m {
+		cats[cat] = append(cats[cat], r)
+	}
+	for key := range cats {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+
+	fmt.Fprint(w, unicodedataheader)
+
+	for _, cat := range keys {
+		runes := cats[cat]
+		rt := rangetable.New(runes...)
+		code := printTable(rt, false)
+		fmt.Fprintln(w, fmt.Sprintf("var %s = %s\n", cat, code))
+	}
 }

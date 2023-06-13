@@ -10,11 +10,12 @@ import (
 )
 
 func main() {
+	useCache := flag.Bool("cache", false, "use data from on disk cache")
 	flag.Parse()
 	outputDir := flag.Arg(0)
 	if outputDir == "" {
 		log.Fatal("missing output directory")
 	}
 
-	src.Generate(outputDir)
+	src.Generate(outputDir, *useCache)
 }
