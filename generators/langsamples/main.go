@@ -136,17 +136,17 @@ func printLangTables(langs []languageRunes) string {
 	// print the table
 	s.WriteString(`
 	// languagesRunes stores the runes commonly used to write a language
-	var languagesRunes = []struct{
+	var languagesRunes = [...]struct{
 		lang language.Language
 		runes runeSet // sorted, inclusive ranges 
 	}{
 	`)
-	for _, lang := range langs {
-		s.WriteString(fmt.Sprintf(`{
+	for i, lang := range langs {
+		s.WriteString(fmt.Sprintf(`{ /** index: %d */
 				%q,
 				%s,
 			},
-			`, lang.lang, printRuneSet(lang.runes)))
+			`, i, lang.lang, printRuneSet(lang.runes)))
 	}
 	s.WriteString("}")
 
