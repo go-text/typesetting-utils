@@ -262,6 +262,9 @@ func generateArabicShaping(db unicodeDatabase, joining map[rune]ArabicJoining, w
 		fmt.Fprintf(w, "  { 0x%04x, []arabicLig{\n", first)
 		ligas := ligas3[first]
 		sort.Slice(ligas, func(i, j int) bool {
+			return ligas[i][1] < ligas[j][1]
+		})
+		sort.SliceStable(ligas, func(i, j int) bool {
 			return ligas[i][0] < ligas[j][0]
 		})
 		for _, liga := range ligas {

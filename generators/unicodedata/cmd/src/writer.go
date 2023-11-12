@@ -295,6 +295,38 @@ func generateGraphemeBreakProperty(datas map[string][]rune, w io.Writer) {
 	`, list)
 }
 
+func generateWordBreakProperty(datas map[string][]rune, w io.Writer) {
+	fmt.Fprint(w, unicodedataheader)
+
+	var sortedClasses []string
+	for key := range datas {
+		sortedClasses = append(sortedClasses, key)
+	}
+	sort.Strings(sortedClasses)
+
+	list := ""
+	var allWords []*unicode.RangeTable
+	for _, className := range sortedClasses {
+		runes := datas[className]
+		table := rangetable.New(runes...)
+		s := printTable(table, false)
+		fmt.Fprintf(w, "// WordBreakProperty: %s\n", className)
+		fmt.Fprintf(w, "var WordBreak%s = %s\n\n", className, s)
+
+		list += fmt.Sprintf("WordBreak%s, // %s \n", className, className)
+		allWords = append(allWords, table)
+	}
+
+	// generate a union table to speed up lookup
+	allTable := rangetable.Merge(allWords...)
+	fmt.Fprintf(w, "// contains all the runes having a non nil word break property\n")
+	fmt.Fprintf(w, "var wordBreakAll = %s\n\n", printTable(allTable, false))
+
+	fmt.Fprintf(w, `var wordBreaks = [...]*unicode.RangeTable{
+	%s}
+	`, list)
+}
+
 func generateEmojisTest(sequences [][]rune, w io.Writer) {
 	fmt.Fprintln(w, `
 	// SPDX-License-Identifier: Unlicense OR BSD-3-Clause
@@ -406,14 +438,18 @@ func generateScriptLookupTable(scripts map[string][]runeRange, scriptNames map[s
 	}
 	fmt.Fprintln(w, "}")
 
-	fmt.Fprintln(w, `type scriptItem struct {
-		start, end rune
-		script     Script
+	fmt.Fprintln(w, `
+	// ScriptRange is an inclusive range of runes
+	// with constant script.
+	type ScriptRange struct {
+		Start, End rune
+		Script     Script
 	}
 	
-	var scriptRanges = [...]scriptItem{`)
+	// ScriptRanges is a sorted list of script ranges.
+	var ScriptRanges = [...]ScriptRange{`)
 	for _, item := range crible {
-		fmt.Fprintf(w, "{start: 0x%x, end: 0x%x, script: 0x%08x},\n", item.start, item.end, item.script)
+		fmt.Fprintf(w, "{0x%x, 0x%x, 0x%08x},\n", item.start, item.end, item.script)
 	}
 	fmt.Fprintln(w, "}")
 }

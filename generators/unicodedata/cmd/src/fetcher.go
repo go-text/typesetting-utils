@@ -28,6 +28,7 @@ const (
 	urlEastAsianWidth  = "https://unicode.org/Public/" + version + "/ucd/EastAsianWidth.txt"
 	urlSentenceBreak   = "https://unicode.org/Public/" + version + "/ucd/auxiliary/SentenceBreakProperty.txt"
 	urlGraphemeBreak   = "https://unicode.org/Public/" + version + "/ucd/auxiliary/GraphemeBreakProperty.txt"
+	urlWordBreak       = "https://unicode.org/Public/" + version + "/ucd/auxiliary/WordBreakProperty.txt"
 	urlDerivedCore     = "https://unicode.org/Public/" + version + "/ucd/DerivedCoreProperties.txt"
 )
 
@@ -71,6 +72,7 @@ type sources struct {
 	eastAsianWidth  []byte
 	sentenceBreak   []byte
 	graphemeBreak   []byte
+	wordBreak       []byte
 	derivedCore     []byte
 }
 
@@ -90,6 +92,7 @@ func fetchAll(fromCache bool) (out sources) {
 	out.eastAsianWidth = fetchData(urlEastAsianWidth, fromCache)
 	out.sentenceBreak = fetchData(urlSentenceBreak, fromCache)
 	out.graphemeBreak = fetchData(urlGraphemeBreak, fromCache)
+	out.wordBreak = fetchData(urlWordBreak, fromCache)
 	out.derivedCore = fetchData(urlDerivedCore, fromCache)
 
 	return out

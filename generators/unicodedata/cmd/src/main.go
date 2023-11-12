@@ -78,6 +78,9 @@ func Generate(outputDir string, dataFromCache bool) {
 	graphemeBreaks, err := parseAnnexTables(srcs.graphemeBreak)
 	check(err)
 
+	wordBreaks, err := parseAnnexTables(srcs.wordBreak)
+	check(err)
+
 	scriptsRanges, err := parseAnnexTablesAsRanges(srcs.scripts)
 	check(err)
 
@@ -126,6 +129,9 @@ func Generate(outputDir string, dataFromCache bool) {
 	})
 	process(join("unicodedata/grapheme_break.go"), func(w io.Writer) {
 		generateGraphemeBreakProperty(graphemeBreaks, w)
+	})
+	process(join("unicodedata/word_break.go"), func(w io.Writer) {
+		generateWordBreakProperty(wordBreaks, w)
 	})
 	process(join("unicodedata/general_category.go"), func(w io.Writer) {
 		generateGeneralCategories(db.generalCategory, w)
