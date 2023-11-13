@@ -38,6 +38,7 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/go-text/typesetting-utils/generators"
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
 	"golang.org/x/text/unicode/norm"
@@ -52,40 +53,6 @@ var (
 	bcp47 = newBCP47Parser()
 	ot    = newOpenTypeRegistryParser()
 )
-
-// copied from typesetting/language
-
-var canonMap = [256]byte{
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '-', 0, 0,
-	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 0, 0, 0, 0, 0, 0,
-	'-', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-	'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 0, 0, 0, 0, '-',
-	0, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-	'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 0, 0, 0, 0, 0,
-}
-
-// Language store the canonicalized BCP 47 tag,
-// which has the generic form <lang>-<country>-<other tags>...
-type Language string
-
-// NewLanguage canonicalizes the language input (as a BCP 47 language tag), by converting it to
-// lowercase, mapping '_' to '-', and stripping all characters other
-// than letters, numbers and '-'.
-func NewLanguage(language string) Language {
-	out := make([]byte, 0, len(language))
-	for _, r := range language {
-		if r >= 0xFF {
-			continue
-		}
-		can := canonMap[r]
-		if can != 0 {
-			out = append(out, can)
-		}
-	}
-	return Language(out)
-}
 
 // download and save locally
 func fetchData() {
@@ -1432,7 +1399,7 @@ func printAmbiguous(w io.Writer) {
 		bcp47Tag := disambiguation[otTag]
 		fmt.Fprintf(w, "  case %s:  /* %s */", hbTag(otTag), ot.names[otTag])
 		fmt.Fprintln(w)
-		canonLang := NewLanguage(bcp47Tag)
+		canonLang := generators.NewLanguage(bcp47Tag)
 		fmt.Fprintf(w, "    return %q;  /* language.NewLanguage(%q) %s */", canonLang, bcp47Tag, bcp47.get_name(newLanguageTag(bcp47Tag)))
 		fmt.Fprintln(w)
 	}
