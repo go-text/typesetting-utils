@@ -37,7 +37,7 @@
 
     - Go-Mono-Bold-Italic.ttf : https://go.dev/blog/go-fonts
 
-    - DejaVuSansMono.ttf : https://dejavu-fonts.github.io/
+    - DejaVuSans.ttf, DejaVuSansMono.ttf : https://dejavu-fonts.github.io/
 
     - LiberationMono-Italic.ttf : SIL Open Font License, Version 1.1.
 
