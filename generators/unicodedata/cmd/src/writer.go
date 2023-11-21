@@ -298,6 +298,17 @@ func generateGraphemeBreakProperty(datas map[string][]rune, w io.Writer) {
 func generateWordBreakProperty(datas map[string][]rune, w io.Writer) {
 	fmt.Fprint(w, unicodedataheader)
 
+	// some classes are always used together : merge them to simplify
+	datas["ExtendFormat"] = append(append(append(datas["ExtendFormat"], datas["Extend"]...), datas["Format"]...), datas["ZWJ"]...)
+	datas["NewlineCRLF"] = append(append(append(datas["NewlineCRLF"], datas["Newline"]...), datas["CR"]...), datas["LF"]...)
+
+	delete(datas, "Extend")
+	delete(datas, "Format")
+	delete(datas, "Newline")
+	delete(datas, "LF")
+	delete(datas, "CR")
+	delete(datas, "ZWJ")
+
 	var sortedClasses []string
 	for key := range datas {
 		sortedClasses = append(sortedClasses, key)
