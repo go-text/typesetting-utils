@@ -406,14 +406,17 @@ func generateScriptLookupTable(scripts map[string][]runeRange, scriptNames map[s
 	}
 	fmt.Fprintln(w, "}")
 
-	fmt.Fprintln(w, `type scriptItem struct {
-		start, end rune
-		script     Script
+	fmt.Fprintln(w, `// ScriptRange is an inclusive range of runes
+	// with constant script.
+	type ScriptRange struct {
+		Start, End rune
+		Script     Script
 	}
 	
-	var scriptRanges = [...]scriptItem{`)
+	// ScriptRanges is a sorted list of script ranges.
+	var ScriptRanges = [...]ScriptRange{`)
 	for _, item := range crible {
-		fmt.Fprintf(w, "{start: 0x%x, end: 0x%x, script: 0x%08x},\n", item.start, item.end, item.script)
+		fmt.Fprintf(w, "{0x%x, 0x%x, 0x%08x},\n", item.start, item.end, item.script)
 	}
 	fmt.Fprintln(w, "}")
 }
