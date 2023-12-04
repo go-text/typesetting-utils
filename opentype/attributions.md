@@ -39,6 +39,8 @@
 
     - DejaVuSans.ttf, DejaVuSansMono.ttf : https://dejavu-fonts.github.io/
 
+    - NotoSansArabic.tff, NotoSansCJKjp-VF.otf: SIL Open Font License, Version 1.1. (https://fonts.google.com/noto/specimen/Noto+Sans/about)
+
     - LiberationMono-Italic.ttf : SIL Open Font License, Version 1.1.
 
     - Lmmono-italic.otf : GUST font license (GFL)
