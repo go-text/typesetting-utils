@@ -338,6 +338,23 @@ func generateWordBreakProperty(datas map[string][]rune, w io.Writer) {
 	`, list)
 }
 
+// merge the tables for [Alphabetic] and Number
+func generateWordContent(db *unicodeDatabase, derivedCore map[string][]rune, w io.Writer) {
+	alphabetic := derivedCore["Alphabetic"]
+	categories, _ := db.generalCategories()
+	nd, nl, no := categories["Nd"], categories["Nl"], categories["No"]
+
+	all := append(alphabetic, nd...)
+	all = append(all, nl...)
+	all = append(all, no...)
+	table := rangetable.New(all...)
+	fmt.Fprintf(w, `
+	// Word contains all the runes we may found in a word,
+	// that is either a Number (Nd, Nl, No) or a rune with the Alphabetic property
+	var Word = %s
+	`, printTable(table, false))
+}
+
 func generateEmojisTest(sequences [][]rune, w io.Writer) {
 	fmt.Fprintln(w, `
 	// SPDX-License-Identifier: Unlicense OR BSD-3-Clause
@@ -465,16 +482,9 @@ func generateScriptLookupTable(scripts map[string][]runeRange, scriptNames map[s
 	fmt.Fprintln(w, "}")
 }
 
-func generateGeneralCategories(m map[rune]string, w io.Writer) {
+func generateGeneralCategories(db *unicodeDatabase, w io.Writer) {
 	// reverse the rune->category mapping
-	cats, keys := map[string][]rune{}, []string{}
-	for r, cat := range m {
-		cats[cat] = append(cats[cat], r)
-	}
-	for key := range cats {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
+	cats, keys := db.generalCategories()
 
 	fmt.Fprint(w, unicodedataheader)
 

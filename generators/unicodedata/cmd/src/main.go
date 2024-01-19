@@ -132,9 +132,10 @@ func Generate(outputDir string, dataFromCache bool) {
 	})
 	process(join("unicodedata/word_break.go"), func(w io.Writer) {
 		generateWordBreakProperty(wordBreaks, w)
+		generateWordContent(&db, derivedCore, w)
 	})
 	process(join("unicodedata/general_category.go"), func(w io.Writer) {
-		generateGeneralCategories(db.generalCategory, w)
+		generateGeneralCategories(&db, w)
 	})
 
 	process(join("harfbuzz/emojis_list_test.go"), func(w io.Writer) {

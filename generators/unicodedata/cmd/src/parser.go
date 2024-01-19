@@ -7,6 +7,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -90,6 +91,20 @@ func (db *unicodeDatabase) inferMaps() {
 		// Combining class
 		db.combiningClasses[item.combiningClass] = append(db.combiningClasses[item.combiningClass], c)
 	}
+}
+
+func (db *unicodeDatabase) generalCategories() (map[string][]rune, []string) {
+	// reverse the rune->category mapping
+	cats, keys := map[string][]rune{}, []string{}
+	for r, cat := range db.generalCategory {
+		cats[cat] = append(cats[cat], r)
+	}
+	for key := range cats {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+
+	return cats, keys
 }
 
 type unicodeEntry struct {
