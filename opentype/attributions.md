@@ -37,7 +37,11 @@
 
     - Go-Mono-Bold-Italic.ttf : https://go.dev/blog/go-fonts
 
-    - DejaVuSansMono.ttf : https://dejavu-fonts.github.io/
+    - DejaVuSans.ttf, DejaVuSansMono.ttf : https://dejavu-fonts.github.io/
+
+    - NotoSansArabic.tff, NotoSansCJKjp-VF.otf, NotoSansMongolian-Regular.ttf: SIL Open Font License, Version 1.1. (https://fonts.google.com/noto/specimen/Noto+Sans/about)
+
+    - mplus-1p-regular.ttf: http://mplus-fonts.sourceforge.jp/mplus-outline-fonts/
 
     - LiberationMono-Italic.ttf : SIL Open Font License, Version 1.1.
 

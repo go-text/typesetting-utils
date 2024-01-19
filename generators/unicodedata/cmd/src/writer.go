@@ -451,7 +451,7 @@ func generateScriptLookupTable(scripts map[string][]runeRange, scriptNames map[s
 
 	fmt.Fprintln(w, `
 	// ScriptRange is an inclusive range of runes
-	// with constant script.
+ 	// with constant script.
 	type ScriptRange struct {
 		Start, End rune
 		Script     Script
