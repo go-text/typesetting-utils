@@ -51,6 +51,8 @@
     - NotoColorEmoji.ttf : SIL Open Font License, Version 1.1.
 
     - IBM3161-bitmap.otb : Copyright © 2017-2020 Wyatt Ward
+
+    - unifont-15.1.05.otf : SIL Open Font License, Version 1.1. https://unifoundry.com/unifont/index.html
     
 - toys/gpos, toys/gsub: Copyright 2000-2016 Adobe Systems Incorporated. All Rights Reserved.
 
