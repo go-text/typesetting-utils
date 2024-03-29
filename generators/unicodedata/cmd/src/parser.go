@@ -442,7 +442,7 @@ func parseScriptNames(b []byte) (map[string]uint32, error) {
 		if code == "Geok" {
 			continue // special case: duplicate tag
 		}
-		tag := binary.BigEndian.Uint32([]byte(strings.ToLower(code)))
+		tag := binary.BigEndian.Uint32([]byte(code))
 
 		name := chunks[4]
 		if name == "" {

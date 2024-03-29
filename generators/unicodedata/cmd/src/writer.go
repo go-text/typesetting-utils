@@ -399,10 +399,13 @@ func generateScriptLookupTable(scripts map[string][]runeRange, scriptNames map[s
 	}
 	fmt.Fprintln(w, ")")
 
-	fmt.Fprintln(w, "var scriptToTag = map[string]Script{")
+	fmt.Fprintln(w, `
+	// scriptToTag is only used in tests and will be 
+	// removed by the linker
+	var scriptToTag = map[string]Script{`)
 	for _, k := range sortedKeys {
 		v := scriptNames[k]
-		fmt.Fprintf(w, "%q : %d,\n", k, v)
+		fmt.Fprintf(w, "%q : 0x%08x,\n", k, v)
 	}
 	fmt.Fprintln(w, "}")
 
