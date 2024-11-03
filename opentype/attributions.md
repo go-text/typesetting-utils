@@ -6,7 +6,8 @@
 - collections:
     - Courier.dfont: Howard "Bud" Kettler
     - NotoSansCJK-Bold.ttc: SIL Open Font License, Version 1.1.
-
+    - msgothic.ttc: https://learn.microsoft.com/fr-fr/typography/font-list/ms-gothic#licensing-and-redistribution-info
+    
 - common:
     - Raleway - Raleway-v4020-Regular.otf : SIL Open Font License, 1.1
 	Copyright (c) 2010 - 2013, Matt McInerney (matt@pixelspread.com), Pablo Impallari (impallari@gmail.com), Rodrigo Fuenzalida (hello@rfuenzalida.com) with Reserved Font Name "Raleway"
