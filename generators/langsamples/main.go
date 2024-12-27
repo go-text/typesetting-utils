@@ -1,5 +1,7 @@
 // Run
 // go run main.go rune_coverage.go <OUTPUT_DIR>
+//
+// Files are copied from https://gitlab.freedesktop.org/fontconfig/fontconfig/-/tree/main/fc-lang
 package main
 
 import (
