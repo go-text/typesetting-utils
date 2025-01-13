@@ -310,7 +310,7 @@ func TestOpen(t *testing.T) {
 
 func TestParse(t *testing.T) {
 	l := scanOrthFiles()
-	if len(l) != 281 {
+	if len(l) != 283 {
 		t.Fatal(len(l))
 	}
 
