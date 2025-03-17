@@ -69,13 +69,15 @@ var WithAvar = []string{
 }
 
 var WithFvar = []struct {
-	Path      string
-	AxisCount int
+	Path           string
+	AxisCount      int // checked with fonttools
+	InstancesCount int // checked with fonttools
 }{
-	{"common/Selawik-VF.ttf", 1},
-	{"common/Commissioner-VF.ttf", 4},
-	{"common/SourceSans-VF.ttf", 1},
-	{"toys/Var1.ttf", 15},
+	{"common/Selawik-VF.ttf", 1, 5},
+	{"common/Commissioner-VF.ttf", 4, 18},
+	{"common/SourceSans-VF.ttf", 1, 6},
+	{"common/NotoSansCJKjp-VF.otf", 1, 7},
+	{"toys/Var1.ttf", 15, 0},
 }
 
 var Monospace = map[string]bool{
