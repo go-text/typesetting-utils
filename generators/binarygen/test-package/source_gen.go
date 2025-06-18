@@ -772,10 +772,6 @@ func parseWithArgument(src []byte, arrayCount int, kind uint16, version uint16) 
 	return item, n, nil
 }
 
-func readUint24(b []byte) uint32 {
-	_ = b[2] // bounds check hint to compiler; see golang.org/issue/14808
-	return uint32(b[2]) | uint32(b[1])<<8 | uint32(b[0])<<16
-}
 func (item *singleScope) mustParse(src []byte) {
 	_ = src[52] // early bound checking
 	item.a = int32(binary.BigEndian.Uint32(src[0:]))

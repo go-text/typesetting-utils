@@ -52,6 +52,11 @@ func fl1616ToUint(f fl1616) uint32 {
 	return uint32(int32(f * (1 << 16)))
 }
 
+func readUint24(b []byte) uint32 {
+	_ = b[2] // bounds check hint to compiler; see golang.org/issue/14808
+	return uint32(b[2]) | uint32(b[1])<<8 | uint32(b[0])<<16
+}
+
 // other constants not interpreted as flags
 
 type flagNotVersion_ uint
