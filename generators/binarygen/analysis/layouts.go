@@ -14,6 +14,7 @@ const (
 	Uint16
 	Uint32
 	Uint64
+	Uint24 BinarySize = 3
 )
 
 func newBinarySize(t *types.Basic) (BinarySize, bool) {

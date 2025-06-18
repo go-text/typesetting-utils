@@ -298,6 +298,17 @@ func ParseVariableThenFixed(src []byte) (VariableThenFixed, int, error) {
 	return item, n, nil
 }
 
+func ParseWithAlias(src []byte) (WithAlias, int, error) {
+	var item WithAlias
+	n := 0
+	if L := len(src); L < 4 {
+		return item, 0, fmt.Errorf("reading WithAlias: "+"EOF: expected length: 4, got %d", L)
+	}
+	item.mustParse(src)
+	n += 4
+	return item, n, nil
+}
+
 func ParseWithArray(src []byte) (WithArray, int, error) {
 	var item WithArray
 	n := 0
@@ -363,10 +374,10 @@ func ParseWithImplicitITF(src []byte) (WithImplicitITF, int, error) {
 func ParseWithOffset(src []byte, offsetToSliceCount int) (WithOffset, int, error) {
 	var item WithOffset
 	n := 0
-	if L := len(src); L < 19 {
-		return item, 0, fmt.Errorf("reading WithOffset: "+"EOF: expected length: 19, got %d", L)
+	if L := len(src); L < 22 {
+		return item, 0, fmt.Errorf("reading WithOffset: "+"EOF: expected length: 22, got %d", L)
 	}
-	_ = src[18] // early bound checking
+	_ = src[21] // early bound checking
 	item.version = binary.BigEndian.Uint16(src[0:])
 	offsetOffsetToSlice := int(binary.BigEndian.Uint32(src[2:]))
 	offsetOffsetToStruct := int(binary.BigEndian.Uint32(src[6:]))
@@ -375,7 +386,8 @@ func ParseWithOffset(src []byte, offsetToSliceCount int) (WithOffset, int, error
 	item.c = src[12]
 	offsetOffsetToUnbounded := int(binary.BigEndian.Uint16(src[13:]))
 	offsetOptional := int(binary.BigEndian.Uint32(src[15:]))
-	n += 19
+	offsetOffset24 := int(readUint24(src[19:]))
+	n += 22
 
 	{
 
@@ -435,6 +447,21 @@ func ParseWithOffset(src []byte, offsetToSliceCount int) (WithOffset, int, error
 			}
 
 			item.optional = &tmpOptional
+		}
+	}
+	{
+
+		if offsetOffset24 != 0 { // ignore null offset
+			if L := len(src); L < offsetOffset24 {
+				return item, 0, fmt.Errorf("reading WithOffset: "+"EOF: expected length: %d, got %d", offsetOffset24, L)
+			}
+
+			var err error
+			item.offset24, _, err = ParseWithAlias(src[offsetOffset24:])
+			if err != nil {
+				return item, 0, fmt.Errorf("reading WithOffset: %s", err)
+			}
+
 		}
 	}
 	return item, n, nil
@@ -745,6 +772,10 @@ func parseWithArgument(src []byte, arrayCount int, kind uint16, version uint16) 
 	return item, n, nil
 }
 
+func readUint24(b []byte) uint32 {
+	_ = b[2] // bounds check hint to compiler; see golang.org/issue/14808
+	return uint32(b[2]) | uint32(b[1])<<8 | uint32(b[0])<<16
+}
 func (item *singleScope) mustParse(src []byte) {
 	_ = src[52] // early bound checking
 	item.a = int32(binary.BigEndian.Uint32(src[0:]))
