@@ -74,6 +74,8 @@ func newTags(st *types.Struct, tags reflect.StructTag) (out parsedTags) {
 	switch tag := tags.Get("offsetSize"); tag {
 	case "Offset16":
 		out.offsetSize = Offset16
+	case "Offset24":
+		out.offsetSize = Offset24
 	case "Offset32":
 		out.offsetSize = Offset32
 	case "":
@@ -217,6 +219,8 @@ const (
 	NoOffset OffsetSize = iota
 	// The offset is written as uint16
 	Offset16
+	// The offset is written as 3 bytes
+	Offset24
 	// The offset is written as uint32
 	Offset32
 )
@@ -225,6 +229,8 @@ func (os OffsetSize) binary() BinarySize {
 	switch os {
 	case Offset16:
 		return Uint16
+	case Offset24:
+		return Uint24
 	case Offset32:
 		return Uint32
 	default:

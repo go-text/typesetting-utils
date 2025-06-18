@@ -18,6 +18,8 @@ func readBasicTypeAt(cc gen.Context, size an.BinarySize) string {
 		return fmt.Sprintf("%s[%s]", sliceName, offset)
 	case an.Uint16:
 		return fmt.Sprintf("binary.BigEndian.Uint16(%s[%s:])", sliceName, offset)
+	case an.Uint24:
+		return fmt.Sprintf("readUint24(%s[%s:])", sliceName, offset)
 	case an.Uint32:
 		return fmt.Sprintf("binary.BigEndian.Uint32(%s[%s:])", sliceName, offset)
 	case an.Uint64:

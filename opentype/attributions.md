@@ -48,6 +48,11 @@
 
     - Lmmono-italic.otf : GUST font license (GFL)
 
+    - NotoColorEmoji-Regular.ttf: Copyright 2021 Google Inc. All Rights Reserved. SIL Open Font License, Version 1.1.
+
+    - CoralPixels-Regular.ttf: Copyright 2024 The Coral Pixels Project Authors (https://github.com/tanukifont/Coral-Pixels) SIL Open Font License, Version 1.1.
+ 
+
 - bitmap:
     - NotoColorEmoji.ttf : SIL Open Font License, Version 1.1.
 
