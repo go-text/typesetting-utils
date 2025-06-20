@@ -241,6 +241,68 @@ func ParseRootTable(src []byte) (RootTable, int, error) {
 	return item, n, nil
 }
 
+func ParseS1(src []byte) (S1, int, error) {
+	var item S1
+	n := 0
+	if L := len(src); L < 5 {
+		return item, 0, fmt.Errorf("reading S1: "+"EOF: expected length: 5, got %d", L)
+	}
+	_ = src[4] // early bound checking
+	item.format = src[0]
+	item.v = int32(binary.BigEndian.Uint32(src[1:]))
+	n += 5
+
+	{
+		var (
+			err  error
+			read int
+		)
+		item.other, read, err = ParseSelfRef(src[5:])
+		if err != nil {
+			return item, 0, fmt.Errorf("reading S1: %s", err)
+		}
+		n += read
+	}
+	return item, n, nil
+}
+
+func ParseS2(src []byte) (S2, int, error) {
+	var item S2
+	n := 0
+	if L := len(src); L < 1 {
+		return item, 0, fmt.Errorf("reading S2: "+"EOF: expected length: 1, got %d", L)
+	}
+	item.mustParse(src)
+	n += 1
+	return item, n, nil
+}
+
+func ParseSelfRef(src []byte) (SelfRef, int, error) {
+	var item SelfRef
+
+	if L := len(src); L < 1 {
+		return item, 0, fmt.Errorf("reading SelfRef: "+"EOF: expected length: 1, got %d", L)
+	}
+	format := byte(src[0])
+	var (
+		read int
+		err  error
+	)
+	switch format {
+	case 1:
+		item, read, err = ParseS1(src[0:])
+	case 2:
+		item, read, err = ParseS2(src[0:])
+	default:
+		err = fmt.Errorf("unsupported SelfRef format %d", format)
+	}
+	if err != nil {
+		return item, 0, fmt.Errorf("reading SelfRef: %s", err)
+	}
+
+	return item, read, nil
+}
+
 func ParseSubElement(src []byte, grandParentSrc []byte) (SubElement, int, error) {
 	var item SubElement
 	n := 0
@@ -637,6 +699,10 @@ func ParseWithUnion(src []byte) (WithUnion, int, error) {
 		n += read
 	}
 	return item, n, nil
+}
+
+func (item *S2) mustParse(src []byte) {
+	item.format = src[0]
 }
 
 func (item *WithAlias) mustParse(src []byte) {

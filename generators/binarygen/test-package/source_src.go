@@ -196,3 +196,19 @@ type VariableThenFixed struct {
 	b uint32
 	c [5]byte
 }
+
+type SelfRef interface {
+	isSelfRef()
+}
+
+func (S1) isSelfRef() {}
+func (S2) isSelfRef() {}
+
+type S1 struct {
+	format byte `unionTag:"1"`
+	v      int32
+	other  SelfRef
+}
+type S2 struct {
+	format byte `unionTag:"2"`
+}

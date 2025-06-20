@@ -52,7 +52,7 @@ func (t DerivedFromBasic) Origin() types.Type { return t.origin }
 func (t Offset) Origin() types.Type           { return t.Target.Origin() }
 func (t Array) Origin() types.Type            { return t.origin }
 func (t Slice) Origin() types.Type            { return t.origin }
-func (t Union) Origin() types.Type            { return t.origin }
+func (t *Union) Origin() types.Type           { return t.origin }
 func (t Opaque) Origin() types.Type           { return t.origin }
 
 // Struct defines the the binary layout
@@ -118,7 +118,11 @@ func ResolveOffsetRelative(ty Type) OffsetRelative {
 		return ResolveOffsetRelative(ty.Elem)
 	case Offset:
 		return ResolveOffsetRelative(ty.Target)
-	case Union:
+	case *Union:
+		// not supported
+		if ty.SelfReferential {
+			return 0
+		}
 		var out OffsetRelative
 		for _, member := range ty.Members {
 			out |= member.resolveOffsetRelative()
@@ -303,6 +307,8 @@ type Union struct {
 	Members []Struct
 
 	UnionTag UnionTagScheme
+
+	SelfReferential bool
 }
 
 func (Union) IsFixedSize() (BinarySize, bool) { return 0, false }
