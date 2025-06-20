@@ -501,8 +501,6 @@ func (an *Analyser) createFromInterface(dst *Union, ty *types.Named, unionField 
 
 	// resolve the union scheme, given priority to explicit
 	if unionField != nil { // explicit
-		fmt.Println(ty.Obj().Name(), unionField.Name())
-
 		flags := an.unionFlags[unionField.Type().(*types.Named)]
 		// match flags and members
 		byVersion := map[string]*types.Const{}
