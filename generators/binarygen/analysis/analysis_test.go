@@ -78,7 +78,7 @@ func TestInterfaces(t *testing.T) {
 		t.Fatal()
 	}
 
-	u := ana.Tables[ana.ByName("WithUnion")].Fields[2].Type.(Union)
+	u := ana.Tables[ana.ByName("WithUnion")].Fields[2].Type.(*Union)
 	if len(u.UnionTag.(UnionTagExplicit).Flags) != 2 || len(u.Members) != 2 {
 		t.Fatal(u)
 	}
@@ -174,7 +174,7 @@ func TestExternalArguments(t *testing.T) {
 
 func TestImplicitITF(t *testing.T) {
 	ty := ana.Tables[ana.ByName("WithImplicitITF")]
-	unionScheme, ok := ty.Fields[1].Type.(Union).UnionTag.(UnionTagImplicit)
+	unionScheme, ok := ty.Fields[1].Type.(*Union).UnionTag.(UnionTagImplicit)
 	if !ok {
 		t.Fatal()
 	}
@@ -182,7 +182,7 @@ func TestImplicitITF(t *testing.T) {
 		t.Fatal()
 	}
 
-	if len(ana.StandaloneUnions) != 1 {
+	if len(ana.StandaloneUnions) != 2 {
 		t.Fatal()
 	}
 }
@@ -218,6 +218,13 @@ func TestRelativeOffset(t *testing.T) {
 func TestParseEnd(t *testing.T) {
 	ty := ana.Tables[ana.ByName("varSize")]
 	if ty.ParseEnd == nil {
+		t.Fatal()
+	}
+}
+
+func TestSelfReferential(t *testing.T) {
+	ty := ana.StandaloneUnions[ana.ByName("SelfRef")]
+	if !ty.SelfReferential {
 		t.Fatal()
 	}
 }

@@ -46,7 +46,7 @@ func parserForVariableSize(field an.Field, parent an.Struct, cc *gen.Context) st
 		return parserForOpaque(field, parent, cc)
 	case an.Offset:
 		return parserForOffset(field, parent, cc)
-	case an.Union:
+	case *an.Union:
 		return parserForUnion(field, cc)
 	case an.Struct:
 		return parserForStructTo(field, cc, cc.Selector(field.Name))
@@ -407,7 +407,7 @@ func parserForSliceOfOffsets(of an.Offset, cc *gen.Context, count gen.Expression
 
 // -- unions --
 
-func unionCases(u an.Union, cc *gen.Context, providedArguments []an.ProvidedArgument, target string) []string {
+func unionCases(u *an.Union, cc *gen.Context, providedArguments []an.ProvidedArgument, target string) []string {
 	start := cc.Offset.Value()
 	flags := u.UnionTag.TagsCode()
 	var cases []string
@@ -425,7 +425,7 @@ func unionCases(u an.Union, cc *gen.Context, providedArguments []an.ProvidedArgu
 	return cases
 }
 
-func standaloneUnionBody(u an.Union, cc *gen.Context, cases []string) string {
+func standaloneUnionBody(u *an.Union, cc *gen.Context, cases []string) string {
 	// steps :
 	// 	1 : check the length for the format tag
 	//	2 : read the format tag
@@ -457,7 +457,7 @@ func standaloneUnionBody(u an.Union, cc *gen.Context, cases []string) string {
 }
 
 func parserForUnion(field an.Field, cc *gen.Context) string {
-	u := field.Type.(an.Union)
+	u := field.Type.(*an.Union)
 
 	cases := unionCases(u, cc, field.ArgumentsProvidedByFields, cc.Selector(field.Name))
 

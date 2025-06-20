@@ -46,11 +46,18 @@ type Analyser struct {
 
 	// StandaloneUnions returns the union with an implicit union tag scheme,
 	// for which standalone parsing/writing function should be generated
-	StandaloneUnions map[*types.Named]Union
+	StandaloneUnions map[*types.Named]*Union
 
 	// ChildTypes contains types that are used in other types.
 	// For instance, top-level tables have a [false] value.
 	ChildTypes map[*types.Named]bool
+
+	resolvedUnion map[unionKey]*Union // used to handle self referencial unions
+}
+
+type unionKey struct {
+	t   *types.Named
+	tag *types.Var
 }
 
 // ImportSource loads the source go file with go/packages,
@@ -92,8 +99,9 @@ func NewAnalyserFromPkg(pkg *packages.Package, sourcePath, sourceAbsPath string)
 
 	// perform the actual analysis
 	an.Tables = make(map[*types.Named]Struct)
-	an.StandaloneUnions = make(map[*types.Named]Union)
+	an.StandaloneUnions = make(map[*types.Named]*Union)
 	an.ChildTypes = make(map[*types.Named]bool)
+	an.resolvedUnion = make(map[unionKey]*Union)
 	for _, ty := range an.fetchSource() {
 		an.handleTable(ty, false)
 	}
@@ -397,7 +405,20 @@ func (an *Analyser) createTypeFor(ty types.Type, tags parsedTags, decl ast.Expr)
 		}
 	case *types.Interface:
 		// anonymous interface are not supported
-		return an.createFromInterface(ty.(*types.Named), tags.unionField)
+		named := ty.(*types.Named)
+		// handle self referential union
+		key := unionKey{named, tags.unionField}
+		if out, has := an.resolvedUnion[key]; has {
+			if out.origin == nil { // we have a self referential union
+				out.SelfReferential = true
+			}
+			return out
+		}
+		// register a pointer first
+		var out Union
+		an.resolvedUnion[key] = &out
+		an.createFromInterface(&out, named, tags.unionField)
+		return &out
 	default:
 		panic(fmt.Sprintf("unsupported type %s", under))
 	}
@@ -462,7 +483,7 @@ func (an *Analyser) createFromStruct(ty *types.Named) Struct {
 	return out
 }
 
-func (an *Analyser) createFromInterface(ty *types.Named, unionField *types.Var) Union {
+func (an *Analyser) createFromInterface(dst *Union, ty *types.Named, unionField *types.Var) {
 	itfName := ty.Obj().Name()
 	itf := ty.Underlying().(*types.Interface)
 	members := an.interfaces[itf]
@@ -471,16 +492,17 @@ func (an *Analyser) createFromInterface(ty *types.Named, unionField *types.Var) 
 		panic(fmt.Sprintf("interface %s does not have any member", itfName))
 	}
 
-	out := Union{origin: ty}
 	for _, member := range members {
 		// analyse the concrete type
 		st := an.handleTable(member, true)
 
-		out.Members = append(out.Members, st)
+		dst.Members = append(dst.Members, st)
 	}
 
 	// resolve the union scheme, given priority to explicit
 	if unionField != nil { // explicit
+		fmt.Println(ty.Obj().Name(), unionField.Name())
+
 		flags := an.unionFlags[unionField.Type().(*types.Named)]
 		// match flags and members
 		byVersion := map[string]*types.Const{}
@@ -500,13 +522,14 @@ func (an *Analyser) createFromInterface(ty *types.Named, unionField *types.Var) 
 			}
 			scheme.Flags = append(scheme.Flags, flag)
 		}
-		out.UnionTag = scheme
-	} else if scheme, ok := isTagImplicit(out.Members); ok {
-		out.UnionTag = scheme
-		an.StandaloneUnions[ty] = out
+		dst.UnionTag = scheme
+	} else if scheme, ok := isTagImplicit(dst.Members); ok {
+		dst.UnionTag = scheme
+		an.StandaloneUnions[ty] = dst
 	} else {
 		panic(fmt.Sprintf("union field with type %s is missing unionField tag", ty))
 	}
 
-	return out
+	// set this flag at after recursing to detect self referential unions
+	dst.origin = ty
 }

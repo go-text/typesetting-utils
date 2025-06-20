@@ -154,7 +154,7 @@ func requiredArgs(ty an.Type, fieldName string) []argument {
 	switch ty := ty.(type) {
 	case an.Struct:
 		return requiredArgsForStruct(ty)
-	case an.Union:
+	case *an.Union:
 		return requiredArgsForUnion(ty, fieldName)
 	case an.Slice:
 		var args []argument
@@ -178,7 +178,11 @@ func requiredArgs(ty an.Type, fieldName string) []argument {
 }
 
 // return the union of the arguments for each member
-func requiredArgsForUnion(ty an.Union, fieldName string) []argument {
+func requiredArgsForUnion(ty *an.Union, fieldName string) []argument {
+	if ty.SelfReferential {
+		// not supported
+		return nil
+	}
 	all := map[argument]bool{}
 	for _, member := range ty.Members {
 		for _, arg := range requiredArgs(member, fieldName) {

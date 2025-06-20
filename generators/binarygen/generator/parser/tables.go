@@ -79,7 +79,7 @@ func parserForTable(ta an.Struct) []gen.Declaration {
 }
 
 // parserForStanaloneUnion returns the parsing function for the given union.
-func parserForStanaloneUnion(un an.Union) gen.Declaration {
+func parserForStanaloneUnion(un *an.Union) gen.Declaration {
 	context := &gen.Context{
 		Type:      un.Origin().(*types.Named).Obj().Name(),
 		ObjectVar: "item",
