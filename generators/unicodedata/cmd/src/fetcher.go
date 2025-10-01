@@ -2,7 +2,7 @@ package src
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"path"
@@ -45,7 +45,7 @@ func fetchData(url string, fromCache bool) []byte {
 	check(err)
 
 	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	check(err)
 
 	err = os.WriteFile(fileName, data, os.ModePerm)

@@ -25,7 +25,8 @@ func Generate(outputDir string, dataFromCache bool) {
 	// parse
 	fmt.Println("Parsing Unicode files...")
 
-	db := parseUnicodeDatabase(srcs.unicodeData)
+	db, err := parseUnicodeDatabase(srcs.unicodeData)
+	check(err)
 
 	emojis, err := parseAnnexTables(srcs.emoji)
 	check(err)
@@ -147,7 +148,7 @@ func Generate(outputDir string, dataFromCache bool) {
 		generateArabicShaping(db, joiningTypes, w)
 		generateHasArabicJoining(joiningTypes, scripts, w)
 	})
-	process(join("opentype/api/cmap_arabic_pua_table.go"), func(w io.Writer) {
+	process(join("font/cmap_arabic_pua_table.go"), func(w io.Writer) {
 		generateArabicPUAMapping(puaSimp, puaTrad, w)
 	})
 

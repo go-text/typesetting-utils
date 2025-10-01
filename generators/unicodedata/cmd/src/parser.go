@@ -102,12 +102,24 @@ type unicodeEntry struct {
 	shapingItems []rune // remaining after shape
 }
 
-// assume at least 6 fields
-func parseUnicodeEntry(chunks []string) unicodeEntry {
-	var item unicodeEntry
+// legacy range delimiters
+const (
+	noRange uint8 = iota
+	isFirst
+	isLast
+)
 
+// assume at least 6 fields
+func parseUnicodeEntry(chunks []string) (item unicodeEntry, isLegacyRange uint8) {
 	// Rune
 	item.char = parseRune(chunks[0])
+
+	// Legacy range start/stop
+	if strings.HasSuffix(chunks[1], "First>") {
+		isLegacyRange = isFirst
+	} else if strings.HasSuffix(chunks[1], "Last>") {
+		isLegacyRange = isLast
+	}
 
 	// General category
 	item.generalCategory = strings.TrimSpace(chunks[2])
@@ -122,11 +134,11 @@ func parseUnicodeEntry(chunks []string) unicodeEntry {
 
 	// we are now looking for <...> XXXX
 	if chunks[5] == "" {
-		return item
+		return item, isLegacyRange
 	}
 
 	if chunks[5][0] != '<' {
-		return item
+		return item, isLegacyRange
 	}
 
 	items := strings.Split(chunks[5], " ")
@@ -138,23 +150,51 @@ func parseUnicodeEntry(chunks []string) unicodeEntry {
 	for _, r := range items[1:] {
 		item.shapingItems = append(item.shapingItems, parseRune(r))
 	}
-	return item
+	return item, isLegacyRange
 }
 
 // rune;comment;General_Category;Canonical_Combining_Class;Bidi_Class;Decomposition_Mapping;...;Bidi_Mirrored
-func parseUnicodeDatabase(b []byte) unicodeDatabase {
+func parseUnicodeDatabase(b []byte) (unicodeDatabase, error) {
 	chars := make([]unicodeEntry, 0, 10_000)
-	for _, chunks := range splitLines(b) {
-		if len(chunks) < 6 {
+	lines := splitLines(b)
+	for i := 0; i < len(lines); i++ {
+		line := lines[i]
+		if len(line) < 6 {
 			continue
 		}
-		chars = append(chars, parseUnicodeEntry(chunks))
+		entry, rangeComment := parseUnicodeEntry(line)
+		rangeEnd := entry.char
+		if rangeComment == isFirst {
+			// parse the next line
+			if i+1 >= len(lines) {
+				return unicodeDatabase{}, errors.New("unmatched range start (EOF)")
+			}
+			nextLine := lines[i+1]
+			if len(line) < 6 {
+				return unicodeDatabase{}, errors.New("unmatched range start (next line to short)")
+			}
+			end, rangeCommentEnd := parseUnicodeEntry(nextLine)
+			if rangeCommentEnd != isLast {
+				return unicodeDatabase{}, errors.New("unmatched range start (next line is missing Last)")
+			}
+			rangeEnd = end.char
+			i++
+		} else if rangeComment == isLast {
+			return unicodeDatabase{}, errors.New("unmatched range start (spurious End)")
+		} else {
+			// regular line, nothing to do
+		}
+
+		for char := entry.char; char <= rangeEnd; char++ {
+			entry.char = char // copy
+			chars = append(chars, entry)
+		}
 	}
 
 	out := unicodeDatabase{chars: chars}
 	out.inferMaps()
 
-	return out
+	return out, nil
 }
 
 // -1 for no shapeT
