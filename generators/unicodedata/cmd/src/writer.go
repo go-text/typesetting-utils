@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"reflect"
 	"sort"
 	"unicode"
 
@@ -481,13 +480,8 @@ func generateGeneralCategories(m map[rune]string, w io.Writer) {
 	for _, cat := range keys {
 		runes := cats[cat]
 		rt := rangetable.New(runes...)
-
-		standard := unicode.Categories[cat]
-		if !reflect.DeepEqual(standard, rt) {
-			check(fmt.Errorf("unexpected content for category %s", cat))
-		}
-
-		fmt.Fprintln(w, fmt.Sprintf("var %s = unicode.%s\n", cat, cat))
+		code := printTable(rt, false)
+		fmt.Fprintln(w, fmt.Sprintf("var %s = %s\n", cat, code))
 	}
 
 	// generate an array of all categories
