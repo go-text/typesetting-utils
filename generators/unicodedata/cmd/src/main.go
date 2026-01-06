@@ -147,7 +147,7 @@ func Generate(outputDir string, dataFromCache bool) {
 		generateArabicShaping(db, joiningTypes, w)
 		generateHasArabicJoining(joiningTypes, scripts, w)
 	})
-	process(join("opentype/api/cmap_arabic_pua_table.go"), func(w io.Writer) {
+	process(join("font/cmap_arabic_pua_table.go"), func(w io.Writer) {
 		generateArabicPUAMapping(puaSimp, puaTrad, w)
 	})
 
