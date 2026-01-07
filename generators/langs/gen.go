@@ -28,7 +28,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -61,11 +60,11 @@ func fetchData() {
 		log.Fatal(err)
 	}
 	defer resp.Body.Close()
-	tags, err := ioutil.ReadAll(resp.Body)
+	tags, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = ioutil.WriteFile("languagetags.html", tags, os.ModePerm)
+	err = os.WriteFile("languagetags.html", tags, os.ModePerm)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -75,11 +74,11 @@ func fetchData() {
 		log.Fatal(err)
 	}
 	defer resp.Body.Close()
-	subtags, err := ioutil.ReadAll(resp.Body)
+	subtags, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = ioutil.WriteFile("language-subtag-registry.txt", subtags, os.ModePerm)
+	err = os.WriteFile("language-subtag-registry.txt", subtags, os.ModePerm)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -87,7 +86,7 @@ func fetchData() {
 
 func expect(condition bool, message string) {
 	if !condition {
-		log.Fatal("assertion error ", message)
+		log.Fatal("assertion error: ", message)
 	}
 }
 
@@ -501,7 +500,12 @@ func (pr *OpenTypeRegistryParser) handleTr(n *html.Node) {
 	if s == nil {
 		s = make(set)
 	}
-	for _, code := range strings.Split(strings.ReplaceAll(isoCodes, " ", ""), ",") {
+	isoCodes = strings.ReplaceAll(isoCodes, " ", "")
+	for _, code := range strings.Split(isoCodes, ",") {
+		// ignore comments
+		if len(code) > 5 {
+			continue
+		}
 		if c, ok := iso_639_3_to_1[code]; ok {
 			code = c
 		}
@@ -511,12 +515,6 @@ func (pr *OpenTypeRegistryParser) handleTr(n *html.Node) {
 	rank += 2 * len(pr.toBCP47[tag])
 	pr.ranks[tag] = rank
 }
-
-// 	def handle_charref (self, name):
-// 		self.handle_data (html_unescape (self, '&#%s;' % name))
-
-// 	def handle_entityref (self, name):
-// 		self.handle_data (html_unescape (self, '&%s;' % name))
 
 // parse the OpenType language system tag registry.
 func (pr *OpenTypeRegistryParser) parse(filename string) {
@@ -731,7 +729,7 @@ func newBCP47Parser() BCP47Parser {
 
 // Parse the BCP 47 subtag registry.
 func (pr *BCP47Parser) parse(filename string) {
-	b, err := ioutil.ReadFile(filename)
+	b, err := os.ReadFile(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -1291,7 +1289,7 @@ func printComplexFunc(w io.Writer) {
 
 	fmt.Fprintln(w, `
 	// Converts a multi-subtag BCP 47 language tag to language tags.`)
-	fmt.Fprintln(w, "func tagsFromComplexLanguage (langStr string) []loader.Tag{")
+	fmt.Fprintln(w, "func tagsFromComplexLanguage (langStr string) []ot.Tag{")
 
 	for _, initial := range complexTagsKeys {
 		items := complexTags[initial]
@@ -1314,9 +1312,9 @@ func printComplexFunc(w io.Writer) {
 			fmt.Fprintf(w, "    /* %s */\n", bcp47.get_name(lt))
 			fmt.Fprintln(w)
 			if len(tags) == 1 {
-				fmt.Fprintf(w, "    return []loader.Tag{%s};  /* %s */\n", hbTag(tags[0]), ot.names[tags[0]])
+				fmt.Fprintf(w, "    return []ot.Tag{%s};  /* %s */\n", hbTag(tags[0]), ot.names[tags[0]])
 			} else {
-				fmt.Fprintln(w, "    return []loader.Tag{")
+				fmt.Fprintln(w, "    return []ot.Tag{")
 				for _, tag := range tags {
 					fmt.Fprintf(w, "      %s,  /* %s */\n", hbTag(tag), ot.names[tag])
 					fmt.Fprintln(w)
@@ -1366,9 +1364,9 @@ func printComplexFunc(w io.Writer) {
 			fmt.Fprintln(w, ") {")
 			fmt.Fprintf(w, "      /* %s */\n", bcp47.get_name(lt))
 			if len(tags) == 1 {
-				fmt.Fprintf(w, "    return []loader.Tag{%s};  /* %s */\n", hbTag(tags[0]), ot.names[tags[0]])
+				fmt.Fprintf(w, "    return []ot.Tag{%s};  /* %s */\n", hbTag(tags[0]), ot.names[tags[0]])
 			} else {
-				fmt.Fprintln(w, "      return []loader.Tag{")
+				fmt.Fprintln(w, "      return []ot.Tag{")
 				for _, tag := range tags {
 					fmt.Fprintf(w, "\t%s,  /* %s */\n", hbTag(tag), ot.names[tag])
 				}
@@ -1392,7 +1390,7 @@ func printAmbiguous(w io.Writer) {
 	// many language tags) and the best tag is not the alphabetically first, or if
 	// the best tag consists of multiple subtags, or if the best tag does not appear
 	// in 'otLanguages'.`)
-	fmt.Fprintln(w, "func ambiguousTagToLanguage (tag loader.Tag) language.Language {")
+	fmt.Fprintln(w, "func ambiguousTagToLanguage (tag ot.Tag) language.Language {")
 	fmt.Fprintln(w, "  switch tag {")
 
 	for _, otTag := range sortedKeys {

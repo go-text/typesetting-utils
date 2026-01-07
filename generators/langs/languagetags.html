@@ -1,685 +1,917 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
+		<html
+			class="layout layout-holy-grail   show-table-of-contents conceptual show-breadcrumb default-focus"
+			lang="en-us"
+			dir="ltr"
+			data-authenticated="false"
+			data-auth-status-determined="false"
+			data-target="docs"
+			x-ms-format-detection="none"
+		>
+			
+		<head>
+			<title>Language system tags (OpenType 1.9.1) - Typography | Microsoft Learn</title>
+			<meta charset="utf-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+			<meta name="color-scheme" content="light dark" />
 
+			<meta name="description" content="Language system tags (OpenType 1.9.1)" />
+			<link rel="canonical" href="https://learn.microsoft.com/en-us/typography/opentype/spec/languagetags" /> 
 
+			<!-- Non-customizable open graph and sharing-related metadata -->
+			<meta name="twitter:card" content="summary_large_image" />
+			<meta name="twitter:site" content="@MicrosoftLearn" />
+			<meta property="og:type" content="website" />
+			<meta property="og:image:alt" content="Microsoft Learn" />
+			<meta property="og:image" content="https://learn.microsoft.com/en-us/media/open-graph-image.png" />
+			<!-- Page specific open graph and sharing-related metadata -->
+			<meta property="og:title" content="Language system tags (OpenType 1.9.1) - Typography" />
+			<meta property="og:url" content="https://learn.microsoft.com/en-us/typography/opentype/spec/languagetags" />
+			<meta property="og:description" content="Language system tags (OpenType 1.9.1)" />
+			<meta name="platform_id" content="91c1c92e-4871-294a-8897-4f128619041a" /> <meta name="scope" content="typography" />
+			<meta name="locale" content="en-us" />
+			 <meta name="adobe-target" content="true" /> 
+			<meta name="uhfHeaderId" content="MSDocsHeader-MSTypography" />
 
+			<meta name="page_type" content="conceptual" />
 
+			<!--page specific meta tags-->
+			
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<html class="hasSidebar hasPageActions hasBreadcrumb conceptual has-default-focus theme-light" lang="en-us" dir="ltr" data-css-variable-support="true" data-authenticated="false" data-auth-status-determined="false" data-target="docs" x-ms-format-detection="none">
-
-<head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta property="og:title" content="Language system tags (OpenType 1.9) - Typography" />
-	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://learn.microsoft.com/en-us/typography/opentype/spec/languagetags" />
-			<meta property="og:description" content="Language system tags (OpenType 1.9)" />
-
-	<meta property="og:image" content="https://learn.microsoft.com/en-us/media/logos/logo-ms-social.png" />
-
-	<meta property="og:image:alt" content="Microsoft Logo" />
-
-	<meta name="twitter:card" content="summary" />
-
-	<meta name="twitter:site" content="@MicrosoftLearn" />
-
-	<meta name="color-scheme" content="light dark">
-
-
-	<meta name="author" content="PeterCon" />
-<meta name="breadcrumb_path" content="/typography/breadcrumbs/toc.json" />
-<meta name="depot_name" content="Win.typography" />
-<meta name="description" content="Language system tags (OpenType 1.9)" />
-<meta name="document_id" content="662c6f54-f90c-52ed-dca2-0f0a0a49fee5" />
-<meta name="document_version_independent_id" content="6aa33924-d45e-60c3-a9fd-e317ff662993" />
-<meta name="gitcommit" content="https://github.com/MicrosoftDocs/typography/blob/4d2aeb16c92d5f7890c37f4b524728688c102675/typographydocs/opentype/spec/languagetags.md" />
-<meta name="keywords" content="typography" />
-<meta name="locale" content="en-us" />
-<meta name="ms.author" content="alib" />
-<meta name="ms.date" content="09/30/2022" />
-<meta name="ms.prod" content="typography" />
-<meta name="ms.topic" content="article" />
-<meta name="original_content_git_url" content="https://github.com/MicrosoftDocs/typography/blob/live/typographydocs/opentype/spec/languagetags.md" />
-<meta name="page_type" content="conceptual" />
-<meta name="pdf_url_template" content="https://learn.microsoft.com/pdfstore/en-us/Win.typography/{branchName}{pdfName}" />
-<meta name="schema" content="Conceptual" />
-<meta name="site_name" content="Docs" />
-<meta name="source-file" content="https://www.microsoft.com/typography/otspec/languagetags.htm" />
-<meta name="toc_rel" content="../../toc.json" />
-<meta name="uhfHeaderId" content="MSDocsHeader-MSTypography" />
-<meta name="updated_at" content="2022-09-30 11:47 PM" />
-<meta name="word_count" content="3813" />
-
-
-	<meta name="persistent_id" content="91c1c92e-4871-294a-8897-4f128619041a" />
+			<!-- custom meta tags -->
+			
+		<meta name="ms.service" content="typography" />
+	
+		<meta name="breadcrumb_path" content="/typography/breadcrumbs/toc.json" />
+	
+		<meta name="feedback_system" content="OpenSource" />
+	
+		<meta name="author" content="PeterCon" />
+	
+		<meta name="ms.author" content="pconstable" />
+	
+		<meta name="ms.date" content="2024-12-05T00:00:00Z" />
+	
+		<meta name="feedback_product_url" content="https://github.com/MicrosoftDocs/typography-issues/issues/new?template=opentype-docs-feedback.yml" />
+	
+		<meta name="keywords" content="typography" />
+	
+		<meta name="ms.topic" content="article" />
+	
+		<meta name="source-file" content="https://www.microsoft.com/typography/otspec/languagetags.htm" />
+	
+		<meta name="document_id" content="662c6f54-f90c-52ed-dca2-0f0a0a49fee5" />
+	
+		<meta name="document_version_independent_id" content="6aa33924-d45e-60c3-a9fd-e317ff662993" />
+	
+		<meta name="updated_at" content="2024-12-06T06:35:00Z" />
+	
+		<meta name="original_content_git_url" content="https://github.com/MicrosoftDocs/typography/blob/live/typographydocs/opentype/spec/languagetags.md" />
+	
+		<meta name="gitcommit" content="https://github.com/MicrosoftDocs/typography/blob/a28e0b00c0caeab295cb11948fcd9ff62852fa49/typographydocs/opentype/spec/languagetags.md" />
+	
+		<meta name="git_commit_id" content="a28e0b00c0caeab295cb11948fcd9ff62852fa49" />
+	
+		<meta name="site_name" content="Docs" />
+	
+		<meta name="depot_name" content="Win.typography" />
+	
+		<meta name="schema" content="Conceptual" />
+	
+		<meta name="toc_rel" content="../../toc.json" />
+	
+		<meta name="pdf_url_template" content="https://learn.microsoft.com/pdfstore/en-us/Win.typography/{branchName}{pdfName}" />
+	
+		<meta name="feedback_help_link_type" content="" />
+	
+		<meta name="feedback_help_link_url" content="" />
+	
+		<meta name="word_count" content="4055" />
+	
+		<meta name="asset_id" content="opentype/spec/languagetags" />
+	
+		<meta name="moniker_range_name" content="" />
+	
+		<meta name="item_type" content="Content" />
+	
+		<meta name="source_path" content="typographydocs/opentype/spec/languagetags.md" />
+	
+		<meta name="previous_tlsh_hash" content="8FDED9923A4FEC812F1301071E7322149D61AB51F2BC18AE8D18F0916E5836BFD79C35E92F37DAC83532124F46F536BABFBCA1BF852C1306688A575C67A8A19A76B6721C94" />
+	
+		<meta name="github_feedback_content_git_url" content="https://github.com/MicrosoftDocs/typography/blob/live/typographydocs/opentype/spec/languagetags.md" />
+	 
+		<meta name="cmProducts" content="https://microsoft-devrel.poolparty.biz/DevRelOfferingOntology/c6f99e62-1cf6-4b71-af9b-649b05f80cce" data-source="generated" />
+	
+		<meta name="spProducts" content="https://microsoft-devrel.poolparty.biz/DevRelOfferingOntology/3f56b378-07a9-4fa1-afe8-9889fdc77628" data-source="generated" />
 	
 
+			<!-- assets and js globals -->
+			
+			<link rel="stylesheet" href="/static/assets/0.4.03293.7387-5105f7e2/styles/site-ltr.css" />
+			
+			<link rel="preconnect" href="//mscom.demdex.net" crossorigin />
+						<link rel="dns-prefetch" href="//target.microsoft.com" />
+						<link rel="dns-prefetch" href="//microsoftmscompoc.tt.omtrdc.net" />
+						<link
+							rel="preload"
+							as="script"
+							href="/static/third-party/adobe-target/at-js/2.9.0/at.js"
+							integrity="sha384-l4AKhsU8cUWSht4SaJU5JWcHEWh1m4UTqL08s6b/hqBLAeIDxTNl+AMSxTLx6YMI"
+							crossorigin="anonymous"
+							id="adobe-target-script"
+							type="application/javascript"
+						/>
+			<script src="https://wcpstatic.microsoft.com/mscc/lib/v2/wcp-consent.js"></script>
+			<script src="https://js.monitor.azure.com/scripts/c/ms.jsll-4.min.js"></script>
+			<script src="/_themes/docs.theme/master/en-us/_themes/global/deprecation.js"></script>
 
-	<meta name="cmProducts" content="https://authoring-docs-microsoft.poolparty.biz/devrel/cb49e66a-8528-497d-adaa-eade2d009d1b" data-source="generated" />
-
-	<meta name="cmProducts" content="https://authoring-docs-microsoft.poolparty.biz/devrel/d3928677-9b71-43a6-875f-004dc4f98b65" data-source="generated" />
-
-	<meta name="cmProducts" content="https://authoring-docs-microsoft.poolparty.biz/devrel/65ca8d99-bbc4-4d52-a348-666fc2eb372e" data-source="generated" />
-
-	
-
-	<meta name="scope" content="typography" />
-	<meta name="github_feedback_content_git_url" content="https://github.com/MicrosoftDocs/typography/blob/live/typographydocs/opentype/spec/languagetags.md" />
-<link href="https://learn.microsoft.com/en-us/typography/opentype/spec/languagetags" rel="canonical">
-	<title>Language system tags (OpenType 1.9) - Typography | Microsoft Learn</title>
-
-		<link rel="stylesheet" href="/_themes/docs.theme/master/en-us/_themes/styles/98ec3a2a.site-ltr.css ">
-
-	
-
-	<script id="msdocs-script">
-	var msDocs = {
-		data: {
-			timeOrigin: Date.now(),
-			contentLocale: 'en-us',
-			contentDir: 'ltr',
-			userLocale: 'en-us',
-			userDir: 'ltr',
-			pageTemplate: 'Conceptual',
-			brand: '',
-			context: {
-			},
-			hasBinaryRating: true,
-			hasGithubIssues: true,
-			standardFeedback: false,
-			showFeedbackReport: false,
-			enableTutorialFeedback: false,
-			contentWellNotification: '',
-			feedbackSystem: 'GitHub',
-			feedbackGitHubRepo: 'MicrosoftDocs/typography-issues',
-			feedbackProductUrl: '',
-			extendBreadcrumb: true,
-			isEditDisplayable: false,
-			hideViewSource: false,
-			hasPageActions: true,
-			hasPrintButton: true,
-			hasBookmark: true,
-			hasShare: true,
-			isPermissioned: false,
-			hasRecommendations: false,
-			contributors: [
-						{ name: "PeterCon", url: "https://github.com/PeterCon" },
-						{ name: "PeterConstable", url: "https://github.com/PeterConstable" },
-						{ name: "mijacobs", url: "https://github.com/mijacobs" }
-],
-		},
-		functions:{}
-	};
+			<!-- msdocs global object -->
+			<script id="msdocs-script">
+		var msDocs = {
+  "environment": {
+    "accessLevel": "online",
+    "azurePortalHostname": "portal.azure.com",
+    "reviewFeatures": false,
+    "supportLevel": "production",
+    "systemContent": true,
+    "siteName": "learn",
+    "legacyHosting": false
+  },
+  "data": {
+    "contentLocale": "en-us",
+    "contentDir": "ltr",
+    "userLocale": "en-us",
+    "userDir": "ltr",
+    "pageTemplate": "Conceptual",
+    "brand": "",
+    "context": {},
+    "standardFeedback": false,
+    "showFeedbackReport": false,
+    "feedbackHelpLinkType": "",
+    "feedbackHelpLinkUrl": "",
+    "feedbackSystem": "OpenSource",
+    "feedbackGitHubRepo": "",
+    "feedbackProductUrl": "https://github.com/MicrosoftDocs/typography-issues/issues/new?template=opentype-docs-feedback.yml",
+    "extendBreadcrumb": false,
+    "isEditDisplayable": false,
+    "isPrivateUnauthorized": false,
+    "hideViewSource": false,
+    "isPermissioned": false,
+    "hasRecommendations": true,
+    "contributors": [
+      {
+        "name": "PeterConstable",
+        "url": "https://github.com/PeterConstable"
+      },
+      {
+        "name": "mijacobs",
+        "url": "https://github.com/mijacobs"
+      }
+    ],
+    "openSourceFeedbackIssueUrl": "https://github.com/MicrosoftDocs/typography-issues/issues/new?template=opentype-docs-feedback.yml",
+    "openSourceFeedbackIssueTitle": ""
+  },
+  "functions": {}
+};;
 	</script>
-	<script src="https://wcpstatic.microsoft.com/mscc/lib/v2/wcp-consent.js"></script>
-	<script src="https://js.monitor.azure.com/scripts/c/ms.jsll-3.min.js"></script>
 
-	<script src="/_themes/docs.theme/master/en-us/_themes/global/67a45209.deprecation.js"></script>
-		<link rel="preconnect" href="//mscom.demdex.net" crossorigin>
-		<link rel="dns-prefetch" href="//target.microsoft.com">
-		<link rel="dns-prefetch" href="//microsoftmscompoc.tt.omtrdc.net">
-		<link
-			rel="preload"
-			as="script"
-			href="/static/third-party/adobe-target/at-js/2.9.0/at.js"
-			integrity="sha384-1/viVM50hgc33O2gOgkWz3EjiD/Fy/ld1dKYXJRUyjNYVEjSUGcSN+iPiQF7e4cu"
-			crossorigin="anonymous"
-			id="adobe-target-script"
-			type="application/javascript"
-		/>
-		<script src="/_themes/docs.theme/master/en-us/_themes/global/20fc89aa.at-config.js"></script>
-		<script src="/_themes/docs.theme/master/en-us/_themes/scripts/c44414d3.index-docs.js"></script>
-</head>
+			<!-- base scripts, msdocs global should be before this -->
+			<script src="/static/assets/0.4.03293.7387-5105f7e2/scripts/en-us/index-docs.js"></script>
+			
 
-<body lang="en-us" dir="ltr">
-	<div class="header-holder has-default-focus">
-		<a href="#main" class="skip-to-main-link has-outline-color-text visually-hidden-until-focused position-fixed has-inner-focus focus-visible top-0 left-0 right-0 padding-xs has-text-centered has-body-background" tabindex="1">Skip to main content</a>
-
-		<div hidden id="cookie-consent-holder"></div>
-
-		<div id="unsupported-browser" style="
-			background-color: white;
-			color: black;
-			padding: 16px;
-			border-bottom: 1px solid grey;"
+			<!-- json-ld -->
+			
+		</head>
+	
+			<body
+				id="body"
+				data-bi-name="body"
+				class="layout-body "
+				lang="en-us"
+				dir="ltr"
+			>
+				<header class="layout-body-header">
+		<div class="header-holder has-default-focus">
+			
+		<a
+			href="#main"
+			
+			style="z-index: 1070"
+			class="outline-color-text visually-hidden-until-focused position-fixed inner-focus focus-visible top-0 left-0 right-0 padding-xs text-align-center background-color-body"
+			
+		>
+			Skip to main content
+		</a>
+	
+		<a
+			href="#"
+			data-skip-to-ask-learn
+			style="z-index: 1070"
+			class="outline-color-text visually-hidden-until-focused position-fixed inner-focus focus-visible top-0 left-0 right-0 padding-xs text-align-center background-color-body"
 			hidden
 		>
-			<div style="max-width: 800px; margin: 0 auto;">
-				<p style="font-size: 24px">This browser is no longer supported.</p>
-				<p style="font-size: 16px; margin-top: 16px;">Upgrade to Microsoft Edge to take advantage of the latest features, security updates, and technical support.</p>
-				<div style="margin-top: 12px;">
-					<a href="https://go.microsoft.com/fwlink/p/?LinkID=2092881 "
-						style="
-						background-color: #0078d4;
-						border: 1px solid #0078d4;
-						color: white;
-						padding: 6px 12px;
-						border-radius: 2px;
-						display: inline-block;
-						">
-Download Microsoft Edge					</a>
-					<a href="https://learn.microsoft.com/en-us/lifecycle/faq/internet-explorer-microsoft-edge"
-						style="
-							background-color: white;
-							padding: 6px 12px;
-							border: 1px solid #505050;
-							color: #171717;
-							border-radius: 2px;
-							display: inline-block;
-							">
-More info about Internet Explorer and Microsoft Edge					</a>
+			Skip to Ask Learn chat experience
+		</a>
+	
+
+			<div hidden id="cookie-consent-holder" data-test-id="cookie-consent-container"></div>
+			<!-- Unsupported browser warning -->
+			<div
+				id="unsupported-browser"
+				style="background-color: white; color: black; padding: 16px; border-bottom: 1px solid grey;"
+				hidden
+			>
+				<div style="max-width: 800px; margin: 0 auto;">
+					<p style="font-size: 24px">This browser is no longer supported.</p>
+					<p style="font-size: 16px; margin-top: 16px;">
+						Upgrade to Microsoft Edge to take advantage of the latest features, security updates, and technical support.
+					</p>
+					<div style="margin-top: 12px;">
+						<a
+							href="https://go.microsoft.com/fwlink/p/?LinkID=2092881 "
+							style="background-color: #0078d4; border: 1px solid #0078d4; color: white; padding: 6px 12px; border-radius: 2px; display: inline-block;"
+						>
+							Download Microsoft Edge
+						</a>
+						<a
+							href="https://learn.microsoft.com/en-us/lifecycle/faq/internet-explorer-microsoft-edge"
+							style="background-color: white; padding: 6px 12px; border: 1px solid #505050; color: #171717; border-radius: 2px; display: inline-block;"
+						>
+							More info about Internet Explorer and Microsoft Edge
+						</a>
+					</div>
 				</div>
 			</div>
-
+			<!-- site header -->
+			<header
+				id="ms--site-header"
+				data-test-id="site-header-wrapper"
+				role="banner"
+				itemscope="itemscope"
+				itemtype="http://schema.org/Organization"
+			>
+				<div
+					id="ms--mobile-nav"
+					class="site-header display-none-tablet padding-inline-none gap-none"
+					data-bi-name="mobile-header"
+					data-test-id="mobile-header"
+				></div>
+				<div
+					id="ms--primary-nav"
+					class="site-header display-none display-flex-tablet"
+					data-bi-name="L1-header"
+					data-test-id="primary-header"
+				></div>
+				<div
+					id="ms--secondary-nav"
+					class="site-header display-none display-flex-tablet"
+					data-bi-name="L2-header"
+					data-test-id="secondary-header"
+					
+				></div>
+			</header>
+			
+		<!-- banner -->
+		<div data-banner>
+			<div id="disclaimer-holder"></div>
+			
 		</div>
-		<!-- liquid-tag banners global -->
-		<div id="headerAreaHolder" data-bi-name="header">
-<header role="banner" itemscope="itemscope" itemtype="http://schema.org/Organization">
-	<div class="nav-bar">
-		<div class="nav-bar-brand">
-			<a itemprop="url" href="https://www.microsoft.com" aria-label="Microsoft" class="nav-bar-button">
-				<div class="nav-bar-logo has-background-image theme-display is-light" role="presentation" aria-hidden="true" itemprop="logo" itemscope="itemscope"></div>
-				<div class="nav-bar-logo has-background-image theme-display is-dark is-high-contrast" role="presentation" aria-hidden="true" itemprop="logo" itemscope="itemscope"></div>
-			</a>
+		<!-- banner end -->
+	
 		</div>
-	</div>
-	<div class="nav-bar border-top is-hidden-mobile"></div>
-</header>		</div>
-
-
-			<div id="content-header" class="content-header uhf-container has-padding has-default-focus border-bottom-none" data-bi-name="content-header">
-				<div class="content-header-controls margin-xxs margin-inline-sm-tablet">
-					<button type="button" class="contents-button button button-sm margin-right-xxs" data-bi-name="contents-expand" aria-haspopup="true" data-contents-button>
-						<span class="icon"><span class="docon docon-menu" aria-hidden="true"></span></span>
-						<span class="contents-expand-title">
-Table of contents						</span>
-					</button>
-					<button type="button" class="ap-collapse-behavior ap-expanded button button-sm" data-bi-name="ap-collapse" aria-controls="action-panel">
-						<span class="icon"><span class="docon docon-exit-mode" aria-hidden="true"></span></span>
-						<span>Exit focus mode</span>
-					</button>
-				</div>
+	</header>
+				 <section
+					id="layout-body-menu"
+					class="layout-body-menu display-flex"
+					data-bi-name="menu"
+			  >
+					
+		<div
+			id="left-container"
+			class="left-container display-none display-block-tablet padding-inline-sm padding-bottom-sm width-full"
+			data-toc-container="true"
+		>
+			<!-- Regular TOC content (default) -->
+			<div id="ms--toc-content" class="height-full">
+				<nav
+					id="affixed-left-container"
+					class="margin-top-sm-tablet position-sticky display-flex flex-direction-column"
+					aria-label="Primary"
+					data-bi-name="left-toc"
+					role="navigation"
+				></nav>
 			</div>
-
-		<div id="disclaimer-holder" class="has-overflow-hidden has-default-focus">
-			<!-- liquid-tag banners sectional -->
-		</div>
-	</div>
-
-	<div class="mainContainer  uhf-container has-default-focus" data-bi-name="body">
-
-		<div class="columns has-large-gaps is-gapless-mobile ">
-
-			<div id="left-container" class="left-container is-hidden-mobile column is-one-third-tablet is-one-quarter-desktop">
-				<nav id="affixed-left-container" class="margin-top-sm-tablet position-sticky display-flex flex-direction-column" role="navigation" aria-label="Primary"></nav>
+			<!-- Collapsible TOC content (hidden by default) -->
+			<div id="ms--toc-content-collapsible" class="height-full" hidden>
+				<nav
+					id="affixed-left-container"
+					class="margin-top-sm-tablet position-sticky display-flex flex-direction-column"
+					aria-label="Primary"
+					data-bi-name="left-toc"
+					role="navigation"
+				>
+					<div
+						id="ms--collapsible-toc-header"
+						class="display-flex justify-content-flex-end margin-bottom-xxs"
+					>
+						<button
+							type="button"
+							class="button button-clear inner-focus"
+							data-collapsible-toc-toggle
+							aria-expanded="true"
+							aria-controls="ms--collapsible-toc-content"
+							aria-label="Table of contents"
+						>
+							<span class="icon font-size-h4" aria-hidden="true">
+								<span class="docon docon-panel-left-contract"></span>
+							</span>
+						</button>
+					</div>
+				</nav>
 			</div>
+		</div>
+	
+			  </section>
 
-			<!-- .primary-holder -->
-			<section class="primary-holder column is-two-thirds-tablet is-three-quarters-desktop">
-				<!--div.columns -->
-				<div class="columns is-gapless-mobile has-large-gaps ">
-
-
-					<div id="main-column" class="column  is-full is-8-desktop">
-
-						<main id="main" class="" role="main" data-bi-name="content" lang="en-us" dir="ltr">
-							<!-- article-header -->
-							<div id="article-header" class="background-color-body margin-top-sm-tablet margin-bottom-xs display-none-print">
-								<div class="display-flex align-items-center ">
-									<details id="article-header-breadcrumbs-overflow-popover" class="popover" data-for="article-header-breadcrumbs">
-										<summary class="button button-clear button-primary button-sm inner-focus" aria-label="All breadcrumbs">
-											<span class="icon">
-												<span class="docon docon-more"></span>
-											</span>
-										</summary>
-										<div id="article-header-breadcrumbs-overflow" class="popover-content padding-none">
-
-										</div>
-									</details>
-									<bread-crumbs id="article-header-breadcrumbs" data-test-id="article-header-breadcrumbs" class="overflow-hidden flex-grow-1 margin-right-sm margin-right-md-tablet margin-right-lg-desktop margin-left-negative-xxs padding-left-xxs" id="page-breadcrumbs"></bread-crumbs>
-
-									<div id="article-header-page-actions"  class="opacity-none margin-left-auto display-flex flex-wrap-no-wrap align-items-stretch">
-
-										<a
-											id="lang-link-tablet"
-											class="button button-primary button-clear button-sm display-none display-inline-flex-tablet"
-											title="Read in English" data-bi-name="language-toggle"
-											data-read-in-link
-											hidden>
-											<span class="icon margin-none" aria-hidden="true" data-read-in-link-icon>
-												<span class="docon docon-locale-globe"></span>
-											</span>
-											<span class="is-visually-hidden" data-read-in-link-text>Read in English</span>
-										</a>
-
-											<button
-												type="button"
-												class="collection button button-clear button-sm button-primary display-none display-inline-flex-tablet"
-												data-list-type="collection"
-												data-bi-name="collection"
-												title="Add to collection">
-												<span class="icon margin-none" aria-hidden="true">
-													<span class="docon docon-circle-addition"></span>
-												</span>
-												<span class="collection-status is-visually-hidden">Save</span>
-											</button>
-										
-
-											<a	data-contenteditbtn
-												class="button button-clear button-sm text-decoration-none button-primary display-none display-inline-flex-tablet"
-												aria-label="Edit"
-												title="Edit This Document"
-												data-bi-name="edit"
-
-													hidden
-
-														href="https://github.com/MicrosoftDocs/typography/blob/live/typographydocs/opentype/spec/languagetags.md"
-											>
-												<span class="icon margin-none" aria-hidden="true">
-													<span class="docon docon-edit-outline"></span>
-												</span>
-											</a>
-										
-
-
-										
-										<details class="popover popover-right" id="article-header-page-actions-overflow">
-											<summary class="justify-content-flex-start button button-clear button-sm button-primary" aria-label="More actions">
-												<span class="icon" aria-hidden="true">
-													<span class="docon docon-more-vertical"></span>
-												</span>
-											</summary>
-											<div class="popover-content padding-none">
-													<button
-														data-page-action-item="overflow-mobile"
-														type="button"
-														class="justify-content-flex-start button-block button-sm has-inner-focus button button-clear display-none-tablet"
-														data-bi-name="contents-expand"
-														data-contents-button
-														data-popover-close>
-														<span class="icon">
-															<span class="docon docon-editor-list-bullet" aria-hidden="true"></span>
-														</span>
-															<span class="contents-expand-title">Table of contents</span>
-													</button>
-
-												<a
-													id="lang-link-overflow"
-													class="justify-content-flex-start button-sm has-inner-focus button button-clear button-block display-none-tablet"
-													title="Read in English" data-bi-name="language-toggle"
-													data-page-action-item="overflow-mobile"
-													data-check-hidden="true"
-													data-read-in-link
-													hidden
-													>
-													<span class="icon" aria-hidden="true" data-read-in-link-icon>
-														<span class="docon docon-locale-globe"></span>
-													</span>
-													<span data-read-in-link-text>Read in English</span>
-												</a>
-
-													<button
-														type="button"
-														class="collection justify-content-flex-start button button-clear button-sm has-inner-focus button-block display-none-tablet"
-														data-list-type="collection"
-														data-bi-name="collection"
-														title="Add to collection"
-														data-page-action-item="overflow-mobile"
-														data-check-hidden="true"
-														data-popover-close>
-														<span class="icon" aria-hidden="true">
-															<span class="docon docon-circle-addition"></span>
-														</span>
-														<span class="collection-status">Save</span>
-													</button>
-
-													<a	data-contenteditbtn
-														class="button button-clear button-block button-sm has-inner-focus justify-content-flex-start text-decoration-none display-none-tablet"
-														aria-label="Edit"
-														title="Edit This Document"
-														data-bi-name="edit"
-
-															hidden
-
-																href="https://github.com/MicrosoftDocs/typography/blob/live/typographydocs/opentype/spec/languagetags.md"
-													>
-														<span class="icon" aria-hidden="true">
-															<span class="docon docon-edit-outline"></span>
-														</span>
-														<span>Edit</span>
-													</a>
-
-													<button
-														class="button button-block button-clear button-sm justify-content-flex-start has-inner-focus"
-														title="Print"
-														type="button"
-														aria-label="Print"
-														data-bi-name="print"
-														data-page-action-item="overflow-all"
-														data-popover-close
-														data-print-page
-														data-check-hidden="true">
-														<span class="icon" aria-hidden="true">
-															<span class="docon docon-print"></span>
-														</span>
-														<span>Print</span>
-													</button>
-
-													<div aria-hidden="true" class="margin-none
-														border-top" data-page-action-item="overflow-all"></div>
-
-													
-														<a class="button button-clear button-sm has-inner-focus button-block text-decoration-none justify-content-flex-start share-twitter" data-bi-name="twitter" data-page-action-item="overflow-all">
-															<span class="icon" aria-hidden="true">
-																<span class="docon docon-brand-twitter"></span>
-															</span>
-															<span>Twitter</span>
-														</a>
-														<a class="button button-clear button-sm has-inner-focus button-block text-decoration-none justify-content-flex-start share-linkedin" data-bi-name="linkedin" data-page-action-item="overflow-all">
-															<span class="icon" aria-hidden="true">
-																<span class="docon docon-brand-linkedin"></span>
-															</span>
-															<span>LinkedIn</span>
-														</a>
-														<a class="button button-clear button-sm button-block has-inner-focus text-decoration-none justify-content-flex-start share-facebook" data-bi-name="facebook" data-page-action-item="overflow-all">
-															<span class="icon" aria-hidden="true">
-																<span class="docon docon-brand-facebook"></span>
-															</span>
-															<span>Facebook</span>
-														</a>
-														<a class="button button-clear button-sm button-block has-inner-focus text-decoration-none justify-content-flex-start share-email" data-bi-name="email" data-page-action-item="overflow-all">
-															<span class="icon" aria-hidden="true">
-																<span class="docon docon-mail-message-fill"></span>
-															</span>
-															<span>Email</span>
-														</a>
-												
-											</div>
-										</details>
-										
-									</div>
-								</div>
-							</div>
-							<!-- end article-header -->
-
-
-							<div>
-								<button type="button" class="border contents-button button button-clear button-sm is-hidden-tablet has-inner-focus" data-bi-name="contents-expand" data-contents-button hidden>
-									<span class="icon">
-										<span class="docon docon-editor-list-bullet" aria-hidden="true"></span>
-									</span>
-										<span class="contents-expand-title">Table of contents</span>
-								</button>
-							</div>
-
-							<!-- end mobile-contents button  -->
-
-							<div class="content ">
-
-
-								<h1 id="language-system-tags">Language System Tags</h1>
-
-
-									<div class="display-flex justify-content-space-between align-items-center flex-wrap-wrap page-metadata-container">
-										<div class="margin-right-xxs">
-											<ul class="metadata page-metadata" data-bi-name="page info" lang="en-us" dir="ltr">
-													<li>
-Article													</li>
-													<li class="visibility-hidden-visual-diff">
-														<time class="is-invisible" data-article-date aria-label="Article review date" datetime="2022-09-30T23:47:00Z" data-article-date-source="git">09/30/2022</time>
-													</li>
-														<li class="contributors-holder display-none-print">
-															<button aria-label="View all contributors" class="contributors-button link-button" data-bi-name="contributors" title="View all contributors">
-																	3 contributors
-															</button>
-														</li>
-											</ul>
-										</div>
-
-<div id="user-feedback" class="margin-block-xxs display-none-print" data-hide-on-archived>
-	<button
-		id="user-feedback-button"
-		data-test-id="conceptual-feedback-button"
-		class="button button-sm button-clear button-primary"
-		type="button"
-		data-bi-name="user-feedback-button"
-		data-user-feedback-button
+				<main
+					id="main"
+					role="main"
+					class="layout-body-main "
+					data-bi-name="content"
+					lang="en-us"
+					dir="ltr"
+				>
+					
+			<div
+		id="ms--content-header"
+		class="content-header default-focus border-bottom-none"
+		data-bi-name="content-header"
 	>
-		<span class="icon" aria-hidden="true">
-			<span class="docon docon-like"></span>
-		</span>
-		<span>Feedback</span>
-	</button>
-</div>
-									</div>
+		<div class="content-header-controls margin-xxs margin-inline-sm-tablet">
+			<button
+				type="button"
+				class="contents-button button button-sm margin-right-xxs"
+				data-bi-name="contents-expand"
+				aria-haspopup="true"
+				data-contents-button
+			>
+				<span class="icon" aria-hidden="true"><span class="docon docon-menu"></span></span>
+				<span class="contents-expand-title"> Table of contents </span>
+			</button>
+			<button
+				type="button"
+				class="ap-collapse-behavior ap-expanded button button-sm"
+				data-bi-name="ap-collapse"
+				aria-controls="action-panel"
+			>
+				<span class="icon" aria-hidden="true"><span class="docon docon-exit-mode"></span></span>
+				<span>Exit editor mode</span>
+			</button>
+		</div>
+	</div>
+			<div data-main-column class="padding-sm padding-top-none padding-top-sm-tablet">
+				<div>
+					
+		<div id="article-header" class="background-color-body margin-bottom-xs display-none-print">
+			<div class="display-flex align-items-center justify-content-space-between">
+				
+		<details
+			id="article-header-breadcrumbs-overflow-popover"
+			class="popover"
+			data-for="article-header-breadcrumbs"
+		>
+			<summary
+				class="button button-clear button-primary button-sm inner-focus"
+				aria-label="All breadcrumbs"
+			>
+				<span class="icon">
+					<span class="docon docon-more"></span>
+				</span>
+			</summary>
+			<div id="article-header-breadcrumbs-overflow" class="popover-content padding-none"></div>
+		</details>
 
-									<div id="ms--content-well-notifications" data-bi-name="content-well-notification"></div>
+		<bread-crumbs
+			id="article-header-breadcrumbs"
+			role="group"
+			aria-label="Breadcrumbs"
+			data-test-id="article-header-breadcrumbs"
+			class="overflow-hidden flex-grow-1 margin-right-sm margin-right-md-tablet margin-right-lg-desktop margin-left-negative-xxs padding-left-xxs"
+		></bread-crumbs>
+	 
+		<div
+			id="article-header-page-actions"
+			class="opacity-none margin-left-auto display-flex flex-wrap-no-wrap align-items-stretch"
+		>
+			
+		<button
+			class="button button-sm border-none inner-focus display-none-tablet flex-shrink-0 "
+			data-bi-name="ask-learn-assistant-entry"
+			data-test-id="ask-learn-assistant-modal-entry-mobile"
+			data-ask-learn-modal-entry
+			
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			aria-label="Ask Learn"
+			hidden
+		>
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button
+			class="button button-sm display-none display-inline-flex-tablet display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn "
+			data-bi-name="ask-learn-assistant-entry"
+			
+			data-test-id="ask-learn-assistant-modal-entry-tablet"
+			data-ask-learn-modal-entry
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			hidden
+		>
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button
+			class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn "
+			data-bi-name="ask-learn-assistant-entry"
+			
+			data-test-id="ask-learn-assistant-flyout-entry"
+			data-ask-learn-flyout-entry
+			data-flyout-button="toggle"
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			aria-controls="ask-learn-flyout"
+			hidden
+		>
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+	 
+		<button
+			type="button"
+			id="ms--focus-mode-button"
+			data-focus-mode
+			data-bi-name="focus-mode-entry"
+			class="button button-sm flex-shrink-0 margin-right-xxs display-none display-inline-flex-desktop"
+		>
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-glasses"></span>
+			</span>
+			<span>Focus mode</span>
+		</button>
+	 
 
-										<nav id="center-doc-outline" class="doc-outline is-hidden-desktop display-none-print margin-bottom-sm" data-bi-name="intopic toc" role="navigation" aria-label="In this article">
-											<h2 id="ms--in-this-article" class="title is-6 margin-block-xs">In this article</h2>
-										</nav>
+			<details class="popover popover-right" id="article-header-page-actions-overflow">
+				<summary
+					class="justify-content-flex-start button button-clear button-sm button-primary inner-focus"
+					aria-label="More actions"
+					title="More actions"
+				>
+					<span class="icon" aria-hidden="true">
+						<span class="docon docon-more-vertical"></span>
+					</span>
+				</summary>
+				<div class="popover-content">
+					
+		<button
+			data-page-action-item="overflow-mobile"
+			type="button"
+			class="button-block button-sm inner-focus button button-clear display-none-tablet justify-content-flex-start text-align-left"
+			data-bi-name="contents-expand"
+			data-contents-button
+			data-popover-close
+		>
+			<span class="icon">
+				<span class="docon docon-editor-list-bullet" aria-hidden="true"></span>
+			</span>
+			<span class="contents-expand-title">Table of contents</span>
+		</button>
+	 
+		<a
+			id="lang-link-overflow"
+			class="button-sm inner-focus button button-clear button-block justify-content-flex-start text-align-left"
+			data-bi-name="language-toggle"
+			data-page-action-item="overflow-all"
+			data-check-hidden="true"
+			data-read-in-link
+			href="#"
+			hidden
+		>
+			<span class="icon" aria-hidden="true" data-read-in-link-icon>
+				<span class="docon docon-locale-globe"></span>
+			</span>
+			<span data-read-in-link-text>Read in English</span>
+		</a>
+	 
+		<button
+			type="button"
+			class="collection button button-clear button-sm button-block justify-content-flex-start text-align-left inner-focus"
+			data-list-type="collection"
+			data-bi-name="collection"
+			data-page-action-item="overflow-all"
+			data-check-hidden="true"
+			data-popover-close
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="collection-status">Add</span>
+		</button>
+	
+					
+		<button
+			type="button"
+			class="collection button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus"
+			data-list-type="plan"
+			data-bi-name="plan"
+			data-page-action-item="overflow-all"
+			data-check-hidden="true"
+			data-popover-close
+			hidden
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="plan-status">Add to plan</span>
+		</button>
+	  
+		<a
+			data-contenteditbtn
+			class="button button-clear button-block button-sm inner-focus justify-content-flex-start text-align-left text-decoration-none"
+			data-bi-name="edit"
+			hidden
+			href=""
+			data-original_content_git_url="https://github.com/MicrosoftDocs/typography/blob/live/typographydocs/opentype/spec/languagetags.md"
+			data-original_content_git_url_template="{repo}/blob/{branch}/typographydocs/opentype/spec/languagetags.md"
+			data-pr_repo=""
+			data-pr_branch=""
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-edit-outline"></span>
+			</span>
+			<span>Edit</span>
+		</a>
+	
+					
+		<hr class="margin-block-xxs" />
+		<h4 class="font-size-sm padding-left-xxs">Share via</h4>
+		
+					<a
+						class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-facebook"
+						data-bi-name="facebook"
+						data-page-action-item="overflow-all"
+						href="#"
+					>
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-facebook-share"></span>
+						</span>
+						<span>Facebook</span>
+					</a>
 
-								<!-- <content> -->
-									<p><a name="lang" id="lang"></a></p>
-<p>Language system tags identify the language systems supported in a OpenType Layout font. What is meant by a “language system” in this context is a set of typographic conventions for how text in a given script should be presented. Such conventions may be associated with particular languages, with particular genres of usage, with different publications, and other such factors. For example, particular glyph variants for certain characters may be required for particular languages, or for phonetic transcription or mathematical notation.</p>
-<p>In principle, a given set of conventions may be shared across multiple scenarios. For instance, two different languages (perhaps unrelated) may happen to follow the same conventions. Language system tags can be registered on a perceived-need basis, however; as a result, there is no guarantee that each tag represents a distinct and unique set of conventions. Tags can, however, be registered with the intent of representing conventions that apply to multiple languages. In such cases, the documented description for the tag should reflect that intent.</p>
+					<a
+						href="#"
+						class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-twitter"
+						data-bi-name="twitter"
+						data-page-action-item="overflow-all"
+					>
+						<span class="icon color-text" aria-hidden="true">
+							<span class="docon docon-xlogo-share"></span>
+						</span>
+						<span>x.com</span>
+					</a>
+
+					<a
+						href="#"
+						class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-linkedin"
+						data-bi-name="linkedin"
+						data-page-action-item="overflow-all"
+					>
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-linked-in-logo"></span>
+						</span>
+						<span>LinkedIn</span>
+					</a>
+					<a
+						href="#"
+						class="button button-clear button-sm inner-focus button-block justify-content-flex-start text-align-left text-decoration-none share-email"
+						data-bi-name="email"
+						data-page-action-item="overflow-all"
+					>
+						<span class="icon color-primary" aria-hidden="true">
+							<span class="docon docon-mail-message"></span>
+						</span>
+						<span>Email</span>
+					</a>
+			  
+	 
+		<hr class="margin-block-xxs" />
+		<button
+			class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus"
+			type="button"
+			data-bi-name="print"
+			data-page-action-item="overflow-all"
+			data-popover-close
+			data-print-page
+			data-check-hidden="true"
+		>
+			<span class="icon color-primary" aria-hidden="true">
+				<span class="docon docon-print"></span>
+			</span>
+			<span>Print</span>
+		</button>
+	
+				</div>
+			</details>
+		</div>
+	
+			</div>
+		</div>
+	  
+		<!-- privateUnauthorizedTemplate is hidden by default -->
+		<div unauthorized-private-section data-bi-name="permission-content-unauthorized-private" hidden>
+			<hr class="hr margin-top-xs margin-bottom-sm" />
+			<div class="notification notification-info">
+				<div class="notification-content">
+					<p class="margin-top-none notification-title">
+						<span class="icon">
+							<span class="docon docon-exclamation-circle-solid" aria-hidden="true"></span>
+						</span>
+						<span>Note</span>
+					</p>
+					<p class="margin-top-none authentication-determined not-authenticated">
+						Access to this page requires authorization. You can try <a class="docs-sign-in" href="#" data-bi-name="permission-content-sign-in">signing in</a> or <a  class="docs-change-directory" data-bi-name="permisson-content-change-directory">changing directories</a>.
+					</p>
+					<p class="margin-top-none authentication-determined authenticated">
+						Access to this page requires authorization. You can try <a class="docs-change-directory" data-bi-name="permisson-content-change-directory">changing directories</a>.
+					</p>
+				</div>
+			</div>
+		</div>
+	
+					<div class="content"><h1 id="language-system-tags">Language System Tags</h1></div>
+					
+		<div
+			id="article-metadata"
+			data-bi-name="article-metadata"
+			data-test-id="article-metadata"
+			class="page-metadata-container display-flex gap-xxs justify-content-space-between align-items-center flex-wrap-wrap"
+		>
+			 
+				<div
+					id="user-feedback"
+					class="margin-block-xxs display-none display-none-print"
+					hidden
+					data-hide-on-archived
+				>
+					
+		<button
+			id="user-feedback-button"
+			data-test-id="conceptual-feedback-button"
+			class="button button-sm button-clear button-primary display-none"
+			type="button"
+			data-bi-name="user-feedback-button"
+			data-user-feedback-button
+			hidden
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-like"></span>
+			</span>
+			<span>Feedback</span>
+		</button>
+	
+				</div>
+		  
+		</div>
+	 
+		<div data-id="ai-summary" hidden>
+			<div id="ms--ai-summary-cta" class="margin-top-xs display-flex align-items-center">
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-sparkle-fill gradient-text-vivid"></span>
+				</span>
+				<button
+					id="ms--ai-summary"
+					type="button"
+					class="tag tag-sm tag-suggestion margin-left-xxs"
+					data-test-id="ai-summary-cta"
+					data-bi-name="ai-summary-cta"
+					data-an="ai-summary"
+				>
+					<span class="ai-summary-cta-text">
+						Summarize this article for me
+					</span>
+				</button>
+			</div>
+			<!-- Slot where the client will render the summary card after the user clicks the CTA -->
+			<div id="ms--ai-summary-header" class="margin-top-xs"></div>
+		</div>
+	 
+		<nav
+			id="center-doc-outline"
+			class="doc-outline is-hidden-desktop display-none-print margin-bottom-sm"
+			data-bi-name="intopic toc"
+			aria-label="In this article"
+		>
+			<h2 id="ms--in-this-article" class="title is-6 margin-block-xs">
+				In this article
+			</h2>
+		</nav>
+	
+					<div class="content"><p><a name="lang" id="lang"></a></p>
+<p>Language system tags identify the language systems supported in OpenType Layout tables. What is meant by a “language system” in this context is a set of typographic conventions for how text in a given script should be presented. Such conventions may be associated with particular languages, with particular genres of usage, with different publications, and other such factors. For example, particular glyph variants for certain characters may be required for particular languages, or for phonetic transcription or mathematical notation.</p>
+<p>In principle, a given set of conventions may be shared across multiple scenarios. For instance, two different languages (perhaps unrelated) may happen to follow the same conventions. Language system tags can be registered on a perceived-need basis, however. As a result, there is no guarantee that each tag represents a distinct and unique set of conventions. Tags can, however, be registered with the intent of representing conventions that apply to multiple languages. In such cases, the documented description for the tag should reflect that intent.</p>
 <p>It should also be noted that there may be more than one set of typographic conventions that apply to a given language.</p>
-<p>Therefore, in several respects, language system tags do not correspond in a one-to-one manner with languages. Even so, many registered tags are intended to represent typographic conventions for a particular language. For cases in which a correlation exists between a tag and one or more languages, the language identities are documented here by reference to ISO 639-2 and ISO 639-3.</p>
+<p>Therefore, in several respects, language system tags do not correspond in a one-to-one manner with languages. Even so, many registered tags are intended to represent typographic conventions for a particular language. For cases in which a correlation exists between a tag and one or more languages, the language identities are documented here by reference to the ISO 639 standard for language identifiers.</p>
 <blockquote>
-<p><em>Note:</em> ISO 639-2 provides identifiers for individual languages as well as for certain collections of languages. ISO 639-3 provides identifiers for a more-comprehensive set of individual languages, though not for collections. Entities in ISO 639 that are referenced here may include any of the individual languages covered in ISO 639-2 or ISO 639-3, or to any of the collections covered in ISO 639-2.</p>
+<p><em>Note:</em> The ISO 639 standard defines different identifier sets. Set 3 includes identifiers for all known languages; Set 2 also includes identifiers for certain collections of languages. Entities from ISO 639 that are referenced here can include any of the individual languages covered in Set 3, or any of the collections covered in Set 2.</p>
 </blockquote>
 <blockquote>
 <p><em>Note:</em> The ISO 639 data for a given language system can include identifiers that are equivalent or narrower in scope. For example, when a language system corresponds to an ISO 639 collection, the ISO 639 identifiers for individual languages within that collection may also be listed. On the other hand, if a language system corresponds to an ISO 639 individual language identifier, ISO 639 collection identifiers are not also listed. In some cases, an individual language identifier may be listed for multiple language system tags.</p>
 </blockquote>
-<p>If information is available to an application declaring the language of text content, then the application may make use of that to select a default language system tag to be applied when displaying that text. It is preferable, however, to give users control over the choice of language system tag to be used. (Depending on the application scenario, such control may be given to content authors, to content readers, or to both.)</p>
+<p>If information is available to an application declaring the language of text content, then the application may make use of that to select a default language system tag to be applied when displaying that text. In some applications, however, it could be preferable to give users control over the choice of language system tag to be used. Depending on the application scenario, such control may be given to content authors, to content readers, or to both.</p>
 <p>All tags are four-character strings composed of a limited set of ASCII characters; for details regarding the Tag data type, see <a href="otff#data-types" data-linktype="relative-path">Data Types</a>. By convention, registered language system tags use three or four capital letters (0x41 to 0x5A).</p>
 <blockquote>
-<p><em>Note:</em> The tags 'dflt' and 'DFLT', as language system tags, are permanently reserved and are not used in OpenType fonts. Within the structure of GPOS and GSUB tables, data is organized by <a href="chapter2#script-table-and-language-system-record" data-linktype="relative-path">Script tables</a>, and each Script table has an offset to a default language system (LangSys) table. These structures do not involve use of any language system tag. Some font development tools may use 'dflt' or 'DFLT' as a means to indicate data that should get compiled into a default LangSys table. That is a tool-specific convention, and it is the responsibility of font tool developers to compile data into appropriate structures with the font file. An OpenType font should never include language system records (LangSysRecord) with the 'dflt' or 'DFLT' tag.</p>
+<p><em>Note:</em> The tags 'dflt' and 'DFLT', as language system tags, are permanently reserved and are not used in OpenType fonts. Within the structure of GPOS and GSUB tables, data is organized by <a href="chapter2#script-table" data-linktype="relative-path">Script tables</a>, and each Script table has an offset to a default <a href="chapter2#language-system-table" data-linktype="relative-path">language system (LangSys) table</a>. These structures do not involve use of any language system tag. Some font development tools may use 'dflt' or 'DFLT' as a means to indicate data that should get compiled into a default LangSys table. That is a tool-specific convention, and it is the responsibility of font tool developers to compile data into appropriate structures with the font file. An OpenType font should never include language system records (LangSysRecord) with the 'dflt' or 'DFLT' tag.</p>
 </blockquote>
 <p>Requests to register additional language system tags can be submitted using the feedback mechanism at the bottom of this page or at <a href="https://github.com/MicrosoftDocs/typography-issues/issues" data-linktype="external">https://github.com/MicrosoftDocs/typography-issues/issues</a>.</p>
 <p>In the following table, entries marked with an asterisk (“*”) have been added to the registry since the current OpenType version was published.</p>
 <table>
 <tbody>
 <tr>
-<th>Language System</th>
-<th>Language System Tag</th>
+<th>Language system</th>
+<th>Language system tag</th>
 <th>Corresponding ISO 639 IDs or other information</th>
 </tr>
 <tr>
+<td>Eastern Abenaki</td>
+<td>'AAQ '</td>
+<td>aaq</td>
+</tr>
+<tr>
 <td>Abaza</td>
-<td>&#39;ABA &#39;</td>
+<td>'ABA '</td>
 <td>abq</td>
 </tr>
 <tr>
 <td>Abkhazian</td>
-<td>&#39;ABK &#39;</td>
+<td>'ABK '</td>
 <td>abk</td>
 </tr>
 <tr>
 <td>Acholi</td>
-<td>&#39;ACH &#39;</td>
+<td>'ACH '</td>
 <td>ach</td>
 </tr>
 <tr>
 <td>Achi</td>
-<td>&#39;ACR &#39;</td>
+<td>'ACR '</td>
 <td>acr</td>
 </tr>
 <tr>
+<td>Cypriot Arabic</td>
+<td>'ACY '</td>
+<td>acy</td>
+</tr>
+<tr>
 <td>Adyghe</td>
-<td>&#39;ADY &#39;</td>
+<td>'ADY '</td>
 <td>ady</td>
 </tr>
 <tr>
 <td>Afrikaans</td>
-<td>&#39;AFK &#39;</td>
+<td>'AFK '</td>
 <td>afr</td>
 </tr>
 <tr>
 <td>Afar</td>
-<td>&#39;AFR &#39;</td>
+<td>'AFR '</td>
 <td>aar</td>
 </tr>
 <tr>
 <td>Agaw</td>
-<td>&#39;AGW &#39;</td>
+<td>'AGW '</td>
 <td>ahg</td>
 </tr>
 <tr>
 <td>Aiton</td>
-<td>&#39;AIO &#39;</td>
+<td>'AIO '</td>
 <td>aio</td>
 </tr>
 <tr>
 <td>Akan</td>
-<td>&#39;AKA &#39;</td>
+<td>'AKA '</td>
 <td>aka, fat, twi</td>
 </tr>
 <tr>
 <td>Batak Angkola</td>
-<td>&#39;AKB &#39;</td>
+<td>'AKB '</td>
 <td>akb</td>
 </tr>
 <tr>
 <td>Alsatian</td>
-<td>&#39;ALS &#39;</td>
+<td>'ALS '</td>
 <td>gsw</td>
 </tr>
 <tr>
 <td>Altai</td>
-<td>&#39;ALT &#39;</td>
+<td>'ALT '</td>
 <td>atv, alt</td>
 </tr>
 <tr>
 <td>Amharic</td>
-<td>&#39;AMH &#39;</td>
+<td>'AMH '</td>
 <td>amh</td>
 </tr>
 <tr>
 <td>Anglo-Saxon</td>
-<td>&#39;ANG &#39;</td>
+<td>'ANG '</td>
 <td>ang</td>
 </tr>
 <tr>
 <td>Phonetic transcription—Americanist conventions</td>
 <td>APPH</td>
-<td></td>
+<td>Cf. BCP 47 variant subtag “fonnapa” (see <a href="https://www.iana.org/assignments/lang-subtags-templates/fonnapa.txt" data-linktype="external">https://www.iana.org/assignments/lang-subtags-templates/fonnapa.txt</a>) </td>
 </tr>
 <tr>
 <td>Arabic</td>
-<td>&#39;ARA &#39;</td>
+<td>'ARA '</td>
 <td>ara</td>
 </tr>
 <tr>
 <td>Aragonese</td>
-<td>&#39;ARG &#39;</td>
+<td>'ARG '</td>
 <td>arg</td>
 </tr>
 <tr>
 <td>Aari</td>
-<td>&#39;ARI &#39;</td>
+<td>'ARI '</td>
 <td>aiw</td>
 </tr>
 <tr>
 <td>Rakhine</td>
-<td>&#39;ARK &#39;</td>
+<td>'ARK '</td>
 <td>mhv, rmz, rki</td>
 </tr>
 <tr>
 <td>Assamese</td>
-<td>&#39;ASM &#39;</td>
+<td>'ASM '</td>
 <td>asm</td>
 </tr>
 <tr>
 <td>Asturian</td>
-<td>&#39;AST &#39;</td>
+<td>'AST '</td>
 <td>ast</td>
 </tr>
 <tr>
 <td>Athapaskan languages</td>
-<td>&#39;ATH &#39;</td>
+<td>'ATH '</td>
 <td>aht, apa, apk, apj, apl, apm, apw, ath, bea, sek, bcr, caf, chp, clc, coq, crx, ctc, den, dgr, gce, gwi, haa, hoi, hup, ing, kkz, koy, ktw, kuu, mvb, nav, qwt, scs, srs, taa, tau, tcb, tce, tfn, tgx, tht, tol, ttm, tuu, txc, wlk, xup, xsl</td>
 </tr>
 <tr>
+<td>Gros Ventre (Atsina)</td>
+<td>'ATS '</td>
+<td>ats</td>
+</tr>
+<tr>
 <td>Avatime</td>
-<td>&#39;AVN &#39;</td>
+<td>'AVN '</td>
 <td>avn</td>
 </tr>
 <tr>
 <td>Avar</td>
-<td>&#39;AVR &#39;</td>
+<td>'AVR '</td>
 <td>ava</td>
 </tr>
 <tr>
 <td>Awadhi</td>
-<td>&#39;AWA &#39;</td>
+<td>'AWA '</td>
 <td>awa</td>
 </tr>
 <tr>
 <td>Aymara</td>
-<td>&#39;AYM &#39;</td>
+<td>'AYM '</td>
 <td>aym</td>
 </tr>
 <tr>
 <td>Torki</td>
-<td>&#39;AZB &#39;</td>
+<td>'AZB '</td>
 <td>azb</td>
 </tr>
 <tr>
 <td>Azerbaijani</td>
-<td>&#39;AZE &#39;</td>
+<td>'AZE '</td>
 <td>aze</td>
 </tr>
 <tr>
 <td>Badaga</td>
-<td>&#39;BAD &#39;</td>
+<td>'BAD '</td>
 <td>bfq</td>
 </tr>
 <tr>
@@ -689,252 +921,267 @@ Article													</li>
 </tr>
 <tr>
 <td>Baghelkhandi</td>
-<td>&#39;BAG &#39;</td>
+<td>'BAG '</td>
 <td>bfy</td>
 </tr>
 <tr>
 <td>Balkar</td>
-<td>&#39;BAL &#39;</td>
+<td>'BAL '</td>
 <td>krc</td>
 </tr>
 <tr>
 <td>Balinese</td>
-<td>&#39;BAN &#39;</td>
+<td>'BAN '</td>
 <td>ban</td>
 </tr>
 <tr>
 <td>Bavarian</td>
-<td>&#39;BAR &#39;</td>
+<td>'BAR '</td>
 <td>bar</td>
 </tr>
 <tr>
 <td>Baulé</td>
-<td>&#39;BAU &#39;</td>
+<td>'BAU '</td>
 <td>bci</td>
 </tr>
 <tr>
 <td>Batak Toba</td>
-<td>&#39;BBC &#39;</td>
+<td>'BBC '</td>
 <td>bbc</td>
 </tr>
 <tr>
 <td>Berber</td>
-<td>&#39;BBR &#39;</td>
+<td>'BBR '</td>
 <td>auj, ber, cnu, gha, gho, grr, jbe, jbn, kab, mzb, oua, rif, sds, shi, shy, siz, sjs, swn, taq, tez, thv, thz, tia, tjo, tmh, ttq, tzm, zen, zgh</td>
 </tr>
 <tr>
 <td>Bench</td>
-<td>&#39;BCH &#39;</td>
+<td>'BCH '</td>
 <td>bcq</td>
 </tr>
 <tr>
 <td>Bible Cree</td>
-<td>&#39;BCR &#39;</td>
+<td>'BCR '</td>
 <td></td>
 </tr>
 <tr>
+<td>Emberá-Baudó</td>
+<td>'BDC '</td>
+<td>bdc</td>
+</tr>
+<tr>
 <td>Bandjalang</td>
-<td>&#39;BDY &#39;</td>
+<td>'BDY '</td>
 <td>bdy</td>
 </tr>
 <tr>
-<td>Belarussian</td>
-<td>&#39;BEL &#39;</td>
+<td>Belarusian</td>
+<td>'BEL '</td>
 <td>bel</td>
 </tr>
 <tr>
 <td>Bemba</td>
-<td>&#39;BEM &#39;</td>
+<td>'BEM '</td>
 <td>bem</td>
 </tr>
 <tr>
-<td>Bengali</td>
-<td>&#39;BEN &#39;</td>
+<td>Bangla</td>
+<td>'BEN '</td>
 <td>ben</td>
 </tr>
 <tr>
 <td>Haryanvi</td>
-<td>&#39;BGC &#39;</td>
+<td>'BGC '</td>
 <td>bgc</td>
 </tr>
 <tr>
 <td>Bagri</td>
-<td>&#39;BGQ &#39;</td>
+<td>'BGQ '</td>
 <td>bgq</td>
 </tr>
 <tr>
 <td>Bulgarian</td>
-<td>&#39;BGR &#39;</td>
+<td>'BGR '</td>
 <td>bul</td>
 </tr>
 <tr>
 <td>Bhili</td>
-<td>&#39;BHI &#39;</td>
+<td>'BHI '</td>
 <td>bhi, bhb</td>
 </tr>
 <tr>
 <td>Bhojpuri</td>
-<td>&#39;BHO &#39;</td>
+<td>'BHO '</td>
 <td>bho</td>
 </tr>
 <tr>
 <td>Bikol</td>
-<td>&#39;BIK &#39;</td>
+<td>'BIK '</td>
 <td>bik, bhk, bcl, bto, cts, bln, fbl, lbl, rbl, ubl</td>
 </tr>
 <tr>
 <td>Bilen</td>
-<td>&#39;BIL &#39;</td>
+<td>'BIL '</td>
 <td>byn</td>
 </tr>
 <tr>
 <td>Bislama</td>
-<td>&#39;BIS &#39;</td>
+<td>'BIS '</td>
 <td>bis</td>
 </tr>
 <tr>
 <td>Kanauji</td>
-<td>&#39;BJJ &#39;</td>
+<td>'BJJ '</td>
 <td>bjj</td>
 </tr>
 <tr>
 <td>Blackfoot</td>
-<td>&#39;BKF &#39;</td>
+<td>'BKF '</td>
 <td>bla</td>
 </tr>
 <tr>
 <td>Baluchi</td>
-<td>&#39;BLI &#39;</td>
+<td>'BLI '</td>
 <td>bal</td>
 </tr>
 <tr>
 <td>Pa’o Karen</td>
-<td>&#39;BLK &#39;</td>
+<td>'BLK '</td>
 <td>blk</td>
 </tr>
 <tr>
 <td>Balante</td>
-<td>&#39;BLN &#39;</td>
+<td>'BLN '</td>
 <td>bjt, ble</td>
 </tr>
 <tr>
 <td>Balti</td>
-<td>&#39;BLT &#39;</td>
+<td>'BLT '</td>
 <td>bft</td>
 </tr>
 <tr>
 <td>Bambara (Bamanankan)</td>
-<td>&#39;BMB &#39;</td>
+<td>'BMB '</td>
 <td>bam</td>
 </tr>
 <tr>
 <td>Bamileke</td>
-<td>&#39;BML &#39;</td>
+<td>'BML '</td>
 <td>bai, bbj, bko, byv, fmp, jgo, nla, nnh, nnz, nwe, xmg, ybb</td>
 </tr>
 <tr>
 <td>Bosnian</td>
-<td>&#39;BOS &#39;</td>
+<td>'BOS '</td>
 <td>bos</td>
 </tr>
 <tr>
 <td>Bishnupriya Manipuri</td>
-<td>&#39;BPY &#39;</td>
+<td>'BPY '</td>
 <td>bpy</td>
 </tr>
 <tr>
 <td>Breton</td>
-<td>&#39;BRE &#39;</td>
+<td>'BRE '</td>
 <td>bre</td>
 </tr>
 <tr>
 <td>Brahui</td>
-<td>&#39;BRH &#39;</td>
+<td>'BRH '</td>
 <td>brh</td>
 </tr>
 <tr>
 <td>Braj Bhasha</td>
-<td>&#39;BRI &#39;</td>
+<td>'BRI '</td>
 <td>bra</td>
 </tr>
 <tr>
 <td>Burmese</td>
-<td>&#39;BRM &#39;</td>
+<td>'BRM '</td>
 <td>mya</td>
 </tr>
 <tr>
 <td>Bodo</td>
-<td>&#39;BRX &#39;</td>
+<td>'BRX '</td>
 <td>brx</td>
 </tr>
 <tr>
 <td>Bashkir</td>
-<td>&#39;BSH &#39;</td>
+<td>'BSH '</td>
 <td>bak</td>
 </tr>
 <tr>
 <td>Burushaski</td>
-<td>&#39;BSK &#39;</td>
+<td>'BSK '</td>
 <td>bsk</td>
 </tr>
 <tr>
 <td>Batak Dairi (Pakpak)</td>
-<td>&#39;BTD &#39;</td>
+<td>'BTD '</td>
 <td>btd</td>
 </tr>
 <tr>
 <td>Beti</td>
-<td>&#39;BTI &#39;</td>
+<td>'BTI '</td>
 <td>btb, beb, bum, bxp, eto, ewo, mct</td>
 </tr>
 <tr>
 <td>Batak languages</td>
-<td>&#39;BTK &#39;</td>
+<td>'BTK '</td>
 <td>akb, bbc, btd, btk, btm, bts, btx, btz</td>
 </tr>
 <tr>
 <td>Batak Mandailing</td>
-<td>&#39;BTM &#39;</td>
+<td>'BTM '</td>
 <td>btm</td>
 </tr>
 <tr>
 <td>Batak Simalungun</td>
-<td>&#39;BTS &#39;</td>
+<td>'BTS '</td>
 <td>bts</td>
 </tr>
 <tr>
 <td>Batak Karo</td>
-<td>&#39;BTX &#39;</td>
+<td>'BTX '</td>
 <td>btx</td>
 </tr>
 <tr>
 <td>Batak Alas-Kluet</td>
-<td>&#39;BTZ &#39;</td>
+<td>'BTZ '</td>
 <td>btz</td>
 </tr>
 <tr>
 <td>Bugis</td>
-<td>&#39;BUG &#39;</td>
+<td>'BUG '</td>
 <td>bug</td>
 </tr>
 <tr>
 <td>Medumba</td>
-<td>&#39;BYV &#39;</td>
+<td>'BYV '</td>
 <td>byv</td>
 </tr>
 <tr>
 <td>Kaqchikel</td>
-<td>&#39;CAK &#39;</td>
+<td>'CAK '</td>
 <td>cak</td>
 </tr>
 <tr>
 <td>Catalan</td>
-<td>&#39;CAT &#39;</td>
+<td>'CAT '</td>
 <td>cat</td>
 </tr>
 <tr>
+<td>Cayuga</td>
+<td>'CAY '</td>
+<td>cay</td>
+</tr>
+<tr>
+<td>Chimila</td>
+<td>'CBG '</td>
+<td>cbg</td>
+</tr>
+<tr>
 <td>Zamboanga Chavacano</td>
-<td>&#39;CBK &#39;</td>
+<td>'CBK '</td>
 <td>cbk</td>
 </tr>
 <tr>
@@ -944,42 +1191,42 @@ Article													</li>
 </tr>
 <tr>
 <td>Cebuano</td>
-<td>&#39;CEB &#39;</td>
+<td>'CEB '</td>
 <td>ceb</td>
 </tr>
 <tr>
 <td>Chiga</td>
-<td>&#39;CGG &#39;</td>
+<td>'CGG '</td>
 <td>cgg</td>
 </tr>
 <tr>
 <td>Chamorro</td>
-<td>&#39;CHA &#39;</td>
+<td>'CHA '</td>
 <td>cha</td>
 </tr>
 <tr>
 <td>Chechen</td>
-<td>&#39;CHE &#39;</td>
+<td>'CHE '</td>
 <td>che</td>
 </tr>
 <tr>
 <td>Chaha Gurage</td>
-<td>&#39;CHG &#39;</td>
+<td>'CHG '</td>
 <td>sgw</td>
 </tr>
 <tr>
 <td>Chattisgarhi</td>
-<td>&#39;CHH &#39;</td>
+<td>'CHH '</td>
 <td>hne</td>
 </tr>
 <tr>
 <td>Chichewa (Chewa, Nyanja)</td>
-<td>&#39;CHI &#39;</td>
+<td>'CHI '</td>
 <td>nya</td>
 </tr>
 <tr>
 <td>Chukchi</td>
-<td>&#39;CHK &#39;</td>
+<td>'CHK '</td>
 <td>ckt</td>
 </tr>
 <tr>
@@ -989,172 +1236,187 @@ Article													</li>
 </tr>
 <tr>
 <td>Choctaw</td>
-<td>&#39;CHO &#39;</td>
+<td>'CHO '</td>
 <td>cho</td>
 </tr>
 <tr>
 <td>Chipewyan</td>
-<td>&#39;CHP &#39;</td>
+<td>'CHP '</td>
 <td>chp</td>
 </tr>
 <tr>
 <td>Cherokee</td>
-<td>&#39;CHR &#39;</td>
+<td>'CHR '</td>
 <td>chr</td>
 </tr>
 <tr>
 <td>Chuvash</td>
-<td>&#39;CHU &#39;</td>
+<td>'CHU '</td>
 <td>chv</td>
 </tr>
 <tr>
 <td>Cheyenne</td>
-<td>&#39;CHY &#39;</td>
+<td>'CHY '</td>
 <td>chy</td>
 </tr>
 <tr>
 <td>Western Cham</td>
-<td>&#39;CJA &#39;</td>
+<td>'CJA '</td>
 <td>cja</td>
 </tr>
 <tr>
 <td>Eastern Cham</td>
-<td>&#39;CJM &#39;</td>
+<td>'CJM '</td>
 <td>cjm</td>
 </tr>
 <tr>
+<td>Emberá-Chamí</td>
+<td>'CMI '</td>
+<td>cmi</td>
+</tr>
+<tr>
 <td>Comorian</td>
-<td>&#39;CMR &#39;</td>
+<td>'CMR '</td>
 <td>swb, wlc, wni, zdj</td>
 </tr>
 <tr>
+<td>Comox</td>
+<td>'COO '</td>
+<td>coo</td>
+</tr>
+<tr>
 <td>Coptic</td>
-<td>&#39;COP &#39;</td>
+<td>'COP '</td>
 <td>cop</td>
 </tr>
 <tr>
 <td>Cornish</td>
-<td>&#39;COR &#39;</td>
+<td>'COR '</td>
 <td>cor</td>
 </tr>
 <tr>
 <td>Corsican</td>
-<td>&#39;COS &#39;</td>
+<td>'COS '</td>
 <td>cos</td>
 </tr>
 <tr>
 <td>Creoles</td>
-<td>&#39;CPP &#39;</td>
-<td>abs, acf, afs, aig, aoa, bah, bew, bis, bjs, bpl, bpq, brc, bxo, bzj, bzk, cbk, ccl, ccm, chn, cks, cpe, cpf, cpi, cpp, cri, crp, crs, dcr, dep, djk, fab, fng, fpe, gac, gcf, gcl, gcr, gib, goq, gpe, gul, gyn, hat, hca, hmo, hwc, icr, idb, ihb, jam, jvd, kcn, kea, kmv, kri, kww, lir, lou, lrt, max, mbf, mcm, mfe, mfp, mkn, mod, msi, mud, mzs, nag, nef, ngm, njt, onx, oor, pap, pcm, pea, pey, pga, pih, pis, pln, pml, pmy, pov, pre, rcf, rop, scf, sci, skw, srm, srn, sta, svc, tas, tch, tcs, tgh, tmg, tpi, trf, tvy, uln, vic, vkp, wes, xmm</td>
+<td>'CPP '</td>
+<td>abs, acf, afs, aig, aoa, bah, bew, bis, bjs, bpl, bpq, brc, bxo, bzj, bzk, cbk, ccl, ccm, chn, cks, cpe, cpf, cpi, cpp, cri, crp, crs, dcr, dep, djk, fab, fng, fpe, gac, gcf, gcl, gcr, gib, goq, gpe, gul, gyn, hat, hca, hmo, hwc, icr, idb, ihb, jam, jvd, kcn, kea, kmv, kri, kww, lir, lou, lrt, max, mbf, mcm, mfe, mfp, mkn, mod, msi, mud, mzs, nag, nef, ngm, njt, onx, oor, pap, pcm, pea, pey, pga, pih, pis, pln, pml, pmy, pov, pre, rcf, rop, scf, sci, skw, srm, srn, sta, svc, tas, tch, tcs, tgh, tmg, tpi, trf, tvy, uln, vic, vkp, wes, xmm, ycr</td>
 </tr>
 <tr>
 <td>Cree</td>
-<td>&#39;CRE &#39;</td>
+<td>'CRE '</td>
 <td>cre</td>
 </tr>
 <tr>
 <td>Carrier</td>
-<td>&#39;CRR &#39;</td>
+<td>'CRR '</td>
 <td>crx, caf</td>
 </tr>
 <tr>
 <td>Crimean Tatar</td>
-<td>&#39;CRT &#39;</td>
+<td>'CRT '</td>
 <td>crh</td>
 </tr>
 <tr>
 <td>Kashubian</td>
-<td>&#39;CSB &#39;</td>
+<td>'CSB '</td>
 <td>csb</td>
 </tr>
 <tr>
 <td>Church Slavonic</td>
-<td>&#39;CSL &#39;</td>
+<td>'CSL '</td>
 <td>chu</td>
 </tr>
 <tr>
 <td>Czech</td>
-<td>&#39;CSY &#39;</td>
+<td>'CSY '</td>
 <td>ces</td>
 </tr>
 <tr>
 <td>Chittagonian</td>
-<td>&#39;CTG &#39;</td>
+<td>'CTG '</td>
 <td>ctg</td>
 </tr>
 <tr>
+<td>Emberá-Catío</td>
+<td>'CTO '</td>
+<td>cto</td>
+</tr>
+<tr>
 <td>Wayanad Chetti</td>
-<td>&#39;CTT &#39;</td>
+<td>'CTT '</td>
 <td>ctt</td>
 </tr>
 <tr>
 <td>San Blas Kuna</td>
-<td>&#39;CUK &#39;</td>
+<td>'CUK '</td>
 <td>cuk</td>
 </tr>
 <tr>
 <td>Dagbani</td>
-<td>&#39;DAG &#39;</td>
+<td>'DAG '</td>
 <td>dag</td>
 </tr>
 <tr>
 <td>Danish</td>
-<td>&#39;DAN &#39;</td>
+<td>'DAN '</td>
 <td>dan</td>
 </tr>
 <tr>
 <td>Dargwa</td>
-<td>&#39;DAR &#39;</td>
+<td>'DAR '</td>
 <td>dar</td>
 </tr>
 <tr>
 <td>Dayi</td>
-<td>&#39;DAX &#39;</td>
+<td>'DAX '</td>
 <td>dax</td>
 </tr>
 <tr>
 <td>Woods Cree</td>
-<td>&#39;DCR &#39;</td>
+<td>'DCR '</td>
 <td>cwd</td>
 </tr>
 <tr>
 <td>German</td>
-<td>&#39;DEU &#39;</td>
+<td>'DEU '</td>
 <td>deu</td>
 </tr>
 <tr>
 <td>Dogri (individual language)</td>
-<td>&#39;DGO &#39;</td>
+<td>'DGO '</td>
 <td>dgo</td>
 </tr>
 <tr>
 <td>Dogri (macrolanguage)</td>
-<td>&#39;DGR &#39;</td>
+<td>'DGR '</td>
 <td>doi</td>
 </tr>
 <tr>
 <td>Dhangu</td>
-<td>&#39;DHG &#39;</td>
+<td>'DHG '</td>
 <td>dhg</td>
 </tr>
 <tr>
 <td>Divehi (Dhivehi, Maldivian)</td>
-<td>&#39;DHV &#39; (deprecated)</td>
+<td>'DHV ' (deprecated)</td>
 <td>div</td>
 </tr>
 <tr>
 <td>Dimli</td>
-<td>&#39;DIQ &#39;</td>
+<td>'DIQ '</td>
 <td>diq</td>
 </tr>
 <tr>
 <td>Divehi (Dhivehi, Maldivian)</td>
-<td>&#39;DIV &#39;</td>
+<td>'DIV '</td>
 <td>div</td>
 </tr>
 <tr>
 <td>Zarma</td>
-<td>&#39;DJR &#39;</td>
+<td>'DJR '</td>
 <td>dje</td>
 </tr>
 <tr>
@@ -1164,117 +1426,122 @@ Article													</li>
 </tr>
 <tr>
 <td>Dangme</td>
-<td>&#39;DNG &#39;</td>
+<td>'DNG '</td>
 <td>ada</td>
 </tr>
 <tr>
 <td>Dan</td>
-<td>&#39;DNJ &#39;</td>
+<td>'DNJ '</td>
 <td>dnj</td>
 </tr>
 <tr>
 <td>Dinka</td>
-<td>&#39;DNK &#39;</td>
+<td>'DNK '</td>
 <td>din</td>
 </tr>
 <tr>
 <td>Dari</td>
-<td>&#39;DRI &#39;</td>
+<td>'DRI '</td>
 <td>prs</td>
 </tr>
 <tr>
 <td>Dhuwal</td>
-<td>&#39;DUJ &#39;</td>
+<td>'DUJ '</td>
 <td>duj, dwu, dwy</td>
 </tr>
 <tr>
 <td>Dungan</td>
-<td>&#39;DUN &#39;</td>
+<td>'DUN '</td>
 <td>dng</td>
 </tr>
 <tr>
 <td>Dzongkha</td>
-<td>&#39;DZN &#39;</td>
+<td>'DZN '</td>
 <td>dzo</td>
 </tr>
 <tr>
 <td>Ebira</td>
-<td>&#39;EBI &#39;</td>
+<td>'EBI '</td>
 <td>igb</td>
 </tr>
 <tr>
 <td>Eastern Cree</td>
-<td>&#39;ECR &#39;</td>
+<td>'ECR '</td>
 <td>crj, crl</td>
 </tr>
 <tr>
 <td>Edo</td>
-<td>&#39;EDO &#39;</td>
+<td>'EDO '</td>
 <td>bin</td>
 </tr>
 <tr>
 <td>Efik</td>
-<td>&#39;EFI &#39;</td>
+<td>'EFI '</td>
 <td>efi</td>
 </tr>
 <tr>
 <td>Greek</td>
-<td>&#39;ELL &#39;</td>
+<td>'ELL '</td>
 <td>ell</td>
 </tr>
 <tr>
 <td>Eastern Maninkakan</td>
-<td>&#39;EMK &#39;</td>
+<td>'EMK '</td>
 <td>emk</td>
 </tr>
 <tr>
+<td>Northern Emberá</td>
+<td>'EMP '</td>
+<td>emp</td>
+</tr>
+<tr>
 <td>English</td>
-<td>&#39;ENG &#39;</td>
+<td>'ENG '</td>
 <td>eng</td>
 </tr>
 <tr>
 <td>Erzya</td>
-<td>&#39;ERZ &#39;</td>
+<td>'ERZ '</td>
 <td>myv</td>
 </tr>
 <tr>
 <td>Spanish</td>
-<td>&#39;ESP &#39;</td>
+<td>'ESP '</td>
 <td>spa</td>
 </tr>
 <tr>
 <td>Central Yupik</td>
-<td>&#39;ESU &#39;</td>
+<td>'ESU '</td>
 <td>esu</td>
 </tr>
 <tr>
 <td>Estonian</td>
-<td>&#39;ETI &#39;</td>
+<td>'ETI '</td>
 <td>est</td>
 </tr>
 <tr>
 <td>Basque</td>
-<td>&#39;EUQ &#39;</td>
+<td>'EUQ '</td>
 <td>eus</td>
 </tr>
 <tr>
 <td>Evenki</td>
-<td>&#39;EVK &#39;</td>
+<td>'EVK '</td>
 <td>evn</td>
 </tr>
 <tr>
 <td>Even</td>
-<td>&#39;EVN &#39;</td>
+<td>'EVN '</td>
 <td>eve</td>
 </tr>
 <tr>
 <td>Ewe</td>
-<td>&#39;EWE &#39;</td>
+<td>'EWE '</td>
 <td>ewe</td>
 </tr>
 <tr>
 <td>French Antillean</td>
-<td>&#39;FAN &#39;</td>
+<td>'FAN '</td>
 <td>acf</td>
 </tr>
 <tr>
@@ -1284,132 +1551,132 @@ Article													</li>
 </tr>
 <tr>
 <td>Persian</td>
-<td>&#39;FAR &#39;</td>
+<td>'FAR '</td>
 <td>fas</td>
 </tr>
 <tr>
 <td>Fanti</td>
-<td>&#39;FAT &#39;</td>
+<td>'FAT '</td>
 <td>fat</td>
 </tr>
 <tr>
 <td>Finnish</td>
-<td>&#39;FIN &#39;</td>
+<td>'FIN '</td>
 <td>fin</td>
 </tr>
 <tr>
 <td>Fijian</td>
-<td>&#39;FJI &#39;</td>
+<td>'FJI '</td>
 <td>fij</td>
 </tr>
 <tr>
 <td>Dutch (Flemish)</td>
-<td>&#39;FLE &#39;</td>
+<td>'FLE '</td>
 <td>vls</td>
 </tr>
 <tr>
 <td>Fe’fe’</td>
-<td>&#39;FMP &#39;</td>
+<td>'FMP '</td>
 <td>fmp</td>
 </tr>
 <tr>
 <td>Forest Enets</td>
-<td>&#39;FNE &#39;</td>
+<td>'FNE '</td>
 <td>enf</td>
 </tr>
 <tr>
 <td>Fon</td>
-<td>&#39;FON &#39;</td>
+<td>'FON '</td>
 <td>fon</td>
 </tr>
 <tr>
 <td>Faroese</td>
-<td>&#39;FOS &#39;</td>
+<td>'FOS '</td>
 <td>fao</td>
 </tr>
 <tr>
 <td>French</td>
-<td>&#39;FRA &#39;</td>
+<td>'FRA '</td>
 <td>fra</td>
 </tr>
 <tr>
 <td>Cajun French</td>
-<td>&#39;FRC &#39;</td>
+<td>'FRC '</td>
 <td>frc</td>
 </tr>
 <tr>
 <td>Frisian</td>
-<td>&#39;FRI &#39;</td>
+<td>'FRI '</td>
 <td>fry</td>
 </tr>
 <tr>
 <td>Friulian</td>
-<td>&#39;FRL &#39;</td>
+<td>'FRL '</td>
 <td>fur</td>
 </tr>
 <tr>
 <td>Arpitan</td>
-<td>&#39;FRP &#39;</td>
+<td>'FRP '</td>
 <td>frp</td>
 </tr>
 <tr>
 <td>Futa</td>
-<td>&#39;FTA &#39;</td>
+<td>'FTA '</td>
 <td>fuf</td>
 </tr>
 <tr>
 <td>Fulah</td>
-<td>&#39;FUL &#39;</td>
+<td>'FUL '</td>
 <td>ful</td>
 </tr>
 <tr>
 <td>Nigerian Fulfulde</td>
-<td>&#39;FUV &#39;</td>
+<td>'FUV '</td>
 <td>fuv</td>
 </tr>
 <tr>
 <td>Ga</td>
-<td>&#39;GAD &#39;</td>
+<td>'GAD '</td>
 <td>gaa</td>
 </tr>
 <tr>
-<td>Scottish Gaelic (Gaelic)</td>
-<td>&#39;GAE &#39;</td>
+<td>Scottish Gaelic</td>
+<td>'GAE '</td>
 <td>gla</td>
 </tr>
 <tr>
 <td>Gagauz</td>
-<td>&#39;GAG &#39;</td>
+<td>'GAG '</td>
 <td>gag</td>
 </tr>
 <tr>
 <td>Galician</td>
-<td>&#39;GAL &#39;</td>
+<td>'GAL '</td>
 <td>glg</td>
 </tr>
 <tr>
 <td>Garshuni</td>
-<td>&#39;GAR &#39;</td>
+<td>'GAR '</td>
 <td></td>
 </tr>
 <tr>
 <td>Garhwali</td>
-<td>&#39;GAW &#39;</td>
+<td>'GAW '</td>
 <td>gbm</td>
 </tr>
 <tr>
 <td>Geez</td>
-<td>&#39;GEZ &#39;</td>
+<td>'GEZ '</td>
 <td>gez</td>
 </tr>
 <tr>
 <td>Githabul</td>
-<td>&#39;GIH &#39;</td>
+<td>'GIH '</td>
 <td>gih</td>
 </tr>
 <tr>
 <td>Gilyak</td>
-<td>&#39;GIL &#39;</td>
+<td>'GIL '</td>
 <td>niv</td>
 </tr>
 <tr>
@@ -1419,187 +1686,192 @@ Article													</li>
 </tr>
 <tr>
 <td>Kpelle (Guinea)</td>
-<td>&#39;GKP &#39;</td>
+<td>'GKP '</td>
 <td>gkp</td>
 </tr>
 <tr>
 <td>Gilaki</td>
-<td>&#39;GLK &#39;</td>
+<td>'GLK '</td>
 <td>glk</td>
 </tr>
 <tr>
 <td>Gumuz</td>
-<td>&#39;GMZ &#39;</td>
+<td>'GMZ '</td>
 <td>guk</td>
 </tr>
 <tr>
 <td>Gumatj</td>
-<td>&#39;GNN &#39;</td>
+<td>'GNN '</td>
 <td>gnn</td>
 </tr>
 <tr>
 <td>Gogo</td>
-<td>&#39;GOG &#39;</td>
+<td>'GOG '</td>
 <td>gog</td>
 </tr>
 <tr>
 <td>Gondi</td>
-<td>&#39;GON &#39;</td>
+<td>'GON '</td>
 <td>gon</td>
 </tr>
 <tr>
 <td>Greenlandic</td>
-<td>&#39;GRN &#39;</td>
+<td>'GRN '</td>
 <td>kal</td>
 </tr>
 <tr>
 <td>Garo</td>
-<td>&#39;GRO &#39;</td>
+<td>'GRO '</td>
 <td>grt</td>
 </tr>
 <tr>
 <td>Guarani</td>
-<td>&#39;GUA &#39;</td>
+<td>'GUA '</td>
 <td>grn</td>
 </tr>
 <tr>
 <td>Wayuu</td>
-<td>&#39;GUC &#39;</td>
+<td>'GUC '</td>
 <td>guc</td>
 </tr>
 <tr>
 <td>Gupapuyngu</td>
-<td>&#39;GUF &#39;</td>
+<td>'GUF '</td>
 <td>guf</td>
 </tr>
 <tr>
 <td>Gujarati</td>
-<td>&#39;GUJ &#39;</td>
+<td>'GUJ '</td>
 <td>guj</td>
 </tr>
 <tr>
 <td>Gusii</td>
-<td>&#39;GUZ &#39;</td>
+<td>'GUZ '</td>
 <td>guz</td>
 </tr>
 <tr>
 <td>Haitian (Haitian Creole)</td>
-<td>&#39;HAI &#39;</td>
+<td>'HAI '</td>
 <td>hat</td>
 </tr>
 <tr>
 <td>Haida</td>
-<td>&#39;HAI0&#39;</td>
+<td>'HAI0'</td>
 <td>hai, hax, hdn</td>
 </tr>
 <tr>
 <td>Halam (Falam Chin)</td>
-<td>&#39;HAL &#39;</td>
+<td>'HAL '</td>
 <td>cfm</td>
 </tr>
 <tr>
 <td>Harauti</td>
-<td>&#39;HAR &#39;</td>
+<td>'HAR '</td>
 <td>hoj</td>
 </tr>
 <tr>
 <td>Hausa</td>
-<td>&#39;HAU &#39;</td>
+<td>'HAU '</td>
 <td>hau</td>
 </tr>
 <tr>
 <td>Hawaiian</td>
-<td>&#39;HAW &#39;</td>
+<td>'HAW '</td>
 <td>haw</td>
 </tr>
 <tr>
 <td>Haya</td>
-<td>&#39;HAY &#39;</td>
+<td>'HAY '</td>
 <td>hay</td>
 </tr>
 <tr>
 <td>Hazaragi</td>
-<td>&#39;HAZ &#39;</td>
+<td>'HAZ '</td>
 <td>haz</td>
 </tr>
 <tr>
 <td>Hammer-Banna</td>
-<td>&#39;HBN &#39;</td>
+<td>'HBN '</td>
 <td>amf</td>
 </tr>
 <tr>
 <td>Heiltsuk</td>
-<td>&#39;HEI &#39;</td>
+<td>'HEI '</td>
 <td>hei</td>
 </tr>
 <tr>
 <td>Herero</td>
-<td>&#39;HER &#39;</td>
+<td>'HER '</td>
 <td>her</td>
 </tr>
 <tr>
 <td>Hiligaynon</td>
-<td>&#39;HIL &#39;</td>
+<td>'HIL '</td>
 <td>hil</td>
 </tr>
 <tr>
 <td>Hindi</td>
-<td>&#39;HIN &#39;</td>
+<td>'HIN '</td>
 <td>hin</td>
 </tr>
 <tr>
 <td>High Mari</td>
-<td>&#39;HMA &#39;</td>
+<td>'HMA '</td>
 <td>mrj</td>
 </tr>
 <tr>
 <td>A-Hmao</td>
-<td>&#39;HMD &#39;</td>
+<td>'HMD '</td>
 <td>hmd</td>
 </tr>
 <tr>
 <td>Hmong</td>
-<td>&#39;HMN &#39;</td>
+<td>'HMN '</td>
 <td>hmn</td>
 </tr>
 <tr>
 <td>Hiri Motu</td>
-<td>&#39;HMO &#39;</td>
+<td>'HMO '</td>
 <td>hmo</td>
 </tr>
 <tr>
 <td>Hmong Shuat</td>
-<td>&#39;HMZ &#39;</td>
+<td>'HMZ '</td>
 <td>hmz</td>
 </tr>
 <tr>
 <td>Hindko</td>
-<td>&#39;HND &#39;</td>
+<td>'HND '</td>
 <td>hno, hnd</td>
 </tr>
 <tr>
 <td>Ho</td>
-<td>&#39;HO  &#39;</td>
+<td>'HO  '</td>
 <td>hoc</td>
 </tr>
 <tr>
 <td>Harari</td>
-<td>&#39;HRI &#39;</td>
+<td>'HRI '</td>
 <td>har</td>
 </tr>
 <tr>
 <td>Croatian</td>
-<td>&#39;HRV &#39;</td>
+<td>'HRV '</td>
 <td>hrv</td>
 </tr>
 <tr>
 <td>Hungarian</td>
-<td>&#39;HUN &#39;</td>
+<td>'HUN '</td>
 <td>hun</td>
 </tr>
 <tr>
+<td>Halkomelem</td>
+<td>'HUR '</td>
+<td>hur</td>
+</tr>
+<tr>
 <td>Armenian</td>
-<td>&#39;HYE &#39;</td>
+<td>'HYE '</td>
 <td>hye, hyw</td>
 </tr>
 <tr>
@@ -1609,152 +1881,157 @@ Article													</li>
 </tr>
 <tr>
 <td>Iban</td>
-<td>&#39;IBA &#39;</td>
+<td>'IBA '</td>
 <td>iba</td>
 </tr>
 <tr>
 <td>Ibibio</td>
-<td>&#39;IBB &#39;</td>
+<td>'IBB '</td>
 <td>ibb</td>
 </tr>
 <tr>
 <td>Igbo</td>
-<td>&#39;IBO &#39;</td>
+<td>'IBO '</td>
 <td>ibo</td>
 </tr>
 <tr>
 <td>Ido</td>
-<td>&#39;IDO &#39;</td>
+<td>'IDO '</td>
 <td>ido</td>
 </tr>
 <tr>
 <td>Ijo languages</td>
-<td>&#39;IJO &#39;</td>
+<td>'IJO '</td>
 <td>iby, ijc, ije, ijn, ijo, ijs, nkx, okd, okr, orr</td>
 </tr>
 <tr>
 <td>Interlingue</td>
-<td>&#39;ILE &#39;</td>
+<td>'ILE '</td>
 <td>ile</td>
 </tr>
 <tr>
 <td>Ilokano</td>
-<td>&#39;ILO &#39;</td>
+<td>'ILO '</td>
 <td>ilo</td>
 </tr>
 <tr>
 <td>Interlingua</td>
-<td>&#39;INA &#39;</td>
+<td>'INA '</td>
 <td>ina</td>
 </tr>
 <tr>
 <td>Indonesian</td>
-<td>&#39;IND &#39;</td>
+<td>'IND '</td>
 <td>ind</td>
 </tr>
 <tr>
 <td>Ingush</td>
-<td>&#39;ING &#39;</td>
+<td>'ING '</td>
 <td>inh</td>
 </tr>
 <tr>
 <td>Inuktitut</td>
-<td>&#39;INU &#39;</td>
+<td>'INU '</td>
 <td>iku</td>
 </tr>
 <tr>
 <td>Nunavik Inuktitut</td>
-<td>&#39;INUK&#39;</td>
+<td>'INUK'</td>
 <td>ike, iku</td>
 </tr>
 <tr>
 <td>Inupiat</td>
-<td>&#39;IPK &#39;</td>
+<td>'IPK '</td>
 <td>ipk</td>
 </tr>
 <tr>
 <td>Phonetic transcription—IPA conventions</td>
 <td>IPPH</td>
-<td></td>
+<td>Cf. BCP 47 variant subtag “fonipa” (see <a href="https://www.iana.org/assignments/lang-subtags-templates/fonipa.txt" data-linktype="external">https://www.iana.org/assignments/lang-subtags-templates/fonipa.txt</a>) </td>
 </tr>
 <tr>
 <td>Irish</td>
-<td>&#39;IRI &#39;</td>
+<td>'IRI '</td>
 <td>gle</td>
 </tr>
 <tr>
 <td>Irish Traditional</td>
-<td>&#39;IRT &#39;</td>
-<td>gle</td>
+<td>'IRT '</td>
+<td>ghc, gle</td>
 </tr>
 <tr>
 <td>Irula</td>
-<td>&#39;IRU &#39;</td>
+<td>'IRU '</td>
 <td>iru</td>
 </tr>
 <tr>
 <td>Icelandic</td>
-<td>&#39;ISL &#39;</td>
+<td>'ISL '</td>
 <td>isl</td>
 </tr>
 <tr>
 <td>Inari Sami</td>
-<td>&#39;ISM &#39;</td>
+<td>'ISM '</td>
 <td>smn</td>
 </tr>
 <tr>
 <td>Italian</td>
-<td>&#39;ITA &#39;</td>
+<td>'ITA '</td>
 <td>ita</td>
 </tr>
 <tr>
 <td>Hebrew</td>
-<td>&#39;IWR &#39;</td>
+<td>'IWR '</td>
 <td>heb</td>
 </tr>
 <tr>
 <td>Jamaican Creole</td>
-<td>&#39;JAM &#39;</td>
+<td>'JAM '</td>
 <td>jam</td>
 </tr>
 <tr>
 <td>Japanese</td>
-<td>&#39;JAN &#39;</td>
+<td>'JAN '</td>
 <td>jpn</td>
 </tr>
 <tr>
 <td>Javanese</td>
-<td>&#39;JAV &#39;</td>
+<td>'JAV '</td>
 <td>jav</td>
 </tr>
 <tr>
 <td>Lojban</td>
-<td>&#39;JBO &#39;</td>
+<td>'JBO '</td>
 <td>jbo</td>
 </tr>
 <tr>
 <td>Krymchak</td>
-<td>&#39;JCT &#39;</td>
+<td>'JCT '</td>
 <td>jct</td>
 </tr>
 <tr>
+<td>Judeo-Tat</td>
+<td>'JDT '</td>
+<td>jdt</td>
+</tr>
+<tr>
 <td>Yiddish</td>
-<td>&#39;JII &#39;</td>
+<td>'JII '</td>
 <td>yid</td>
 </tr>
 <tr>
 <td>Ladino</td>
-<td>&#39;JUD &#39;</td>
+<td>'JUD '</td>
 <td>lad</td>
 </tr>
 <tr>
 <td>Jula</td>
-<td>&#39;JUL &#39;</td>
+<td>'JUL '</td>
 <td>dyu</td>
 </tr>
 <tr>
 <td>Kabardian</td>
-<td>&#39;KAB &#39;</td>
+<td>'KAB '</td>
 <td>kbd</td>
 </tr>
 <tr>
@@ -1764,197 +2041,217 @@ Article													</li>
 </tr>
 <tr>
 <td>Kachchi</td>
-<td>&#39;KAC &#39;</td>
+<td>'KAC '</td>
 <td>kfr</td>
 </tr>
 <tr>
 <td>Kalenjin</td>
-<td>&#39;KAL &#39;</td>
+<td>'KAL '</td>
 <td>kln</td>
 </tr>
 <tr>
 <td>Kannada</td>
-<td>&#39;KAN &#39;</td>
+<td>'KAN '</td>
 <td>kan</td>
 </tr>
 <tr>
 <td>Karachay</td>
-<td>&#39;KAR &#39;</td>
+<td>'KAR '</td>
 <td>krc</td>
 </tr>
 <tr>
 <td>Georgian</td>
-<td>&#39;KAT &#39;</td>
+<td>'KAT '</td>
 <td>kat</td>
 </tr>
 <tr>
 <td>Kawi (Old Javanese)</td>
-<td>&#39;KAW &#39;</td>
+<td>'KAW '</td>
 <td>kaw</td>
 </tr>
 <tr>
 <td>Kazakh</td>
-<td>&#39;KAZ &#39;</td>
+<td>'KAZ '</td>
 <td>kaz</td>
 </tr>
 <tr>
+<td>Kadiwéu</td>
+<td>'KBC '</td>
+<td>kbc</td>
+</tr>
+<tr>
 <td>Makonde</td>
-<td>&#39;KDE &#39;</td>
+<td>'KDE '</td>
 <td>kde</td>
 </tr>
 <tr>
 <td>Kabuverdianu (Crioulo)</td>
-<td>&#39;KEA &#39;</td>
+<td>'KEA '</td>
 <td>kea</td>
 </tr>
 <tr>
 <td>Kebena</td>
-<td>&#39;KEB &#39;</td>
+<td>'KEB '</td>
 <td>ktb</td>
 </tr>
 <tr>
 <td>Kekchi</td>
-<td>&#39;KEK &#39;</td>
+<td>'KEK '</td>
 <td>kek</td>
 </tr>
 <tr>
 <td>Khutsuri Georgian</td>
-<td>&#39;KGE &#39;</td>
+<td>'KGE '</td>
 <td>kat</td>
 </tr>
 <tr>
+<td>Kube</td>
+<td>'KGF '</td>
+<td>kgf</td>
+</tr>
+<tr>
 <td>Khakass</td>
-<td>&#39;KHA &#39;</td>
+<td>'KHA '</td>
 <td>kjh</td>
 </tr>
 <tr>
 <td>Khanty-Kazim</td>
-<td>&#39;KHK &#39;</td>
+<td>'KHK '</td>
 <td>kca</td>
 </tr>
 <tr>
 <td>Khmer</td>
-<td>&#39;KHM &#39;</td>
+<td>'KHM '</td>
 <td>khm</td>
 </tr>
 <tr>
 <td>Khanty-Shurishkar</td>
-<td>&#39;KHS &#39;</td>
+<td>'KHS '</td>
 <td>kca</td>
 </tr>
 <tr>
 <td>Khamti Shan</td>
-<td>&#39;KHT &#39;</td>
+<td>'KHT '</td>
 <td>kht</td>
 </tr>
 <tr>
 <td>Khanty-Vakhi</td>
-<td>&#39;KHV &#39;</td>
+<td>'KHV '</td>
 <td>kca</td>
 </tr>
 <tr>
 <td>Khowar</td>
-<td>&#39;KHW &#39;</td>
+<td>'KHW '</td>
 <td>khw</td>
 </tr>
 <tr>
 <td>Kikuyu (Gikuyu)</td>
-<td>&#39;KIK &#39;</td>
+<td>'KIK '</td>
 <td>kik</td>
 </tr>
 <tr>
 <td>Kirghiz (Kyrgyz)</td>
-<td>&#39;KIR &#39;</td>
+<td>'KIR '</td>
 <td>kir</td>
 </tr>
 <tr>
 <td>Kisii</td>
-<td>&#39;KIS &#39;</td>
+<td>'KIS '</td>
 <td>kqs, kss</td>
 </tr>
 <tr>
 <td>Kirmanjki</td>
-<td>&#39;KIU &#39;</td>
+<td>'KIU '</td>
 <td>kiu</td>
 </tr>
 <tr>
 <td>Southern Kiwai</td>
-<td>&#39;KJD &#39;</td>
+<td>'KJD '</td>
 <td>kjd</td>
 </tr>
 <tr>
+<td>Khinalug</td>
+<td>'KJJ '</td>
+<td>kjj</td>
+</tr>
+<tr>
 <td>Eastern Pwo Karen</td>
-<td>&#39;KJP &#39;</td>
+<td>'KJP '</td>
 <td>kjp</td>
 </tr>
 <tr>
 <td>Bumthangkha</td>
-<td>&#39;KJZ &#39;</td>
+<td>'KJZ '</td>
 <td>kjz</td>
 </tr>
 <tr>
 <td>Kokni</td>
-<td>&#39;KKN &#39;</td>
+<td>'KKN '</td>
 <td>kex</td>
 </tr>
 <tr>
 <td>Kalmyk</td>
-<td>&#39;KLM &#39;</td>
+<td>'KLM '</td>
 <td>xal</td>
 </tr>
 <tr>
 <td>Kamba</td>
-<td>&#39;KMB &#39;</td>
+<td>'KMB '</td>
 <td>kam</td>
 </tr>
 <tr>
+<td>Kâte</td>
+<td>'KMG '</td>
+<td>kmg</td>
+</tr>
+<tr>
 <td>Kumaoni</td>
-<td>&#39;KMN &#39;</td>
+<td>'KMN '</td>
 <td>kfy</td>
 </tr>
 <tr>
 <td>Komo</td>
-<td>&#39;KMO &#39;</td>
+<td>'KMO '</td>
 <td>kmw</td>
 </tr>
 <tr>
 <td>Komso</td>
-<td>&#39;KMS &#39;</td>
+<td>'KMS '</td>
 <td>kxc</td>
 </tr>
 <tr>
 <td>Khorasani Turkic</td>
-<td>&#39;KMZ &#39;</td>
+<td>'KMZ '</td>
 <td>kmz</td>
 </tr>
 <tr>
 <td>Kanuri</td>
-<td>&#39;KNR &#39;</td>
+<td>'KNR '</td>
 <td>kau</td>
 </tr>
 <tr>
 <td>Kodagu</td>
-<td>&#39;KOD &#39;</td>
+<td>'KOD '</td>
 <td>kfa</td>
 </tr>
 <tr>
 <td>Korean Old Hangul</td>
-<td>&#39;KOH &#39;</td>
+<td>'KOH '</td>
 <td>kor, okm</td>
 </tr>
 <tr>
 <td>Konkani</td>
-<td>&#39;KOK &#39;</td>
+<td>'KOK '</td>
 <td>kok</td>
 </tr>
 <tr>
 <td>Komi</td>
-<td>&#39;KOM &#39;</td>
+<td>'KOM '</td>
 <td>kom</td>
 </tr>
 <tr>
 <td>Kikongo</td>
-<td>&#39;KON &#39;</td>
+<td>'KON '</td>
 <td>ktu</td>
 </tr>
 <tr>
@@ -1964,62 +2261,62 @@ Article													</li>
 </tr>
 <tr>
 <td>Komi-Permyak</td>
-<td>&#39;KOP &#39;</td>
+<td>'KOP '</td>
 <td>koi</td>
 </tr>
 <tr>
 <td>Korean</td>
-<td>&#39;KOR &#39;</td>
+<td>'KOR '</td>
 <td>kor</td>
 </tr>
 <tr>
 <td>Kosraean</td>
-<td>&#39;KOS &#39;</td>
+<td>'KOS '</td>
 <td>kos</td>
 </tr>
 <tr>
 <td>Komi-Zyrian</td>
-<td>&#39;KOZ &#39;</td>
+<td>'KOZ '</td>
 <td>kpv</td>
 </tr>
 <tr>
 <td>Kpelle</td>
-<td>&#39;KPL &#39;</td>
+<td>'KPL '</td>
 <td>kpe</td>
 </tr>
 <tr>
 <td>Krio</td>
-<td>&#39;KRI &#39;</td>
+<td>'KRI '</td>
 <td>kri</td>
 </tr>
 <tr>
 <td>Karakalpak</td>
-<td>&#39;KRK &#39;</td>
+<td>'KRK '</td>
 <td>kaa</td>
 </tr>
 <tr>
 <td>Karelian</td>
-<td>&#39;KRL &#39;</td>
+<td>'KRL '</td>
 <td>krl</td>
 </tr>
 <tr>
 <td>Karaim</td>
-<td>&#39;KRM &#39;</td>
+<td>'KRM '</td>
 <td>kdr</td>
 </tr>
 <tr>
 <td>Karen</td>
-<td>&#39;KRN &#39;</td>
+<td>'KRN '</td>
 <td>blk, bwe, eky, ghk, jkm, jkp, kar, kjp, kjt, ksw, kvl, kvq, kvt, kvu, kvy, kxf, kxk, kyu, pdu, pwo, pww, wea</td>
 </tr>
 <tr>
 <td>Koorete</td>
-<td>&#39;KRT &#39;</td>
+<td>'KRT '</td>
 <td>kqy</td>
 </tr>
 <tr>
 <td>Kashmiri</td>
-<td>&#39;KSH &#39;</td>
+<td>'KSH '</td>
 <td>kas</td>
 </tr>
 <tr>
@@ -2029,722 +2326,767 @@ Article													</li>
 </tr>
 <tr>
 <td>Khasi</td>
-<td>&#39;KSI &#39;</td>
+<td>'KSI '</td>
 <td>kha</td>
 </tr>
 <tr>
 <td>Kildin Sami</td>
-<td>&#39;KSM &#39;</td>
+<td>'KSM '</td>
 <td>sjd</td>
 </tr>
 <tr>
+<td>Khamyang</td>
+<td>'KSU '</td>
+<td>ksu</td>
+</tr>
+<tr>
 <td>S’gaw Karen</td>
-<td>&#39;KSW &#39;</td>
+<td>'KSW '</td>
 <td>ksw</td>
 </tr>
 <tr>
 <td>Kuanyama</td>
-<td>&#39;KUA &#39;</td>
+<td>'KUA '</td>
 <td>kua</td>
 </tr>
 <tr>
 <td>Kui</td>
-<td>&#39;KUI &#39;</td>
+<td>'KUI '</td>
 <td>kxu</td>
 </tr>
 <tr>
 <td>Kulvi</td>
-<td>&#39;KUL &#39;</td>
+<td>'KUL '</td>
 <td>kfx</td>
 </tr>
 <tr>
 <td>Kumyk</td>
-<td>&#39;KUM &#39;</td>
+<td>'KUM '</td>
 <td>kum</td>
 </tr>
 <tr>
 <td>Kurdish</td>
-<td>&#39;KUR &#39;</td>
+<td>'KUR '</td>
 <td>kur</td>
 </tr>
 <tr>
 <td>Kurukh</td>
-<td>&#39;KUU &#39;</td>
+<td>'KUU '</td>
 <td>kru</td>
 </tr>
 <tr>
 <td>Kuy</td>
-<td>&#39;KUY &#39;</td>
+<td>'KUY '</td>
 <td>kdt</td>
 </tr>
 <tr>
+<td>Geba Karen</td>
+<td>'KVQ '</td>
+<td>kvq</td>
+</tr>
+<tr>
 <td>Kwakʼwala</td>
-<td>&#39;KWK &#39;</td>
+<td>'KWK '</td>
 <td>kwk</td>
 </tr>
 <tr>
 <td>Koryak</td>
-<td>&#39;KYK &#39;</td>
+<td>'KYK '</td>
 <td>kpy</td>
 </tr>
 <tr>
 <td>Western Kayah</td>
-<td>&#39;KYU &#39;</td>
+<td>'KYU '</td>
 <td>kyu</td>
 </tr>
 <tr>
 <td>Ladin</td>
-<td>&#39;LAD &#39;</td>
+<td>'LAD '</td>
 <td>lld</td>
 </tr>
 <tr>
 <td>Lahuli</td>
-<td>&#39;LAH &#39;</td>
+<td>'LAH '</td>
 <td>bfu</td>
 </tr>
 <tr>
 <td>Lak</td>
-<td>&#39;LAK &#39;</td>
+<td>'LAK '</td>
 <td>lbe</td>
 </tr>
 <tr>
 <td>Lambani</td>
-<td>&#39;LAM &#39;</td>
+<td>'LAM '</td>
 <td>lmn</td>
 </tr>
 <tr>
 <td>Lao</td>
-<td>&#39;LAO &#39;</td>
+<td>'LAO '</td>
 <td>lao</td>
 </tr>
 <tr>
 <td>Latin</td>
-<td>&#39;LAT &#39;</td>
+<td>'LAT '</td>
 <td>lat</td>
 </tr>
 <tr>
 <td>Laz</td>
-<td>&#39;LAZ &#39;</td>
+<td>'LAZ '</td>
 <td>lzz</td>
 </tr>
 <tr>
 <td>L-Cree</td>
-<td>&#39;LCR &#39;</td>
+<td>'LCR '</td>
 <td>crm</td>
 </tr>
 <tr>
 <td>Ladakhi</td>
-<td>&#39;LDK &#39;</td>
+<td>'LDK '</td>
 <td>lbj</td>
 </tr>
 <tr>
 <td>Lelemi</td>
-<td>&#39;LEF &#39;</td>
+<td>'LEF '</td>
 <td>lef</td>
 </tr>
 <tr>
 <td>Lezgi</td>
-<td>&#39;LEZ &#39;</td>
+<td>'LEZ '</td>
 <td>lez</td>
 </tr>
 <tr>
 <td>Ligurian</td>
-<td>&#39;LIJ &#39;</td>
+<td>'LIJ '</td>
 <td>lij</td>
 </tr>
 <tr>
 <td>Limburgish</td>
-<td>&#39;LIM &#39;</td>
+<td>'LIM '</td>
 <td>lim</td>
 </tr>
 <tr>
 <td>Lingala</td>
-<td>&#39;LIN &#39;</td>
+<td>'LIN '</td>
 <td>lin</td>
 </tr>
 <tr>
 <td>Lisu</td>
-<td>&#39;LIS &#39;</td>
+<td>'LIS '</td>
 <td>lis</td>
 </tr>
 <tr>
+<td>Liv</td>
+<td>'LIV '</td>
+<td>liv</td>
+</tr>
+<tr>
 <td>Lampung</td>
-<td>&#39;LJP &#39;</td>
+<td>'LJP '</td>
 <td>ljp</td>
 </tr>
 <tr>
 <td>Laki</td>
-<td>&#39;LKI &#39;</td>
+<td>'LKI '</td>
 <td>lki</td>
 </tr>
 <tr>
 <td>Low Mari</td>
-<td>&#39;LMA &#39;</td>
+<td>'LMA '</td>
 <td>mhr</td>
 </tr>
 <tr>
 <td>Limbu</td>
-<td>&#39;LMB &#39;</td>
+<td>'LMB '</td>
 <td>lif</td>
 </tr>
 <tr>
 <td>Lombard</td>
-<td>&#39;LMO &#39;</td>
+<td>'LMO '</td>
 <td>lmo</td>
 </tr>
 <tr>
 <td>Lomwe</td>
-<td>&#39;LMW &#39;</td>
+<td>'LMW '</td>
 <td>ngl</td>
 </tr>
 <tr>
 <td>Loma</td>
-<td>&#39;LOM &#39;</td>
+<td>'LOM '</td>
 <td>lom</td>
 </tr>
 <tr>
 <td>Lipo</td>
-<td>&#39;LPO &#39;</td>
+<td>'LPO '</td>
 <td>lpo</td>
 </tr>
 <tr>
 <td>Luri</td>
-<td>&#39;LRC &#39;</td>
+<td>'LRC '</td>
 <td>lrc, luz, bqi, zum</td>
 </tr>
 <tr>
 <td>Lower Sorbian</td>
-<td>&#39;LSB &#39;</td>
+<td>'LSB '</td>
 <td>dsb</td>
 </tr>
 <tr>
 <td>Lule Sami</td>
-<td>&#39;LSM &#39;</td>
+<td>'LSM '</td>
 <td>smj</td>
 </tr>
 <tr>
 <td>Lithuanian</td>
-<td>&#39;LTH &#39;</td>
+<td>'LTH '</td>
 <td>lit</td>
 </tr>
 <tr>
 <td>Luxembourgish</td>
-<td>&#39;LTZ &#39;</td>
+<td>'LTZ '</td>
 <td>ltz</td>
 </tr>
 <tr>
 <td>Luba-Lulua</td>
-<td>&#39;LUA &#39;</td>
+<td>'LUA '</td>
 <td>lua</td>
 </tr>
 <tr>
 <td>Luba-Katanga</td>
-<td>&#39;LUB &#39;</td>
+<td>'LUB '</td>
 <td>lub</td>
 </tr>
 <tr>
 <td>Ganda</td>
-<td>&#39;LUG &#39;</td>
+<td>'LUG '</td>
 <td>lug</td>
 </tr>
 <tr>
 <td>Luyia</td>
-<td>&#39;LUH &#39;</td>
+<td>'LUH '</td>
 <td>luy</td>
 </tr>
 <tr>
 <td>Luo</td>
-<td>&#39;LUO &#39;</td>
+<td>'LUO '</td>
 <td>luo</td>
 </tr>
 <tr>
+<td>Lushootseed</td>
+<td>'LUT '</td>
+<td>lut</td>
+</tr>
+<tr>
 <td>Latvian</td>
-<td>&#39;LVI &#39;</td>
+<td>'LVI '</td>
 <td>lav</td>
 </tr>
 <tr>
 <td>Madura</td>
-<td>&#39;MAD &#39;</td>
+<td>'MAD '</td>
 <td>mad</td>
 </tr>
 <tr>
 <td>Magahi</td>
-<td>&#39;MAG &#39;</td>
+<td>'MAG '</td>
 <td>mag</td>
 </tr>
 <tr>
 <td>Marshallese</td>
-<td>&#39;MAH &#39;</td>
+<td>'MAH '</td>
 <td>mah</td>
 </tr>
 <tr>
 <td>Majang</td>
-<td>&#39;MAJ &#39;</td>
+<td>'MAJ '</td>
 <td>mpe</td>
 </tr>
 <tr>
 <td>Makhuwa</td>
-<td>&#39;MAK &#39;</td>
+<td>'MAK '</td>
 <td>vmw</td>
 </tr>
 <tr>
 <td>Malayalam</td>
-<td>&#39;MAL &#39;</td>
+<td>'MAL '</td>
 <td>mal</td>
 </tr>
 <tr>
 <td>Mam</td>
-<td>&#39;MAM &#39;</td>
+<td>'MAM '</td>
 <td>mam</td>
 </tr>
 <tr>
 <td>Mansi</td>
-<td>&#39;MAN &#39;</td>
+<td>'MAN '</td>
 <td>mns</td>
 </tr>
 <tr>
 <td>Mapudungun</td>
-<td>&#39;MAP &#39;</td>
+<td>'MAP '</td>
 <td>arn</td>
 </tr>
 <tr>
 <td>Marathi</td>
-<td>&#39;MAR &#39;</td>
+<td>'MAR '</td>
 <td>mar</td>
 </tr>
 <tr>
 <td>Marwari</td>
-<td>&#39;MAW &#39;</td>
+<td>'MAW '</td>
 <td>mwr, dhd, rwr, mve, wry, mtr, swv</td>
 </tr>
 <tr>
 <td>Mbundu</td>
-<td>&#39;MBN &#39;</td>
+<td>'MBN '</td>
 <td>kmb</td>
 </tr>
 <tr>
 <td>Mbo</td>
-<td>&#39;MBO &#39;</td>
+<td>'MBO '</td>
 <td>mbo</td>
 </tr>
 <tr>
 <td>Manchu</td>
-<td>&#39;MCH &#39;</td>
+<td>'MCH '</td>
 <td>mnc</td>
 </tr>
 <tr>
 <td>Moose Cree</td>
-<td>&#39;MCR &#39;</td>
+<td>'MCR '</td>
 <td>crm</td>
 </tr>
 <tr>
 <td>Mende</td>
-<td>&#39;MDE &#39;</td>
+<td>'MDE '</td>
 <td>men</td>
 </tr>
 <tr>
 <td>Mandar</td>
-<td>&#39;MDR &#39;</td>
+<td>'MDR '</td>
 <td>mdr</td>
 </tr>
 <tr>
 <td>Me’en</td>
-<td>&#39;MEN &#39;</td>
+<td>'MEN '</td>
 <td>mym</td>
 </tr>
 <tr>
 <td>Meru</td>
-<td>&#39;MER &#39;</td>
+<td>'MER '</td>
 <td>mer</td>
 </tr>
 <tr>
+<td>Mano</td>
+<td>'MEV '</td>
+<td>mev</td>
+</tr>
+<tr>
 <td>Pattani Malay</td>
-<td>&#39;MFA &#39;</td>
+<td>'MFA '</td>
 <td>mfa</td>
 </tr>
 <tr>
 <td>Morisyen</td>
-<td>&#39;MFE &#39;</td>
+<td>'MFE '</td>
 <td>mfe</td>
 </tr>
 <tr>
 <td>Minangkabau</td>
-<td>&#39;MIN &#39;</td>
+<td>'MIN '</td>
 <td>min</td>
 </tr>
 <tr>
 <td>Mizo</td>
-<td>&#39;MIZ &#39;</td>
+<td>'MIZ '</td>
 <td>lus</td>
 </tr>
 <tr>
 <td>Macedonian</td>
-<td>&#39;MKD &#39;</td>
+<td>'MKD '</td>
 <td>mkd</td>
 </tr>
 <tr>
 <td>Makasar</td>
-<td>&#39;MKR &#39;</td>
+<td>'MKR '</td>
 <td>mak</td>
 </tr>
 <tr>
 <td>Kituba</td>
-<td>&#39;MKW &#39;</td>
+<td>'MKW '</td>
 <td>mkw</td>
 </tr>
 <tr>
 <td>Male</td>
-<td>&#39;MLE &#39;</td>
+<td>'MLE '</td>
 <td>mdy</td>
 </tr>
 <tr>
 <td>Malagasy</td>
-<td>&#39;MLG &#39;</td>
+<td>'MLG '</td>
 <td>mlg</td>
 </tr>
 <tr>
 <td>Malinke</td>
-<td>&#39;MLN &#39;</td>
+<td>'MLN '</td>
 <td>mlq</td>
 </tr>
 <tr>
 <td>Malayalam Reformed</td>
-<td>&#39;MLR &#39;</td>
+<td>'MLR '</td>
 <td>mal</td>
 </tr>
 <tr>
 <td>Malay</td>
-<td>&#39;MLY &#39;</td>
+<td>'MLY '</td>
 <td>msa</td>
 </tr>
 <tr>
 <td>Mandinka</td>
-<td>&#39;MND &#39;</td>
+<td>'MND '</td>
 <td>mnk</td>
 </tr>
 <tr>
 <td>Mongolian</td>
-<td>&#39;MNG &#39;</td>
+<td>'MNG '</td>
 <td>mon</td>
 </tr>
 <tr>
 <td>Manipuri</td>
-<td>&#39;MNI &#39;</td>
+<td>'MNI '</td>
 <td>mni</td>
 </tr>
 <tr>
 <td>Maninka</td>
-<td>&#39;MNK &#39;</td>
+<td>'MNK '</td>
 <td>man, mnk, myq, mku, msc, emk, mwk, mlq</td>
 </tr>
 <tr>
 <td>Manx</td>
-<td>&#39;MNX &#39;</td>
+<td>'MNX '</td>
 <td>glv</td>
 </tr>
 <tr>
 <td>Mohawk</td>
-<td>&#39;MOH &#39;</td>
+<td>'MOH '</td>
 <td>moh</td>
 </tr>
 <tr>
 <td>Moksha</td>
-<td>&#39;MOK &#39;</td>
+<td>'MOK '</td>
 <td>mdf</td>
 </tr>
 <tr>
 <td>Moldavian</td>
-<td>&#39;MOL &#39;</td>
+<td>'MOL '</td>
 <td>mol</td>
 </tr>
 <tr>
 <td>Mon</td>
-<td>&#39;MON &#39;</td>
+<td>'MON '</td>
 <td>mnw</td>
 </tr>
 <tr>
 <td>Thailand Mon</td>
-<td>&#39;MONT&#39;</td>
+<td>'MONT'</td>
 <td>mnw<br>See <a href="https://www.unicode.org/L2/L2020/20163-arakanese-mon.pdf" data-linktype="external">https://www.unicode.org/L2/L2020/20163-arakanese-mon.pdf</a></td>
 </tr>
 <tr>
 <td>Moroccan</td>
-<td>&#39;MOR &#39;</td>
+<td>'MOR '</td>
 <td></td>
 </tr>
 <tr>
 <td>Mossi</td>
-<td>&#39;MOS &#39;</td>
+<td>'MOS '</td>
 <td>mos</td>
 </tr>
 <tr>
 <td>Maori</td>
-<td>&#39;MRI &#39;</td>
+<td>'MRI '</td>
 <td>mri</td>
 </tr>
 <tr>
 <td>Maithili</td>
-<td>&#39;MTH &#39;</td>
+<td>'MTH '</td>
 <td>mai</td>
 </tr>
 <tr>
 <td>Maltese</td>
-<td>&#39;MTS &#39;</td>
+<td>'MTS '</td>
 <td>mlt</td>
 </tr>
 <tr>
 <td>Mundari</td>
-<td>&#39;MUN &#39;</td>
+<td>'MUN '</td>
 <td>unr</td>
 </tr>
 <tr>
 <td>Muscogee</td>
-<td>&#39;MUS &#39;</td>
+<td>'MUS '</td>
 <td>mus</td>
 </tr>
 <tr>
 <td>Mirandese</td>
-<td>&#39;MWL &#39;</td>
+<td>'MWL '</td>
 <td>mwl</td>
 </tr>
 <tr>
 <td>Hmong Daw</td>
-<td>&#39;MWW &#39;</td>
+<td>'MWW '</td>
 <td>mww</td>
 </tr>
 <tr>
 <td>Mayan</td>
-<td>&#39;MYN &#39;</td>
+<td>'MYN '</td>
 <td>acr, agu, caa, cac, cak, chf, ckz, cob, ctu, emy, hus, itz, ixl, jac, kek, kjb, knj, lac, mam, mhc, mop, myn, poc, poh, quc, qum, quv, toj, ttc, tzh, tzj, tzo, usp, yua</td>
 </tr>
 <tr>
 <td>Mazanderani</td>
-<td>&#39;MZN &#39;</td>
+<td>'MZN '</td>
 <td>mzn</td>
 </tr>
 <tr>
 <td>Naga-Assamese</td>
-<td>&#39;NAG &#39;</td>
+<td>'NAG '</td>
 <td>nag</td>
 </tr>
 <tr>
 <td>Nahuatl</td>
-<td>&#39;NAH &#39;</td>
+<td>'NAH '</td>
 <td>azd, azn, azz, nah, naz, nch, nci, ncj, ncl, ncx, ngu, nhc, nhe, nhg, nhi, nhk, nhm, nhn, nhp, nhq, nht, nhv, nhw, nhx, nhy, nhz, nlv, npl, nsu, nuz</td>
 </tr>
 <tr>
 <td>Nanai</td>
-<td>&#39;NAN &#39;</td>
+<td>'NAN '</td>
 <td>gld</td>
 </tr>
 <tr>
 <td>Neapolitan</td>
-<td>&#39;NAP &#39;</td>
+<td>'NAP '</td>
 <td>nap</td>
 </tr>
 <tr>
 <td>Naskapi</td>
-<td>&#39;NAS &#39;</td>
+<td>'NAS '</td>
 <td>nsk</td>
 </tr>
 <tr>
 <td>Nauruan</td>
-<td>&#39;NAU &#39;</td>
+<td>'NAU '</td>
 <td>nau</td>
 </tr>
 <tr>
 <td>Navajo</td>
-<td>&#39;NAV &#39;</td>
+<td>'NAV '</td>
 <td>nav</td>
 </tr>
 <tr>
 <td>N-Cree</td>
-<td>&#39;NCR &#39;</td>
+<td>'NCR '</td>
 <td>csw</td>
 </tr>
 <tr>
 <td>Ndebele</td>
-<td>&#39;NDB &#39;</td>
+<td>'NDB '</td>
 <td>nbl, nde</td>
 </tr>
 <tr>
 <td>Ndau</td>
-<td>&#39;NDC &#39;</td>
+<td>'NDC '</td>
 <td>ndc</td>
 </tr>
 <tr>
 <td>Ndonga</td>
-<td>&#39;NDG &#39;</td>
+<td>'NDG '</td>
 <td>ndo</td>
 </tr>
 <tr>
 <td>Low Saxon</td>
-<td>&#39;NDS &#39;</td>
+<td>'NDS '</td>
 <td>nds</td>
 </tr>
 <tr>
 <td>Nepali</td>
-<td>&#39;NEP &#39;</td>
+<td>'NEP '</td>
 <td>nep</td>
 </tr>
 <tr>
 <td>Newari</td>
-<td>&#39;NEW &#39;</td>
+<td>'NEW '</td>
 <td>new</td>
 </tr>
 <tr>
 <td>Ngbaka</td>
-<td>&#39;NGA &#39;</td>
+<td>'NGA '</td>
 <td>nga</td>
 </tr>
 <tr>
 <td>Nagari</td>
-<td>&#39;NGR &#39;</td>
+<td>'NGR '</td>
 <td></td>
 </tr>
 <tr>
 <td>Norway House Cree</td>
-<td>&#39;NHC &#39;</td>
+<td>'NHC '</td>
 <td>csw</td>
 </tr>
 <tr>
 <td>Nisi</td>
-<td>&#39;NIS &#39;</td>
+<td>'NIS '</td>
 <td>dap, njz, tgj</td>
 </tr>
 <tr>
 <td>Niuean</td>
-<td>&#39;NIU &#39;</td>
+<td>'NIU '</td>
 <td>niu</td>
 </tr>
 <tr>
 <td>Nyankole</td>
-<td>&#39;NKL &#39;</td>
+<td>'NKL '</td>
 <td>nyn</td>
 </tr>
 <tr>
 <td>N’Ko</td>
-<td>&#39;NKO &#39;</td>
+<td>'NKO '</td>
 <td>nqo</td>
 </tr>
 <tr>
 <td>Dutch</td>
-<td>&#39;NLD &#39;</td>
+<td>'NLD '</td>
 <td>nld</td>
 </tr>
 <tr>
 <td>Nimadi</td>
-<td>&#39;NOE &#39;</td>
+<td>'NOE '</td>
 <td>noe</td>
 </tr>
 <tr>
 <td>Nogai</td>
-<td>&#39;NOG &#39;</td>
+<td>'NOG '</td>
 <td>nog</td>
 </tr>
 <tr>
+<td>Numanggang</td>
+<td>'NOP '</td>
+<td>nop</td>
+</tr>
+<tr>
 <td>Norwegian</td>
-<td>&#39;NOR &#39;</td>
+<td>'NOR '</td>
 <td>nob</td>
 </tr>
 <tr>
 <td>Novial</td>
-<td>&#39;NOV &#39;</td>
+<td>'NOV '</td>
 <td>nov</td>
 </tr>
 <tr>
 <td>Northern Sami</td>
-<td>&#39;NSM &#39;</td>
+<td>'NSM '</td>
 <td>sme</td>
 </tr>
 <tr>
 <td>Northern Sotho</td>
-<td>&#39;NSO &#39;</td>
+<td>'NSO '</td>
 <td>nso</td>
 </tr>
 <tr>
 <td>Northern Tai</td>
-<td>&#39;NTA &#39;</td>
+<td>'NTA '</td>
 <td>nod</td>
 </tr>
 <tr>
 <td>Esperanto</td>
-<td>&#39;NTO &#39;</td>
+<td>'NTO '</td>
 <td>epo</td>
 </tr>
 <tr>
+<td>Nuu-chah-nulth</td>
+<td>'NUK '</td>
+<td>nuk</td>
+</tr>
+<tr>
 <td>Nyamwezi</td>
-<td>&#39;NYM &#39;</td>
+<td>'NYM '</td>
 <td>nym</td>
 </tr>
 <tr>
 <td>Norwegian Nynorsk (Nynorsk, Norwegian)</td>
-<td>&#39;NYN &#39;</td>
+<td>'NYN '</td>
 <td>nno</td>
 </tr>
 <tr>
 <td>Mbembe Tigon</td>
-<td>&#39;NZA &#39;</td>
+<td>'NZA '</td>
 <td>nza</td>
 </tr>
 <tr>
 <td>Occitan</td>
-<td>&#39;OCI &#39;</td>
+<td>'OCI '</td>
 <td>oci</td>
 </tr>
 <tr>
 <td>Oji-Cree</td>
-<td>&#39;OCR &#39;</td>
+<td>'OCR '</td>
 <td>ojs</td>
 </tr>
 <tr>
 <td>Ojibway</td>
-<td>&#39;OJB &#39;</td>
+<td>'OJB '</td>
 <td>oji</td>
 </tr>
 <tr>
-<td>Odia (formerly Oriya)</td>
-<td>&#39;ORI &#39;</td>
+<td>Oneida</td>
+<td>'ONE '</td>
+<td>one</td>
+</tr>
+<tr>
+<td>Onondaga</td>
+<td>'ONO '</td>
+<td>ono</td>
+</tr>
+<tr>
+<td>Odia</td>
+<td>'ORI '</td>
 <td>ori</td>
 </tr>
 <tr>
 <td>Oromo</td>
-<td>&#39;ORO &#39;</td>
+<td>'ORO '</td>
 <td>orm</td>
 </tr>
 <tr>
 <td>Ossetian</td>
-<td>&#39;OSS &#39;</td>
+<td>'OSS '</td>
 <td>oss</td>
 </tr>
 <tr>
 <td>Palestinian Aramaic</td>
-<td>&#39;PAA &#39;</td>
+<td>'PAA '</td>
 <td>sam</td>
 </tr>
 <tr>
 <td>Pangasinan</td>
-<td>&#39;PAG &#39;</td>
+<td>'PAG '</td>
 <td>pag</td>
 </tr>
 <tr>
 <td>Pali</td>
-<td>&#39;PAL &#39;</td>
+<td>'PAL '</td>
 <td>pli</td>
 </tr>
 <tr>
 <td>Pampangan</td>
-<td>&#39;PAM &#39;</td>
+<td>'PAM '</td>
 <td>pam</td>
 </tr>
 <tr>
 <td>Punjabi</td>
-<td>&#39;PAN &#39;</td>
+<td>'PAN '</td>
 <td>pan</td>
 </tr>
 <tr>
 <td>Palpa</td>
-<td>&#39;PAP &#39;</td>
+<td>'PAP '</td>
 <td>plp</td>
 </tr>
 <tr>
@@ -2754,352 +3096,377 @@ Article													</li>
 </tr>
 <tr>
 <td>Pashto</td>
-<td>&#39;PAS &#39;</td>
+<td>'PAS '</td>
 <td>pus</td>
 </tr>
 <tr>
 <td>Palauan</td>
-<td>&#39;PAU &#39;</td>
+<td>'PAU '</td>
 <td>pau</td>
 </tr>
 <tr>
 <td>Bouyei</td>
-<td>&#39;PCC &#39;</td>
+<td>'PCC '</td>
 <td>pcc</td>
 </tr>
 <tr>
 <td>Picard</td>
-<td>&#39;PCD &#39;</td>
+<td>'PCD '</td>
 <td>pcd</td>
 </tr>
 <tr>
 <td>Pennsylvania German</td>
-<td>&#39;PDC &#39;</td>
+<td>'PDC '</td>
 <td>pdc</td>
 </tr>
 <tr>
 <td>Polytonic Greek</td>
-<td>&#39;PGR &#39;</td>
+<td>'PGR '</td>
 <td>ell</td>
 </tr>
 <tr>
 <td>Phake</td>
-<td>&#39;PHK &#39;</td>
+<td>'PHK '</td>
 <td>phk</td>
 </tr>
 <tr>
 <td>Norfolk</td>
-<td>&#39;PIH &#39;</td>
+<td>'PIH '</td>
 <td>pih</td>
 </tr>
 <tr>
 <td>Filipino</td>
-<td>&#39;PIL &#39;</td>
+<td>'PIL '</td>
 <td>fil</td>
 </tr>
 <tr>
 <td>Palaung</td>
-<td>&#39;PLG &#39;</td>
+<td>'PLG '</td>
 <td>pce, rbb, pll</td>
 </tr>
 <tr>
+<td>Pilagá</td>
+<td>'PLG0'</td>
+<td>plg</td>
+</tr>
+<tr>
 <td>Polish</td>
-<td>&#39;PLK &#39;</td>
+<td>'PLK '</td>
 <td>pol</td>
 </tr>
 <tr>
 <td>Piemontese</td>
-<td>&#39;PMS &#39;</td>
+<td>'PMS '</td>
 <td>pms</td>
 </tr>
 <tr>
 <td>Western Panjabi</td>
-<td>&#39;PNB &#39;</td>
+<td>'PNB '</td>
 <td>pnb</td>
 </tr>
 <tr>
 <td>Pocomchi</td>
-<td>&#39;POH &#39;</td>
+<td>'POH '</td>
 <td>poh</td>
 </tr>
 <tr>
 <td>Pohnpeian</td>
-<td>&#39;PON &#39;</td>
+<td>'PON '</td>
 <td>pon</td>
 </tr>
 <tr>
 <td>Provençal / Old Provençal</td>
-<td>&#39;PRO &#39;</td>
+<td>'PRO '</td>
 <td>pro</td>
 </tr>
 <tr>
 <td>Portuguese</td>
-<td>&#39;PTG &#39;</td>
+<td>'PTG '</td>
 <td>por</td>
 </tr>
 <tr>
 <td>Western Pwo Karen</td>
-<td>&#39;PWO &#39;</td>
+<td>'PWO '</td>
 <td>pwo</td>
 </tr>
 <tr>
 <td>Chin</td>
-<td>&#39;QIN &#39;</td>
+<td>'QIN '</td>
 <td>bgr, biu, cek, cey, cfm, cbl, cka, ckn, clj, clt, cmr, cnb, cnh, cnk, cnw, csh, csj, csv, csy, ctd, cth, czt, dao, gnb, hlt, hmr, hra, lus, mrh, mwq, pck, pkh, pub, ral, rtc, sch, sez, shl, smt, tcp, tcz, vap, weu, zom, zyp</td>
 </tr>
 <tr>
 <td>K’iche’</td>
-<td>&#39;QUC &#39;</td>
+<td>'QUC '</td>
 <td>quc</td>
 </tr>
 <tr>
 <td>Quechua (Bolivia)</td>
-<td>&#39;QUH &#39;</td>
+<td>'QUH '</td>
 <td>quh</td>
 </tr>
 <tr>
 <td>Quechua</td>
-<td>&#39;QUZ &#39;</td>
+<td>'QUZ '</td>
 <td>quz</td>
 </tr>
 <tr>
 <td>Quechua (Ecuador)</td>
-<td>&#39;QVI &#39;</td>
+<td>'QVI '</td>
 <td>qvi</td>
 </tr>
 <tr>
 <td>Quechua (Peru)</td>
-<td>&#39;QWH &#39;</td>
+<td>'QWH '</td>
 <td>qwh</td>
 </tr>
 <tr>
 <td>Rajasthani</td>
-<td>&#39;RAJ &#39;</td>
+<td>'RAJ '</td>
 <td>raj</td>
 </tr>
 <tr>
 <td>Rarotongan</td>
-<td>&#39;RAR &#39;</td>
+<td>'RAR '</td>
 <td>rar</td>
 </tr>
 <tr>
 <td>Russian Buriat</td>
-<td>&#39;RBU &#39;</td>
+<td>'RBU '</td>
 <td>bxr</td>
 </tr>
 <tr>
 <td>R-Cree</td>
-<td>&#39;RCR &#39;</td>
+<td>'RCR '</td>
 <td>atj</td>
 </tr>
 <tr>
 <td>Rejang</td>
-<td>&#39;REJ &#39;</td>
+<td>'REJ '</td>
 <td>rej</td>
 </tr>
 <tr>
 <td>Riang</td>
-<td>&#39;RIA &#39;</td>
+<td>'RIA '</td>
 <td>ria</td>
 </tr>
 <tr>
 <td>Rohingya</td>
-<td>&#39;RHG &#39;</td>
+<td>'RHG '</td>
 <td>rhg</td>
 </tr>
 <tr>
 <td>Tarifit</td>
-<td>&#39;RIF &#39;</td>
+<td>'RIF '</td>
 <td>rif</td>
 </tr>
 <tr>
 <td>Ritarungo</td>
-<td>&#39;RIT &#39;</td>
+<td>'RIT '</td>
 <td>rit</td>
 </tr>
 <tr>
 <td>Arakwal</td>
-<td>&#39;RKW &#39;</td>
+<td>'RKW '</td>
 <td>rkw</td>
 </tr>
 <tr>
 <td>Romansh</td>
-<td>&#39;RMS &#39;</td>
+<td>'RMS '</td>
 <td>roh</td>
 </tr>
 <tr>
 <td>Vlax Romani</td>
-<td>&#39;RMY &#39;</td>
+<td>'RMY '</td>
 <td>rmy</td>
 </tr>
 <tr>
 <td>Romanian</td>
-<td>&#39;ROM &#39;</td>
+<td>'ROM '</td>
 <td>ron</td>
 </tr>
 <tr>
 <td>Romany</td>
-<td>&#39;ROY &#39;</td>
+<td>'ROY '</td>
 <td>rom</td>
 </tr>
 <tr>
 <td>Rusyn</td>
-<td>&#39;RSY &#39;</td>
+<td>'RSY '</td>
 <td>rue</td>
 </tr>
 <tr>
 <td>Rotuman</td>
-<td>&#39;RTM &#39;</td>
+<td>'RTM '</td>
 <td>rtm</td>
 </tr>
 <tr>
 <td>Kinyarwanda</td>
-<td>&#39;RUA &#39;</td>
+<td>'RUA '</td>
 <td>kin</td>
 </tr>
 <tr>
 <td>Rundi</td>
-<td>&#39;RUN &#39;</td>
+<td>'RUN '</td>
 <td>run</td>
 </tr>
 <tr>
 <td>Aromanian</td>
-<td>&#39;RUP &#39;</td>
+<td>'RUP '</td>
 <td>rup</td>
 </tr>
 <tr>
 <td>Russian</td>
-<td>&#39;RUS &#39;</td>
+<td>'RUS '</td>
 <td>rus</td>
 </tr>
 <tr>
 <td>Sadri</td>
-<td>&#39;SAD &#39;</td>
+<td>'SAD '</td>
 <td>sck</td>
 </tr>
 <tr>
 <td>Sanskrit</td>
-<td>&#39;SAN &#39;</td>
+<td>'SAN '</td>
 <td>san</td>
 </tr>
 <tr>
 <td>Sasak</td>
-<td>&#39;SAS &#39;</td>
+<td>'SAS '</td>
 <td>sas</td>
 </tr>
 <tr>
 <td>Santali</td>
-<td>&#39;SAT &#39;</td>
+<td>'SAT '</td>
 <td>sat</td>
 </tr>
 <tr>
 <td>Sayisi</td>
-<td>&#39;SAY &#39;</td>
+<td>'SAY '</td>
 <td>chp</td>
 </tr>
 <tr>
 <td>Sicilian</td>
-<td>&#39;SCN &#39;</td>
+<td>'SCN '</td>
 <td>scn</td>
 </tr>
 <tr>
 <td>Scots</td>
-<td>&#39;SCO &#39;</td>
+<td>'SCO '</td>
 <td>sco</td>
 </tr>
 <tr>
 <td>North Slavey</td>
-<td>&#39;SCS &#39;</td>
+<td>'SCS '</td>
 <td>scs</td>
 </tr>
 <tr>
+<td>Seneca</td>
+<td>'SEE '</td>
+<td>see</td>
+</tr>
+<tr>
 <td>Sekota</td>
-<td>&#39;SEK &#39;</td>
+<td>'SEK '</td>
 <td>xan</td>
 </tr>
 <tr>
 <td>Selkup</td>
-<td>&#39;SEL &#39;</td>
+<td>'SEL '</td>
 <td>sel</td>
 </tr>
 <tr>
 <td>Small Flowery Miao</td>
-<td>&#39;SFM &#39;</td>
+<td>'SFM '</td>
 <td>sfm</td>
 </tr>
 <tr>
 <td>Old Irish</td>
-<td>&#39;SGA &#39;</td>
+<td>'SGA '</td>
 <td>sga</td>
 </tr>
 <tr>
 <td>Sango</td>
-<td>&#39;SGO &#39;</td>
+<td>'SGO '</td>
 <td>sag</td>
 </tr>
 <tr>
 <td>Samogitian</td>
-<td>&#39;SGS &#39;</td>
+<td>'SGS '</td>
 <td>sgs</td>
 </tr>
 <tr>
 <td>Tachelhit</td>
-<td>&#39;SHI &#39;</td>
+<td>'SHI '</td>
 <td>shi</td>
 </tr>
 <tr>
 <td>Shan</td>
-<td>&#39;SHN &#39;</td>
+<td>'SHN '</td>
 <td>shn</td>
 </tr>
 <tr>
 <td>Sibe</td>
-<td>&#39;SIB &#39;</td>
+<td>'SIB '</td>
 <td>sjo</td>
 </tr>
 <tr>
 <td>Sidamo</td>
-<td>&#39;SID &#39;</td>
+<td>'SID '</td>
 <td>sid</td>
 </tr>
 <tr>
 <td>Silte Gurage</td>
-<td>&#39;SIG &#39;</td>
+<td>'SIG '</td>
 <td>xst, stv, wle</td>
 </tr>
 <tr>
+<td>Epena</td>
+<td>'SJA '</td>
+<td>sja</td>
+</tr>
+<tr>
+<td>Pite Sami</td>
+<td>'SJE '</td>
+<td>sje</td>
+</tr>
+<tr>
+<td>Ume Sami</td>
+<td>'SJU '</td>
+<td>sju</td>
+</tr>
+<tr>
 <td>Skolt Sami</td>
-<td>&#39;SKS &#39;</td>
+<td>'SKS '</td>
 <td>sms</td>
 </tr>
 <tr>
 <td>Slovak</td>
-<td>&#39;SKY &#39;</td>
+<td>'SKY '</td>
 <td>slk</td>
 </tr>
 <tr>
 <td>Slavey</td>
-<td>&#39;SLA &#39;</td>
+<td>'SLA '</td>
 <td>den, scs, xsl</td>
 </tr>
 <tr>
 <td>Slovenian</td>
-<td>&#39;SLV &#39;</td>
+<td>'SLV '</td>
 <td>slv</td>
 </tr>
 <tr>
 <td>Somali</td>
-<td>&#39;SML &#39;</td>
+<td>'SML '</td>
 <td>som</td>
 </tr>
 <tr>
 <td>Samoan</td>
-<td>&#39;SMO &#39;</td>
+<td>'SMO '</td>
 <td>smo</td>
 </tr>
 <tr>
 <td>Sena</td>
-<td>&#39;SNA &#39;</td>
+<td>'SNA '</td>
 <td>seh</td>
 </tr>
 <tr>
@@ -3109,277 +3476,317 @@ Article													</li>
 </tr>
 <tr>
 <td>Sindhi</td>
-<td>&#39;SND &#39;</td>
+<td>'SND '</td>
 <td>snd</td>
 </tr>
 <tr>
 <td>Sinhala (Sinhalese)</td>
-<td>&#39;SNH &#39;</td>
+<td>'SNH '</td>
 <td>sin</td>
 </tr>
 <tr>
 <td>Soninke</td>
-<td>&#39;SNK &#39;</td>
+<td>'SNK '</td>
 <td>snk</td>
 </tr>
 <tr>
 <td>Sodo Gurage</td>
-<td>&#39;SOG &#39;</td>
+<td>'SOG '</td>
 <td>gru</td>
 </tr>
 <tr>
 <td>Songe</td>
-<td>&#39;SOP &#39;</td>
+<td>'SOP '</td>
 <td>sop</td>
 </tr>
 <tr>
 <td>Southern Sotho</td>
-<td>&#39;SOT &#39;</td>
+<td>'SOT '</td>
 <td>sot</td>
 </tr>
 <tr>
 <td>Albanian</td>
-<td>&#39;SQI &#39;</td>
+<td>'SQI '</td>
 <td>sqi</td>
 </tr>
 <tr>
 <td>Serbian</td>
-<td>&#39;SRB &#39;</td>
+<td>'SRB '</td>
 <td>cnr, srp</td>
 </tr>
 <tr>
 <td>Sardinian</td>
-<td>&#39;SRD &#39;</td>
+<td>'SRD '</td>
 <td>srd</td>
 </tr>
 <tr>
 <td>Saraiki</td>
-<td>&#39;SRK &#39;</td>
+<td>'SRK '</td>
 <td>skr</td>
 </tr>
 <tr>
 <td>Serer</td>
-<td>&#39;SRR &#39;</td>
+<td>'SRR '</td>
 <td>srr</td>
 </tr>
 <tr>
 <td>South Slavey</td>
-<td>&#39;SSL &#39;</td>
+<td>'SSL '</td>
 <td>xsl</td>
 </tr>
 <tr>
 <td>Southern Sami</td>
-<td>&#39;SSM &#39;</td>
+<td>'SSM '</td>
 <td>sma</td>
 </tr>
 <tr>
+<td>Straits Salish</td>
+<td>'STR '</td>
+<td>str</td>
+</tr>
+<tr>
 <td>Saterland Frisian</td>
-<td>&#39;STQ &#39;</td>
+<td>'STQ '</td>
 <td>stq</td>
 </tr>
 <tr>
 <td>Sukuma</td>
-<td>&#39;SUK &#39;</td>
+<td>'SUK '</td>
 <td>suk</td>
 </tr>
 <tr>
 <td>Sundanese</td>
-<td>&#39;SUN &#39;</td>
+<td>'SUN '</td>
 <td>sun</td>
 </tr>
 <tr>
 <td>Suri</td>
-<td>&#39;SUR &#39;</td>
+<td>'SUR '</td>
 <td>suq</td>
 </tr>
 <tr>
 <td>Svan</td>
-<td>&#39;SVA &#39;</td>
+<td>'SVA '</td>
 <td>sva</td>
 </tr>
 <tr>
 <td>Swedish</td>
-<td>&#39;SVE &#39;</td>
+<td>'SVE '</td>
 <td>swe</td>
 </tr>
 <tr>
 <td>Swadaya Aramaic</td>
-<td>&#39;SWA &#39;</td>
+<td>'SWA '</td>
 <td>aii</td>
 </tr>
 <tr>
 <td>Swahili</td>
-<td>&#39;SWK &#39;</td>
+<td>'SWK '</td>
 <td>swa</td>
 </tr>
 <tr>
 <td>Swati</td>
-<td>&#39;SWZ &#39;</td>
+<td>'SWZ '</td>
 <td>ssw</td>
 </tr>
 <tr>
 <td>Sutu</td>
-<td>&#39;SXT &#39;</td>
+<td>'SXT '</td>
 <td>ngo, xnj, xnq</td>
 </tr>
 <tr>
 <td>Upper Saxon</td>
-<td>&#39;SXU &#39;</td>
+<td>'SXU '</td>
 <td>sxu</td>
 </tr>
 <tr>
 <td>Sylheti</td>
-<td>&#39;SYL &#39;</td>
+<td>'SYL '</td>
 <td>syl</td>
 </tr>
 <tr>
 <td>Syriac</td>
-<td>&#39;SYR &#39;</td>
+<td>'SYR '</td>
 <td>aii, amw, cld, syc, syr, tru</td>
 </tr>
 <tr>
-<td>Syriac, Estrangela script-variant (equivalent to ISO 15924 &#39;Syre&#39;)</td>
+<td>Syriac, Estrangela script-variant (equivalent to ISO 15924 'Syre')</td>
 <td>SYRE</td>
 <td>syc, syr</td>
 </tr>
 <tr>
-<td>Syriac, Western script-variant (equivalent to ISO 15924 &#39;Syrj&#39;)</td>
+<td>Syriac, Western script-variant (equivalent to ISO 15924 'Syrj')</td>
 <td>SYRJ</td>
 <td>syc, syr</td>
 </tr>
 <tr>
-<td>Syriac, Eastern script-variant (equivalent to ISO 15924 &#39;Syrn&#39;)</td>
+<td>Syriac, Eastern script-variant (equivalent to ISO 15924 'Syrn')</td>
 <td>SYRN</td>
 <td>syc, syr</td>
 </tr>
 <tr>
 <td>Silesian</td>
-<td>&#39;SZL &#39;</td>
+<td>'SZL '</td>
 <td>szl</td>
 </tr>
 <tr>
 <td>Tabasaran</td>
-<td>&#39;TAB &#39;</td>
+<td>'TAB '</td>
 <td>tab</td>
 </tr>
 <tr>
 <td>Tajiki</td>
-<td>&#39;TAJ &#39;</td>
+<td>'TAJ '</td>
 <td>tgk</td>
 </tr>
 <tr>
 <td>Tamil</td>
-<td>&#39;TAM &#39;</td>
+<td>'TAM '</td>
 <td>tam</td>
 </tr>
 <tr>
+<td>Tamasheq</td>
+<td>'TAQ '</td>
+<td>taq<br>See also 'TMH '</td>
+</tr>
+<tr>
 <td>Tatar</td>
-<td>&#39;TAT &#39;</td>
+<td>'TAT '</td>
 <td>tat</td>
 </tr>
 <tr>
+<td>Tobo</td>
+<td>'TBV '</td>
+<td>tbv</td>
+</tr>
+<tr>
 <td>TH-Cree</td>
-<td>&#39;TCR &#39;</td>
+<td>'TCR '</td>
 <td>cwd</td>
 </tr>
 <tr>
+<td>Emberá-Tadó</td>
+<td>'TDC '</td>
+<td>tdc</td>
+</tr>
+<tr>
 <td>Dehong Dai</td>
-<td>&#39;TDD &#39;</td>
+<td>'TDD '</td>
 <td>tdd</td>
 </tr>
 <tr>
 <td>Telugu</td>
-<td>&#39;TEL &#39;</td>
+<td>'TEL '</td>
 <td>tel</td>
 </tr>
 <tr>
 <td>Tetum</td>
-<td>&#39;TET &#39;</td>
+<td>'TET '</td>
 <td>tet</td>
 </tr>
 <tr>
 <td>Tagalog</td>
-<td>&#39;TGL &#39;</td>
+<td>'TGL '</td>
 <td>tgl</td>
 </tr>
 <tr>
 <td>Tongan</td>
-<td>&#39;TGN &#39;</td>
+<td>'TGN '</td>
 <td>ton</td>
 </tr>
 <tr>
 <td>Tigre</td>
-<td>&#39;TGR &#39;</td>
+<td>'TGR '</td>
 <td>tig</td>
 </tr>
 <tr>
 <td>Tigrinya</td>
-<td>&#39;TGY &#39;</td>
+<td>'TGY '</td>
 <td>tir</td>
 </tr>
 <tr>
 <td>Thai</td>
-<td>&#39;THA &#39;</td>
+<td>'THA '</td>
 <td>tha</td>
 </tr>
 <tr>
 <td>Tahitian</td>
-<td>&#39;THT &#39;</td>
+<td>'THT '</td>
 <td>tah</td>
 </tr>
 <tr>
+<td>Thompson</td>
+<td>'THP '</td>
+<td>thp</td>
+</tr>
+<tr>
+<td>Tahaggart Tamahaq</td>
+<td>'THV '</td>
+<td>thv<br>See also 'TMH '</td>
+</tr>
+<tr>
+<td>Tayart Tamajeq</td>
+<td>'THZ '</td>
+<td>thz<br>See also 'TMH '</td>
+</tr>
+<tr>
 <td>Tibetan</td>
-<td>&#39;TIB &#39;</td>
+<td>'TIB '</td>
 <td>bod</td>
 </tr>
 <tr>
 <td>Tiv</td>
-<td>&#39;TIV &#39;</td>
+<td>'TIV '</td>
 <td>tiv</td>
 </tr>
 <tr>
 <td>Tai Laing</td>
-<td>&#39;TJL &#39;</td>
+<td>'TJL '</td>
 <td>tjl</td>
 </tr>
 <tr>
 <td>Turkmen</td>
-<td>&#39;TKM &#39;</td>
+<td>'TKM '</td>
 <td>tuk</td>
 </tr>
 <tr>
 <td>Tlingit</td>
-<td>&#39;TLI &#39;</td>
+<td>'TLI '</td>
 <td>tli</td>
 </tr>
 <tr>
 <td>Tamashek</td>
-<td>&#39;TMH &#39;</td>
-<td>taq, thv, thz, tmh, ttq</td>
+<td>'TMH '</td>
+<td>taq, thv, thz, tmh, ttq<br>See also 'TAQ ', 'THV ', 'THZ ', 'TTQ '</td>
+</tr>
+<tr>
+<td>Talysh</td>
+<td>'TLY '</td>
+<td>tly</td>
 </tr>
 <tr>
 <td>Temne</td>
-<td>&#39;TMN &#39;</td>
+<td>'TMN '</td>
 <td>tem</td>
 </tr>
 <tr>
 <td>Tswana</td>
-<td>&#39;TNA &#39;</td>
+<td>'TNA '</td>
 <td>tsn</td>
 </tr>
 <tr>
 <td>Tundra Enets</td>
-<td>&#39;TNE &#39;</td>
+<td>'TNE '</td>
 <td>enh</td>
 </tr>
 <tr>
 <td>Tonga</td>
-<td>&#39;TNG &#39;</td>
+<td>'TNG '</td>
 <td>toi</td>
 </tr>
 <tr>
 <td>Todo</td>
-<td>&#39;TOD &#39;</td>
+<td>'TOD '</td>
 <td>xal</td>
 </tr>
 <tr>
@@ -3389,652 +3796,1112 @@ Article													</li>
 </tr>
 <tr>
 <td>Tok Pisin</td>
-<td>&#39;TPI &#39;</td>
+<td>'TPI '</td>
 <td>tpi</td>
 </tr>
 <tr>
 <td>Turkish</td>
-<td>&#39;TRK &#39;</td>
+<td>'TRK '</td>
 <td>tur</td>
 </tr>
 <tr>
 <td>Tsonga</td>
-<td>&#39;TSG &#39;</td>
+<td>'TSG '</td>
 <td>tso</td>
 </tr>
 <tr>
 <td>Tshangla</td>
-<td>&#39;TSJ &#39;</td>
+<td>'TSJ '</td>
 <td>tsj</td>
 </tr>
 <tr>
+<td>Tawallammat Tamajaq</td>
+<td>'TTQ '</td>
+<td>ttq<br>See also 'TMH '</td>
+</tr>
+<tr>
 <td>Turoyo Aramaic</td>
-<td>&#39;TUA &#39;</td>
+<td>'TUA '</td>
 <td>tru</td>
 </tr>
 <tr>
 <td>Tulu</td>
-<td>&#39;TUL &#39;</td>
+<td>'TUL '</td>
 <td>tcy</td>
 </tr>
 <tr>
 <td>Tumbuka</td>
-<td>&#39;TUM &#39;</td>
+<td>'TUM '</td>
 <td>tum</td>
 </tr>
 <tr>
+<td>Tuscarora</td>
+<td>'TUS '</td>
+<td>tus</td>
+</tr>
+<tr>
 <td>Tuvin</td>
-<td>&#39;TUV &#39;</td>
+<td>'TUV '</td>
 <td>tyv</td>
 </tr>
 <tr>
 <td>Tuvalu</td>
-<td>&#39;TVL &#39;</td>
+<td>'TVL '</td>
 <td>tvl</td>
 </tr>
 <tr>
 <td>Twi</td>
-<td>&#39;TWI &#39;</td>
+<td>'TWI '</td>
 <td>twi</td>
 </tr>
 <tr>
 <td>Tày</td>
-<td>&#39;TYZ &#39;</td>
+<td>'TYZ '</td>
 <td>tyz</td>
 </tr>
 <tr>
 <td>Tamazight</td>
-<td>&#39;TZM &#39;</td>
+<td>'TZM '</td>
 <td>tzm</td>
 </tr>
 <tr>
 <td>Tzotzil</td>
-<td>&#39;TZO &#39;</td>
+<td>'TZO '</td>
 <td>tzo</td>
 </tr>
 <tr>
+<td>Udi</td>
+<td>'UDI '</td>
+<td>udi</td>
+</tr>
+<tr>
 <td>Udmurt</td>
-<td>&#39;UDM &#39;</td>
+<td>'UDM '</td>
 <td>udm</td>
 </tr>
 <tr>
 <td>Ukrainian</td>
-<td>&#39;UKR &#39;</td>
+<td>'UKR '</td>
 <td>ukr</td>
 </tr>
 <tr>
 <td>Umbundu</td>
-<td>&#39;UMB &#39;</td>
+<td>'UMB '</td>
 <td>umb</td>
 </tr>
 <tr>
+<td>Uralic Phonetic Alphabet</td>
+<td>'UPPH'</td>
+<td>Cf. BCP 47 variant subtag “fonupa” (see <a href="https://www.iana.org/assignments/lang-subtags-templates/fonupa.txt" data-linktype="external">https://www.iana.org/assignments/lang-subtags-templates/fonupa.txt</a>) </td>
+</tr>
+<tr>
 <td>Urdu</td>
-<td>&#39;URD &#39;</td>
+<td>'URD '</td>
 <td>urd</td>
 </tr>
 <tr>
 <td>Upper Sorbian</td>
-<td>&#39;USB &#39;</td>
+<td>'USB '</td>
 <td>hsb</td>
 </tr>
 <tr>
 <td>Uyghur</td>
-<td>&#39;UYG &#39;</td>
+<td>'UYG '</td>
 <td>uig</td>
 </tr>
 <tr>
 <td>Uzbek</td>
-<td>&#39;UZB &#39;</td>
+<td>'UZB '</td>
 <td>uzb</td>
 </tr>
 <tr>
 <td>Venetian</td>
-<td>&#39;VEC &#39;</td>
+<td>'VEC '</td>
 <td>vec</td>
 </tr>
 <tr>
 <td>Venda</td>
-<td>&#39;VEN &#39;</td>
+<td>'VEN '</td>
 <td>ven</td>
 </tr>
 <tr>
 <td>Vietnamese</td>
-<td>&#39;VIT &#39;</td>
+<td>'VIT '</td>
 <td>vie</td>
 </tr>
 <tr>
 <td>Volapük</td>
-<td>&#39;VOL &#39;</td>
+<td>'VOL '</td>
 <td>vol</td>
 </tr>
 <tr>
 <td>Võro</td>
-<td>&#39;VRO &#39;</td>
+<td>'VRO '</td>
 <td>vro</td>
 </tr>
 <tr>
 <td>Wa</td>
-<td>&#39;WA  &#39;</td>
+<td>'WA  '</td>
 <td>wbm</td>
 </tr>
 <tr>
 <td>Wagdi</td>
-<td>&#39;WAG &#39;</td>
+<td>'WAG '</td>
 <td>wbr</td>
 </tr>
 <tr>
 <td>Waray-Waray</td>
-<td>&#39;WAR &#39;</td>
+<td>'WAR '</td>
 <td>war</td>
 </tr>
 <tr>
+<td>Wakhi</td>
+<td>'WBL '</td>
+<td>wbl</td>
+</tr>
+<tr>
 <td>Waci Gbe</td>
-<td>&#39;WCI &#39;</td>
+<td>'WCI '</td>
 <td>wci</td>
 </tr>
 <tr>
 <td>West-Cree</td>
-<td>&#39;WCR &#39;</td>
+<td>'WCR '</td>
 <td>crk</td>
 </tr>
 <tr>
+<td>Wendat</td>
+<td>'WDT '</td>
+<td>wdt</td>
+</tr>
+<tr>
 <td>Welsh</td>
-<td>&#39;WEL &#39;</td>
+<td>'WEL '</td>
 <td>cym</td>
 </tr>
 <tr>
 <td>Wolof</td>
-<td>&#39;WLF &#39;</td>
+<td>'WLF '</td>
 <td>wol</td>
 </tr>
 <tr>
 <td>Walloon</td>
-<td>&#39;WLN &#39;</td>
+<td>'WLN '</td>
 <td>wln</td>
 </tr>
 <tr>
 <td>Mewati</td>
-<td>&#39;WTM &#39;</td>
+<td>'WTM '</td>
 <td>wtm</td>
 </tr>
 <tr>
+<td>Wyandot</td>
+<td>'WYN '</td>
+<td>wyn</td>
+</tr>
+<tr>
 <td>Lü</td>
-<td>&#39;XBD &#39;</td>
+<td>'XBD '</td>
 <td>khb</td>
 </tr>
 <tr>
 <td>Xhosa</td>
-<td>&#39;XHS &#39;</td>
+<td>'XHS '</td>
 <td>xho</td>
 </tr>
 <tr>
 <td>Minjangbal</td>
-<td>&#39;XJB &#39;</td>
+<td>'XJB '</td>
 <td>xjb</td>
 </tr>
 <tr>
 <td>Khengkha</td>
-<td>&#39;XKF &#39;</td>
+<td>'XKF '</td>
 <td>xkf</td>
 </tr>
 <tr>
 <td>Soga</td>
-<td>&#39;XOG &#39;</td>
+<td>'XOG '</td>
 <td>xog</td>
 </tr>
 <tr>
 <td>Kpelle (Liberia)</td>
-<td>&#39;XPE &#39;</td>
+<td>'XPE '</td>
 <td>xpe</td>
 </tr>
 <tr>
 <td>Bette Kuruma</td>
-<td>&#39;XUB &#39;</td>
+<td>'XUB '</td>
 <td>xub</td>
 </tr>
 <tr>
 <td>Jennu Kuruma</td>
-<td>&#39;XUJ &#39;</td>
+<td>'XUJ '</td>
 <td>xuj</td>
 </tr>
 <tr>
 <td>Sakha</td>
-<td>&#39;YAK &#39;</td>
+<td>'YAK '</td>
 <td>sah</td>
 </tr>
 <tr>
 <td>Yao</td>
-<td>&#39;YAO &#39;</td>
+<td>'YAO '</td>
 <td>yao</td>
 </tr>
 <tr>
 <td>Yapese</td>
-<td>&#39;YAP &#39;</td>
+<td>'YAP '</td>
 <td>yap</td>
 </tr>
 <tr>
 <td>Yoruba</td>
-<td>&#39;YBA &#39;</td>
+<td>'YBA '</td>
 <td>yor</td>
 </tr>
 <tr>
 <td>Y-Cree</td>
-<td>&#39;YCR &#39;</td>
+<td>'YCR '</td>
 <td>crj, crk, crl</td>
 </tr>
 <tr>
 <td>Gepo</td>
-<td>&#39;YGP &#39;</td>
+<td>'YGP '</td>
 <td>ygp</td>
 </tr>
 <tr>
 <td>Yi Classic</td>
-<td>&#39;YIC &#39;</td>
+<td>'YIC '</td>
 <td></td>
 </tr>
 <tr>
 <td>Yi Modern</td>
-<td>&#39;YIM &#39;</td>
+<td>'YIM '</td>
 <td>iii</td>
 </tr>
 <tr>
 <td>Aluo</td>
-<td>&#39;YNA &#39;</td>
+<td>'YNA '</td>
 <td>yna</td>
 </tr>
 <tr>
+<td>Havasupai-Walapai-Yavapai</td>
+<td>'YUF '</td>
+<td>yuf</td>
+</tr>
+<tr>
 <td>Wuding-Luquan Yi</td>
-<td>&#39;YWQ &#39;</td>
+<td>'YWQ '</td>
 <td>ywq</td>
 </tr>
 <tr>
 <td>Zealandic</td>
-<td>&#39;ZEA &#39;</td>
+<td>'ZEA '</td>
 <td>zea</td>
 </tr>
 <tr>
 <td>Standard Moroccan Tamazight</td>
-<td>&#39;ZGH &#39;</td>
+<td>'ZGH '</td>
 <td>zgh</td>
 </tr>
 <tr>
 <td>Zhuang</td>
-<td>&#39;ZHA &#39;</td>
+<td>'ZHA '</td>
 <td>zha</td>
 </tr>
 <tr>
 <td>Chinese, Traditional, Hong Kong SAR</td>
-<td>&#39;ZHH &#39;</td>
+<td>'ZHH '</td>
 <td>zho</td>
 </tr>
 <tr>
 <td>Chinese, Phonetic</td>
-<td>&#39;ZHP &#39;</td>
+<td>'ZHP '</td>
 <td>zho</td>
 </tr>
 <tr>
 <td>Chinese, Simplified</td>
-<td>&#39;ZHS &#39;</td>
+<td>'ZHS '</td>
 <td>zho</td>
 </tr>
 <tr>
 <td>Chinese, Traditional</td>
-<td>&#39;ZHT &#39;</td>
+<td>'ZHT '</td>
 <td>zho</td>
 </tr>
 <tr>
 <td>Chinese, Traditional, Macao SAR</td>
-<td>&#39;ZHTM&#39;</td>
+<td>'ZHTM'</td>
 <td>zho</td>
 </tr>
 <tr>
 <td>Zande</td>
-<td>&#39;ZND &#39;</td>
+<td>'ZND '</td>
 <td>zne</td>
 </tr>
 <tr>
 <td>Zulu</td>
-<td>&#39;ZUL &#39;</td>
+<td>'ZUL '</td>
 <td>zul</td>
 </tr>
 <tr>
 <td>Zazaki</td>
-<td>&#39;ZZA &#39;</td>
+<td>'ZZA '</td>
 <td>zza</td>
 </tr>
 </tbody>
 </table>
-
-							</div>
-
-							<div id="assertive-live-region" role="alert" aria-live="assertive" class="visually-hidden" aria-relevant="additions" aria-atomic="true"></div>
-							<div id="polite-live-region" role="status" aria-live="polite" class="visually-hidden" aria-relevant="additions" aria-atomic="true"></div>
-							<!-- </content> -->
-
-						</main>
-
-
-
-
-						<!-- recommendations section -->
-						<!-- end recommendations section -->
-
-						<!-- feedback section -->
-<section class="feedback-section position-relative" data-bi-name="feedback-section">
-    <h2 id="feedback" class="title is-3 margin-top-sm">Feedback</h2>
-
-    <div class="alert choose-feedback-type padding-bottom-sm">
-        <p id="send-feedback-about">Submit and view feedback for</p>
-
-        <div class="choose-feedback-buttons buttons margin-top-xs">
-			<a class="button feedback-type-product github-link" aria-label="Send feedback about this page" data-bi-name="create-issue-on-github">
-				<span class="icon" aria-hidden="true">
-					<span class="docon docon-brand-github"></span>
-				</span>
-				<span>This page</span>
-			</a>
-        </div>
-    </div>
-
-    <div class="action-container display-flex justify-content-flex-end margin-block-xxs">
-        <a class="view-on-github has-external-link-indicator" data-bi-name="view-on-github" href="https://github.com/MicrosoftDocs/typography-issues/issues">
-            <span aria-hidden="true" class="docon docon-brand-github"></span>
-            <span>View all page feedback</span>
-        </a>
-    </div>
-</section>
-						<!-- end feedback section -->
-
-						<!-- feedback report section -->
-						<!-- end feedback report section -->
-
-							<div
-								id="ms--additional-resources-mobile"
-								role="complementary"
-								aria-label="Additional resources"
-								class="display-none-desktop display-none-print"
-							>
-								<hr class="hr" hidden />
-								<h2 id="ms--additional-resources-mobile-heading" class="title is-3" hidden>Additional resources</h2>
-								<section id="right-rail-training-mobile" data-bi-name="learning-resources-card" hidden></section>
-								<section id="right-rail-events-mobile" data-bi-name="events-card" hidden></section>
-								<section id="right-rail-qna-mobile" data-bi-name="qna-link-card" hidden></section>
-							</div>
-
-						<div class="border-top is-visible-interactive has-default-focus margin-top-sm ">
-
-
-
-	<footer id="footer-interactive" data-bi-name="footer" class="footer-layout">
-	<div class="display-flex is-full-height padding-right-lg-desktop">
-			<a
-				data-mscc-ic="false"
-				class="locale-selector-link button button-sm button-clear flex-shrink-0"
-				href="#"
-				data-bi-name="select-locale">
-					<span class="icon" aria-hidden="true">
-						<span class="docon docon-world"></span>
-					</span>
-					<span class="local-selector-link-text"></span></a>
-		<div class="margin-inline-xs flex-shrink-0">
-<div class="dropdown has-caret-up">
-	<button class="dropdown-trigger button button-clear button-sm has-inner-focus theme-dropdown-trigger"
-		aria-controls="theme-menu-interactive" aria-expanded="false" title="Theme" data-bi-name="theme">
-		<span class="icon">
-			<span class="docon docon-sun" aria-hidden="true"></span>
-		</span>
-		<span>Theme</span>
-		<span class="icon expanded-indicator" aria-hidden="true">
-			<span class="docon docon-chevron-down-light"></span>
-		</span>
-	</button>
-	<div class="dropdown-menu" id="theme-menu-interactive" role="menu">
-		<ul class="theme-selector padding-xxs" role="none">
-			<li class="theme display-block" role="menuitem">
-				<button class="button button-clear button-sm theme-control button-block justify-content-flex-start"
-					data-theme-to="light">
-					<span class="theme-light margin-right-xxs">
-						<span
-							class="theme-selector-icon css-variable-support border display-inline-block has-body-background"
-							aria-hidden="true">
-							<svg class="svg" xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 22 14">
-								<rect width="22" height="14" class="has-fill-body-background" />
-								<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
-								<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
-								<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
-								<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
-								<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
-								<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
-								<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
-							</svg>
-						</span>
-					</span>
-					<span>
-Light					</span>
-				</button>
-			</li>
-			<li class="theme display-block" role="menuitem">
-				<button class="button button-clear button-sm theme-control button-block justify-content-flex-start"
-					data-theme-to="dark">
-					<span class="theme-dark margin-right-xxs">
-						<span
-							class="border theme-selector-icon css-variable-support display-inline-block has-body-background"
-							aria-hidden="true">
-							<svg class="svg" xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 22 14">
-								<rect width="22" height="14" class="has-fill-body-background" />
-								<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
-								<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
-								<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
-								<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
-								<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
-								<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
-								<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
-							</svg>
-						</span>
-					</span>
-					<span>
-Dark					</span>
-				</button>
-			</li>
-			<li class="theme display-block" role="menuitem">
-				<button class="button button-clear button-sm theme-control button-block justify-content-flex-start"
-					data-theme-to="high-contrast">
-					<span class="theme-high-contrast margin-right-xxs">
-						<span
-							class="border theme-selector-icon css-variable-support display-inline-block has-body-background"
-							aria-hidden="true">
-							<svg class="svg" xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 22 14">
-								<rect width="22" height="14" class="has-fill-body-background" />
-								<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
-								<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
-								<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
-								<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
-								<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
-								<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
-								<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
-							</svg>
-						</span>
-					</span>
-					<span>
-High contrast					</span>
-				</button>
-			</li>
-		</ul>
-	</div>
 </div>
-		</div>
-	</div>
-	<ul class="links" data-bi-name="footerlinks">
-		<li class="manage-cookies-holder" hidden></li>
-				<li><a data-mscc-ic="false" href="/en-us/previous-versions/" data-bi-name="archivelink">Previous Versions</a></li>
-				<li><a data-mscc-ic="false" href="https://techcommunity.microsoft.com/t5/microsoft-learn-blog/bg-p/MicrosoftLearnBlog" data-bi-name="bloglink">Blog</a></li>
-				<li><a data-mscc-ic="false" href="/en-us/contribute/" data-bi-name="contributorGuide">Contribute</a></li>
-					<li><a data-mscc-ic="false" href="https://go.microsoft.com/fwlink/?LinkId=521839" data-bi-name="privacy">Privacy</a></li>
-				<li><a data-mscc-ic="false" href="/en-us/legal/termsofuse" data-bi-name="termsofuse">Terms of Use</a></li>
-				<li><a data-mscc-ic="false" href="https://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/EN-US.aspx" data-bi-name="trademarks">Trademarks</a></li>
-		<li>&copy; Microsoft 2023</li>
-	</ul>
-</footer>
+					
+		<div
+			id="ms--inline-notifications"
+			class="margin-block-xs"
+			data-bi-name="inline-notification"
+		></div>
+	 
+		<div
+			id="assertive-live-region"
+			role="alert"
+			aria-live="assertive"
+			class="visually-hidden"
+			aria-relevant="additions"
+			aria-atomic="true"
+		></div>
+		<div
+			id="polite-live-region"
+			role="status"
+			aria-live="polite"
+			class="visually-hidden"
+			aria-relevant="additions"
+			aria-atomic="true"
+		></div>
+	
+					
+			
+		<!-- feedback section -->
+		<section
+			class="feedback-section position-relative margin-top-lg border border-radius padding-xxs display-none-print"
+			data-bi-name="open-source-feedback-section"
+			data-open-source-feedback-section
+			hidden
+		>
+			<div class="display-flex flex-direction-column flex-direction-row-tablet">
+				<div
+					class="width-450-tablet padding-inline-xs padding-inline-xs-tablet padding-top-xs padding-bottom-sm padding-top-xs-tablet background-color-body-medium"
+				>
+					<div class="display-flex flex-direction-column">
+						<div class="padding-bottom-xxs">
+							<span class="icon margin-right-xxs" aria-hidden="true">
+								<span class="docon docon-brand-github"></span>
+							</span>
+							<span class="font-weight-semibold">
+								Collaborate with us on GitHub
+							</span>
 						</div>
-
+						<span class="line-height-normal">
+							The source for this content can be found on GitHub, where you can also create and review issues and pull requests. For more information, see <a href="https://learn.microsoft.com/contribute/content/">our contributor guide</a>.
+						</span>
 					</div>
+				</div>
+				<div
+					class="display-flex gap-xs width-full-tablet flex-direction-column padding-xs justify-content-space-evenly"
+				>
+					<div class="media">
+						
 
-						<div
-							id="ms--additional-resources"
-							class="right-container column is-4-desktop display-none display-block-desktop"
-							data-bi-name="pageactions"
-							role="complementary"
-							aria-label="Additional resources"
-						>
-							<div id="affixed-right-container" class="margin-top-sm-tablet" data-bi-name="right-column">
-								<h2 id="ms--additional-resources-heading" class="title is-6 margin-top-md" hidden>Additional resources</h2>
-								<section id="right-rail-events" data-bi-name="events-card" hidden></section>
-								<section id="right-rail-training" data-bi-name="learning-resources-card" hidden></section>
-								<section id="right-rail-recommendations" data-bi-name="recommendations" hidden></section>
-								<nav id="side-doc-outline" class="doc-outline" data-bi-name="intopic toc" role="navigation" aria-label="In this article">
-									<h3>In this article</h3>
-								</nav>
-								<section id="right-rail-qna" class="margin-top-xxs" data-bi-name="qna-link-card" hidden></section>
+						<div class="media-content">
+							<p
+								class="font-size-xl font-weight-semibold margin-bottom-xxs"
+								data-open-source-product-title
+							>
+								OpenType specification
+							</p>
+							<div class="display-flex gap-xs flex-direction-column">
+								<p class="line-height-normal" data-open-source-product-description></p>
+								<div class="display-flex gap-xs flex-direction-column">
+									<a href="#" data-github-link>
+										<span class="icon margin-right-xxs" aria-hidden="true">
+											<span class="docon docon-bug"></span>
+										</span>
+										<span>Open a documentation issue</span>
+									</a>
+									<a
+										href="https://github.com/MicrosoftDocs/typography-issues/issues/new?template=opentype-docs-feedback.yml"
+										class="display-block margin-top-auto font-size-md"
+										data-feedback-product-url
+									>
+										<span class="icon margin-right-xxs" aria-hidden="true">
+											<span class="docon docon-feedback"></span>
+										</span>
+										<span>Provide product feedback</span>
+									</a>
+								</div>
 							</div>
 						</div>
-
+					</div>
 				</div>
-				<!--end of div.columns -->
-
-			</section>
-			<!--end of .primary-holder -->
-
-			<!-- interactive container -->
-			<aside id="interactive-container" class="interactive-container is-visible-interactive column has-body-background-dark ">
-			</aside>
-			<!-- end of interactive container -->
-		</div>
-
+			</div>
+		</section>
+		<!-- end feedback section -->
+	
+			
+		<!-- feedback section -->
+		<section
+			id="site-user-feedback-footer"
+			class="font-size-sm margin-top-md display-none-print display-none-desktop"
+			data-test-id="site-user-feedback-footer"
+			data-bi-name="site-feedback-section"
+		>
+			<hr class="hr" />
+			<h2 id="ms--feedback" class="title is-3">Feedback</h2>
+			<div class="display-flex flex-wrap-wrap align-items-center">
+				<p class="font-weight-semibold margin-xxs margin-left-none">
+					Was this page helpful?
+				</p>
+				<div class="buttons">
+					<button
+						class="thumb-rating-button like button button-primary button-sm"
+						data-test-id="footer-rating-yes"
+						data-binary-rating-response="rating-yes"
+						type="button"
+						title="This article is helpful"
+						data-bi-name="button-rating-yes"
+						aria-pressed="false"
+					>
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-like"></span>
+						</span>
+						<span>Yes</span>
+					</button>
+					<button
+						class="thumb-rating-button dislike button button-primary button-sm"
+						id="standard-rating-no-button"
+						hidden
+						data-test-id="footer-rating-no"
+						data-binary-rating-response="rating-no"
+						type="button"
+						title="This article is not helpful"
+						data-bi-name="button-rating-no"
+						aria-pressed="false"
+					>
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-dislike"></span>
+						</span>
+						<span>No</span>
+					</button>
+					<details
+						class="popover popover-top"
+						id="mobile-help-popover"
+						data-test-id="footer-feedback-popover"
+					>
+						<summary
+							class="thumb-rating-button dislike button button-primary button-sm"
+							data-test-id="details-footer-rating-no"
+							data-binary-rating-response="rating-no"
+							title="This article is not helpful"
+							data-bi-name="button-rating-no"
+							aria-pressed="false"
+							data-bi-an="feedback-unhelpful-popover"
+						>
+							<span class="icon" aria-hidden="true">
+								<span class="docon docon-dislike"></span>
+							</span>
+							<span>No</span>
+						</summary>
+						<div
+							class="popover-content width-200 width-300-tablet"
+							role="dialog"
+							aria-labelledby="popover-heading"
+							aria-describedby="popover-description"
+						>
+							<p id="popover-heading" class="font-size-lg margin-bottom-xxs font-weight-semibold">
+								Need help with this topic?
+							</p>
+							<p id="popover-description" class="font-size-sm margin-bottom-xs">
+								Want to try using Ask Learn to clarify or guide you through this topic?
+							</p>
+							
+		<div class="buttons flex-direction-row flex-wrap justify-content-center gap-xxs">
+			<div>
+		<button
+			class="button button-sm border inner-focus display-none margin-right-xxs"
+			data-bi-name="ask-learn-assistant-entry-troubleshoot"
+			data-test-id="ask-learn-assistant-modal-entry-mobile-feedback"
+			data-ask-learn-modal-entry-feedback
+			data-bi-an=feedback-unhelpful-popover
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			aria-label="Ask Learn"
+			hidden
+		>
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button
+			class="button button-sm display-inline-flex display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn margin-right-xxs"
+			data-bi-name="ask-learn-assistant-entry-troubleshoot"
+			data-bi-an=feedback-unhelpful-popover
+			data-test-id="ask-learn-assistant-modal-entry-tablet-feedback"
+			data-ask-learn-modal-entry-feedback
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			hidden
+		>
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button
+			class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn margin-right-xxs"
+			data-bi-name="ask-learn-assistant-entry-troubleshoot"
+			data-bi-an=feedback-unhelpful-popover
+			data-test-id="ask-learn-assistant-flyout-entry-feedback"
+			data-ask-learn-flyout-entry-show-only
+			data-flyout-button="toggle"
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			aria-controls="ask-learn-flyout"
+			hidden
+		>
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
 	</div>
-	<!--end of .mainContainer -->
-
-	<section class="border-top has-default-focus is-hidden-interactive margin-top-sm ">
-
-
-
-	<footer id="footer" data-bi-name="footer" class="footer-layout uhf-container has-padding" role="contentinfo">
-	<div class="display-flex is-full-height padding-right-lg-desktop">
-			<a
-				data-mscc-ic="false"
-				class="locale-selector-link button button-sm button-clear flex-shrink-0"
-				href="#"
-				data-bi-name="select-locale">
+			<button
+				type="button"
+				class="button button-sm margin-right-xxs"
+				data-help-option="suggest-fix"
+				data-bi-name="feedback-suggest"
+				data-bi-an="feedback-unhelpful-popover"
+				data-test-id="suggest-fix"
+			>
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-feedback"></span>
+				</span>
+				<span> Suggest a fix? </span>
+			</button>
+		</div>
+	
+						</div>
+					</details>
+				</div>
+			</div>
+		</section>
+		<!-- end feedback section -->
+	
+		
+				</div>
+				
+		<div id="ms--additional-resources-mobile" class="display-none-print">
+			<hr class="hr" hidden />
+			<h2 id="ms--additional-resources-mobile-heading" class="title is-3" hidden>
+				Additional resources
+			</h2>
+			
+		<section
+			id="right-rail-recommendations-mobile"
+			class=""
+			data-bi-name="recommendations"
+			hidden
+		></section>
+	 
+		<section
+			id="right-rail-training-mobile"
+			class=""
+			data-bi-name="learning-resource-card"
+			hidden
+		></section>
+	 
+		<section
+			id="right-rail-events-mobile"
+			class=""
+			data-bi-name="events-card"
+			hidden
+		></section>
+	 
+		<section
+			id="right-rail-qna-mobile"
+			class="margin-top-xxs"
+			data-bi-name="qna-link-card"
+			hidden
+		></section>
+	
+		</div>
+	 
+		<div
+			id="article-metadata-footer"
+			data-bi-name="article-metadata-footer"
+			data-test-id="article-metadata-footer"
+			class="page-metadata-container"
+		>
+			<hr class="hr" />
+			<ul class="metadata page-metadata" data-bi-name="page info" lang="en-us" dir="ltr">
+				<li class="visibility-hidden-visual-diff">
+			<span class="badge badge-sm text-wrap-pretty">
+				<span>Last updated on <local-time format="twoDigitNumeric"
+		datetime="2024-12-05T08:00:00.000Z"
+		data-article-date-source="calculated"
+		class="is-invisible"
+	>
+		2024-12-05
+	</local-time></span>
+			</span>
+		</li>
+			</ul>
+		</div>
+	
+			</div>
+			
+		<div
+			id="action-panel"
+			role="region"
+			aria-label="Action Panel"
+			class="action-panel"
+			tabindex="-1"
+		></div>
+	
+		
+				</main>
+				<aside
+					id="layout-body-aside"
+					class="layout-body-aside "
+					data-bi-name="aside"
+			  >
+					
+		<div
+			id="ms--additional-resources"
+			class="right-container padding-sm display-none display-block-desktop height-full"
+			data-bi-name="pageactions"
+			role="complementary"
+			aria-label="Additional resources"
+		>
+			<div id="affixed-right-container" data-bi-name="right-column">
+				
+		<nav
+			id="side-doc-outline"
+			class="doc-outline border-bottom padding-bottom-xs margin-bottom-xs"
+			data-bi-name="intopic toc"
+			aria-label="In this article"
+		>
+			<h3>In this article</h3>
+		</nav>
+	
+				<!-- Feedback -->
+				
+		<section
+			id="ms--site-user-feedback-right-rail"
+			class="font-size-sm display-none-print"
+			data-test-id="site-user-feedback-right-rail"
+			data-bi-name="site-feedback-right-rail"
+		>
+			<p class="font-weight-semibold margin-bottom-xs">Was this page helpful?</p>
+			<div class="buttons">
+				<button
+					class="thumb-rating-button like button button-primary button-sm"
+					data-test-id="right-rail-rating-yes"
+					data-binary-rating-response="rating-yes"
+					type="button"
+					title="This article is helpful"
+					data-bi-name="button-rating-yes"
+					aria-pressed="false"
+				>
 					<span class="icon" aria-hidden="true">
-						<span class="docon docon-world"></span>
+						<span class="docon docon-like"></span>
 					</span>
-					<span class="local-selector-link-text"></span></a>
-		<div class="margin-inline-xs flex-shrink-0">
-<div class="dropdown has-caret-up">
-	<button class="dropdown-trigger button button-clear button-sm has-inner-focus theme-dropdown-trigger"
-		aria-controls="theme-menu" aria-expanded="false" title="Theme" data-bi-name="theme">
-		<span class="icon">
-			<span class="docon docon-sun" aria-hidden="true"></span>
-		</span>
-		<span>Theme</span>
-		<span class="icon expanded-indicator" aria-hidden="true">
-			<span class="docon docon-chevron-down-light"></span>
-		</span>
-	</button>
-	<div class="dropdown-menu" id="theme-menu" role="menu">
-		<ul class="theme-selector padding-xxs" role="none">
-			<li class="theme display-block" role="menuitem">
-				<button class="button button-clear button-sm theme-control button-block justify-content-flex-start"
-					data-theme-to="light">
-					<span class="theme-light margin-right-xxs">
-						<span
-							class="theme-selector-icon css-variable-support border display-inline-block has-body-background"
-							aria-hidden="true">
-							<svg class="svg" xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 22 14">
-								<rect width="22" height="14" class="has-fill-body-background" />
-								<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
-								<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
-								<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
-								<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
-								<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
-								<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
-								<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
-							</svg>
-						</span>
-					</span>
-					<span>
-Light					</span>
+					<span>Yes</span>
 				</button>
-			</li>
-			<li class="theme display-block" role="menuitem">
-				<button class="button button-clear button-sm theme-control button-block justify-content-flex-start"
-					data-theme-to="dark">
-					<span class="theme-dark margin-right-xxs">
-						<span
-							class="border theme-selector-icon css-variable-support display-inline-block has-body-background"
-							aria-hidden="true">
-							<svg class="svg" xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 22 14">
-								<rect width="22" height="14" class="has-fill-body-background" />
-								<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
-								<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
-								<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
-								<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
-								<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
-								<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
-								<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
-							</svg>
-						</span>
+				<button
+					class="thumb-rating-button dislike button button-primary button-sm"
+					id="right-rail-no-button"
+					hidden
+					data-test-id="right-rail-rating-no"
+					data-binary-rating-response="rating-no"
+					type="button"
+					title="This article is not helpful"
+					data-bi-name="button-rating-no"
+					aria-pressed="false"
+				>
+					<span class="icon" aria-hidden="true">
+						<span class="docon docon-dislike"></span>
 					</span>
-					<span>
-Dark					</span>
+					<span>No</span>
 				</button>
-			</li>
-			<li class="theme display-block" role="menuitem">
-				<button class="button button-clear button-sm theme-control button-block justify-content-flex-start"
-					data-theme-to="high-contrast">
-					<span class="theme-high-contrast margin-right-xxs">
-						<span
-							class="border theme-selector-icon css-variable-support display-inline-block has-body-background"
-							aria-hidden="true">
-							<svg class="svg" xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 22 14">
-								<rect width="22" height="14" class="has-fill-body-background" />
-								<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
-								<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
-								<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
-								<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
-								<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
-								<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
-								<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
-							</svg>
+				<details class="popover popover-right" id="help-popover" data-test-id="feedback-popover">
+					<summary
+						tabindex="0"
+						class="thumb-rating-button dislike button button-primary button-sm"
+						data-test-id="details-right-rail-rating-no"
+						data-binary-rating-response="rating-no"
+						title="This article is not helpful"
+						data-bi-name="button-rating-no"
+						aria-pressed="false"
+						data-bi-an="feedback-unhelpful-popover"
+					>
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-dislike"></span>
 						</span>
-					</span>
-					<span>
-High contrast					</span>
-				</button>
-			</li>
-		</ul>
+						<span>No</span>
+					</summary>
+					<div
+						class="popover-content width-200 width-300-tablet"
+						role="dialog"
+						aria-labelledby="popover-heading"
+						aria-describedby="popover-description"
+					>
+						<p
+							id="popover-heading-right-rail"
+							class="font-size-lg margin-bottom-xxs font-weight-semibold"
+						>
+							Need help with this topic?
+						</p>
+						<p id="popover-description-right-rail" class="font-size-sm margin-bottom-xs">
+							Want to try using Ask Learn to clarify or guide you through this topic?
+						</p>
+						
+		<div class="buttons flex-direction-row flex-wrap justify-content-center gap-xxs">
+			<div>
+		<button
+			class="button button-sm border inner-focus display-none margin-right-xxs"
+			data-bi-name="ask-learn-assistant-entry-troubleshoot"
+			data-test-id="ask-learn-assistant-modal-entry-mobile-feedback"
+			data-ask-learn-modal-entry-feedback
+			data-bi-an=feedback-unhelpful-popover
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			aria-label="Ask Learn"
+			hidden
+		>
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button
+			class="button button-sm display-inline-flex display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn margin-right-xxs"
+			data-bi-name="ask-learn-assistant-entry-troubleshoot"
+			data-bi-an=feedback-unhelpful-popover
+			data-test-id="ask-learn-assistant-modal-entry-tablet-feedback"
+			data-ask-learn-modal-entry-feedback
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			hidden
+		>
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button
+			class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn margin-right-xxs"
+			data-bi-name="ask-learn-assistant-entry-troubleshoot"
+			data-bi-an=feedback-unhelpful-popover
+			data-test-id="ask-learn-assistant-flyout-entry-feedback"
+			data-ask-learn-flyout-entry-show-only
+			data-flyout-button="toggle"
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			aria-controls="ask-learn-flyout"
+			hidden
+		>
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
 	</div>
-</div>
+			<button
+				type="button"
+				class="button button-sm margin-right-xxs"
+				data-help-option="suggest-fix"
+				data-bi-name="feedback-suggest"
+				data-bi-an="feedback-unhelpful-popover"
+				data-test-id="suggest-fix"
+			>
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-feedback"></span>
+				</span>
+				<span> Suggest a fix? </span>
+			</button>
+		</div>
+	
+					</div>
+				</details>
+			</div>
+		</section>
+	
+			</div>
+		</div>
+	
+			  </aside> <section
+					id="layout-body-flyout"
+					class="layout-body-flyout "
+					data-bi-name="flyout"
+			  >
+					 <div
+	class="height-full border-left background-color-body-medium"
+	id="ask-learn-flyout"
+></div>
+			  </section> <div class="layout-body-footer " data-bi-name="layout-footer">
+		<footer
+			id="footer"
+			data-test-id="footer"
+			data-bi-name="footer"
+			class="footer-layout has-padding has-default-focus border-top  uhf-container"
+			role="contentinfo"
+		>
+			<div class="display-flex gap-xs flex-wrap-wrap is-full-height padding-right-lg-desktop">
+				
+		<a
+			data-mscc-ic="false"
+			href="#"
+			data-bi-name="select-locale"
+			class="locale-selector-link flex-shrink-0 button button-sm button-clear external-link-indicator"
+			id=""
+			title=""
+			><span class="icon" aria-hidden="true"
+				><span class="docon docon-world"></span></span
+			><span class="local-selector-link-text">en-us</span></a
+		>
+	 <div class="ccpa-privacy-link" data-ccpa-privacy-link hidden>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://aka.ms/yourcaliforniaprivacychoices"
+			data-bi-name="your-privacy-choices"
+			class="button button-sm button-clear flex-shrink-0 external-link-indicator"
+			id=""
+			title=""
+			>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 30 14"
+			xml:space="preserve"
+			height="16"
+			width="43"
+			aria-hidden="true"
+			focusable="false"
+		>
+			<path
+				d="M7.4 12.8h6.8l3.1-11.6H7.4C4.2 1.2 1.6 3.8 1.6 7s2.6 5.8 5.8 5.8z"
+				style="fill-rule:evenodd;clip-rule:evenodd;fill:#fff"
+			></path>
+			<path
+				d="M22.6 0H7.4c-3.9 0-7 3.1-7 7s3.1 7 7 7h15.2c3.9 0 7-3.1 7-7s-3.2-7-7-7zm-21 7c0-3.2 2.6-5.8 5.8-5.8h9.9l-3.1 11.6H7.4c-3.2 0-5.8-2.6-5.8-5.8z"
+				style="fill-rule:evenodd;clip-rule:evenodd;fill:#06f"
+			></path>
+			<path
+				d="M24.6 4c.2.2.2.6 0 .8L22.5 7l2.2 2.2c.2.2.2.6 0 .8-.2.2-.6.2-.8 0l-2.2-2.2-2.2 2.2c-.2.2-.6.2-.8 0-.2-.2-.2-.6 0-.8L20.8 7l-2.2-2.2c-.2-.2-.2-.6 0-.8.2-.2.6-.2.8 0l2.2 2.2L23.8 4c.2-.2.6-.2.8 0z"
+				style="fill:#fff"
+			></path>
+			<path
+				d="M12.7 4.1c.2.2.3.6.1.8L8.6 9.8c-.1.1-.2.2-.3.2-.2.1-.5.1-.7-.1L5.4 7.7c-.2-.2-.2-.6 0-.8.2-.2.6-.2.8 0L8 8.6l3.8-4.5c.2-.2.6-.2.9 0z"
+				style="fill:#06f"
+			></path>
+		</svg>
+	
+			<span>Your Privacy Choices</span></a
+		>
+	
+	</div>
+				<div class="flex-shrink-0">
+		<div class="dropdown has-caret-up">
+			<button
+				data-test-id="theme-selector-button"
+				class="dropdown-trigger button button-clear button-sm inner-focus theme-dropdown-trigger"
+				aria-controls="{{ themeMenuId }}"
+				aria-expanded="false"
+				title="Theme"
+				data-bi-name="theme"
+			>
+				<span class="icon">
+					<span class="docon docon-sun" aria-hidden="true"></span>
+				</span>
+				<span>Theme</span>
+				<span class="icon expanded-indicator" aria-hidden="true">
+					<span class="docon docon-chevron-down-light"></span>
+				</span>
+			</button>
+			<div class="dropdown-menu" id="{{ themeMenuId }}" role="menu">
+				<ul class="theme-selector padding-xxs" data-test-id="theme-dropdown-menu">
+					<li class="theme display-block">
+						<button
+							class="button button-clear button-sm theme-control button-block justify-content-flex-start text-align-left"
+							data-theme-to="light"
+						>
+							<span class="theme-light margin-right-xxs">
+								<span
+									class="theme-selector-icon border display-inline-block has-body-background"
+									aria-hidden="true"
+								>
+									<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+										<rect width="22" height="14" class="has-fill-body-background" />
+										<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
+										<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
+										<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
+										<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
+										<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
+									</svg>
+								</span>
+							</span>
+							<span role="menuitem"> Light </span>
+						</button>
+					</li>
+					<li class="theme display-block">
+						<button
+							class="button button-clear button-sm theme-control button-block justify-content-flex-start text-align-left"
+							data-theme-to="dark"
+						>
+							<span class="theme-dark margin-right-xxs">
+								<span
+									class="border theme-selector-icon display-inline-block has-body-background"
+									aria-hidden="true"
+								>
+									<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+										<rect width="22" height="14" class="has-fill-body-background" />
+										<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
+										<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
+										<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
+										<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
+										<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
+									</svg>
+								</span>
+							</span>
+							<span role="menuitem"> Dark </span>
+						</button>
+					</li>
+					<li class="theme display-block">
+						<button
+							class="button button-clear button-sm theme-control button-block justify-content-flex-start text-align-left"
+							data-theme-to="high-contrast"
+						>
+							<span class="theme-high-contrast margin-right-xxs">
+								<span
+									class="border theme-selector-icon display-inline-block has-body-background"
+									aria-hidden="true"
+								>
+									<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+										<rect width="22" height="14" class="has-fill-body-background" />
+										<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
+										<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
+										<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
+										<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
+										<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
+									</svg>
+								</span>
+							</span>
+							<span role="menuitem"> High contrast </span>
+						</button>
+					</li>
+				</ul>
+			</div>
 		</div>
 	</div>
-	<ul class="links" data-bi-name="footerlinks">
-		<li class="manage-cookies-holder" hidden></li>
-				<li><a data-mscc-ic="false" href="/en-us/previous-versions/" data-bi-name="archivelink">Previous Versions</a></li>
-				<li><a data-mscc-ic="false" href="https://techcommunity.microsoft.com/t5/microsoft-learn-blog/bg-p/MicrosoftLearnBlog" data-bi-name="bloglink">Blog</a></li>
-				<li><a data-mscc-ic="false" href="/en-us/contribute/" data-bi-name="contributorGuide">Contribute</a></li>
-					<li><a data-mscc-ic="false" href="https://go.microsoft.com/fwlink/?LinkId=521839" data-bi-name="privacy">Privacy</a></li>
-				<li><a data-mscc-ic="false" href="/en-us/legal/termsofuse" data-bi-name="termsofuse">Terms of Use</a></li>
-				<li><a data-mscc-ic="false" href="https://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/EN-US.aspx" data-bi-name="trademarks">Trademarks</a></li>
-		<li>&copy; Microsoft 2023</li>
-	</ul>
-</footer>
-	</section>
-
-	<div id="action-panel" role="region" aria-label="Action Panel" class="action-panel has-default-focus" tabindex="-1"></div>
-</body>
-</html>
+			</div>
+			<ul class="links" data-bi-name="footerlinks">
+				<li class="manage-cookies-holder" hidden=""></li>
+				<li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://learn.microsoft.com/en-us/principles-for-ai-generated-content"
+			data-bi-name="aiDisclaimer"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>AI Disclaimer</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://learn.microsoft.com/en-us/previous-versions/"
+			data-bi-name="archivelink"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Previous Versions</a
+		>
+	
+	</li> <li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://techcommunity.microsoft.com/t5/microsoft-learn-blog/bg-p/MicrosoftLearnBlog"
+			data-bi-name="bloglink"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Blog</a
+		>
+	
+	</li> <li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://learn.microsoft.com/en-us/contribute"
+			data-bi-name="contributorGuide"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Contribute</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://go.microsoft.com/fwlink/?LinkId=521839"
+			data-bi-name="privacy"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Privacy</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://learn.microsoft.com/en-us/legal/termsofuse"
+			data-bi-name="termsofuse"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Terms of Use</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://www.microsoft.com/legal/intellectualproperty/Trademarks/"
+			data-bi-name="trademarks"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Trademarks</a
+		>
+	
+	</li>
+				<li>&copy; Microsoft 2026</li>
+			</ul>
+		</footer>
+	</footer>
+			</body>
+		</html>

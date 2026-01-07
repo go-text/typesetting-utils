@@ -372,12 +372,20 @@ func isHieroglyphJoiner(U rune, UISC, UDI, UGC, AJT string) bool {
 	return UISC == "Hieroglyph_Joiner"
 }
 
+func isHieroglyphMirror(U rune, UISC, UDI, UGC, AJT string) bool {
+	return UISC == "Hieroglyph_Mirror"
+}
+
+func isHieroglyphMod(U rune, UISC, UDI, UGC, AJT string) bool {
+	return UISC == "Hieroglyph_Modifier"
+}
+
 func isHieroglyphSegmentBegin(U rune, UISC, UDI, UGC, AJT string) bool {
-	return UISC == "Hieroglyph_Segment_Begin"
+	return UISC == "Hieroglyph_Mark_Begin" || UISC == "Hieroglyph_Segment_Begin"
 }
 
 func isHieroglyphSegmentEnd(U rune, UISC, UDI, UGC, AJT string) bool {
-	return UISC == "Hieroglyph_Segment_End"
+	return UISC == "Hieroglyph_Mark_End" || UISC == "Hieroglyph_Segment_End"
 }
 
 func isInvisibleStacker(U rune, UISC, UDI, UGC, AJT string) bool {
@@ -445,6 +453,8 @@ var useMapping = map[string]func(U rune, UISC, UDI, UGC, AJT string) bool{
 	"HN":   isHalantNum,
 	"IS":   isInvisibleStacker,
 	"G":    isHieroglyph,
+	"HM":   isHieroglyphMod,
+	"HR":   isHieroglyphMirror,
 	"J":    isHieroglyphJoiner,
 	"SB":   isHieroglyphSegmentBegin,
 	"SE":   isHieroglyphSegmentEnd,
@@ -491,6 +501,8 @@ var usePositions = map[string]map[string][]string{
 		"Blw": {"Bottom"},
 	},
 	"H":   nil,
+	"HM":  nil,
+	"HR":  nil,
 	"HVM": nil,
 	"IS":  nil,
 	"B":   nil,

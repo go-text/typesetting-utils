@@ -12,8 +12,8 @@ import (
 // download the database files from the Unicode source
 
 const (
-	version            = "15.0.0"
-	versionEmoji       = "15.0"
+	version            = "15.1.0"
+	versionEmoji       = "15.1"
 	urlUCDXML          = "https://unicode.org/Public/" + version + "/ucdxml/ucd.nounihan.grouped.zip"
 	urlUnicodeData     = "https://unicode.org/Public/" + version + "/ucd/UnicodeData.txt"
 	urlEmoji           = "https://unicode.org/Public/" + version + "/ucd/emoji/emoji-data.txt"
