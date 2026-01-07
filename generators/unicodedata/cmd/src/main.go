@@ -25,7 +25,8 @@ func Generate(outputDir string, dataFromCache bool) {
 	// parse
 	fmt.Println("Parsing Unicode files...")
 
-	db := parseUnicodeDatabase(srcs.unicodeData)
+	db, err := parseUnicodeDatabase(srcs.unicodeData)
+	check(err)
 
 	emojis, err := parseAnnexTables(srcs.emoji)
 	check(err)

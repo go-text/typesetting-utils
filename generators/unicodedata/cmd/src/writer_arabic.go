@@ -52,11 +52,10 @@ func (db unicodeDatabase) arabicShaping() (shapingTable, ligatures) {
 	lg := make(ligatures)
 
 	// manually add PUA ligatures
-	entries := append(db.chars,
-		parseUnicodeEntry(strings.Split("F201;PUA ARABIC LIGATURE LELLAH ISOLATED FORM;Lo;0;AL;<isolated> 0644 0644 0647;;;;N;;;;;", ";")),
-		parseUnicodeEntry(strings.Split("F211;PUA ARABIC LIGATURE LAM WITH MEEM WITH JEEM INITIAL FORM;Lo;0;AL;<initial> 0644 0645 062C;;;;N;;;;;", ";")),
-		parseUnicodeEntry(strings.Split("F2EE;PUA ARABIC LIGATURE SHADDA WITH FATHATAN ISOLATED FORM;Lo;0;AL;<isolated> 0020 064B 0651;;;;N;;;;;", ";")),
-	)
+	e1, _ := parseUnicodeEntry(strings.Split("F201;PUA ARABIC LIGATURE LELLAH ISOLATED FORM;Lo;0;AL;<isolated> 0644 0644 0647;;;;N;;;;;", ";"))
+	e2, _ := parseUnicodeEntry(strings.Split("F211;PUA ARABIC LIGATURE LAM WITH MEEM WITH JEEM INITIAL FORM;Lo;0;AL;<initial> 0644 0645 062C;;;;N;;;;;", ";"))
+	e3, _ := parseUnicodeEntry(strings.Split("F2EE;PUA ARABIC LIGATURE SHADDA WITH FATHATAN ISOLATED FORM;Lo;0;AL;<isolated> 0020 064B 0651;;;;N;;;;;", ";"))
+	entries := append(db.chars, e1, e2, e3)
 
 	for _, item := range entries {
 		if item.shape == none {

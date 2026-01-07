@@ -437,10 +437,20 @@ func generateGeneralCategories(m map[rune]string, w io.Writer) {
 
 	fmt.Fprint(w, unicodedataheader)
 
+	// we can't use standard unicode package for Harfbuzz
+	// because of users using older go versions.
 	for _, cat := range keys {
 		runes := cats[cat]
 		rt := rangetable.New(runes...)
 		code := printTable(rt, false)
 		fmt.Fprintln(w, fmt.Sprintf("var %s = %s\n", cat, code))
 	}
+
+	// generate an array of all categories (using standard library for
+	// backward compatibility)
+	fmt.Fprintf(w, "var allCategories = [...]*unicode.RangeTable{\n")
+	for _, cat := range keys {
+		fmt.Fprintf(w, "unicode.%s,\n", cat)
+	}
+	fmt.Fprintln(w, `}`)
 }

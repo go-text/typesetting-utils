@@ -16,8 +16,10 @@ func init() {
 }
 
 func TestParseUnicodeDatabase(t *testing.T) {
-	db := parseUnicodeDatabase(srcs.unicodeData)
-	if len(db.chars) != 33797 {
+	db, err := parseUnicodeDatabase(srcs.unicodeData)
+	check(err)
+
+	if len(db.chars) != 288767 {
 		t.Fatalf("got %d items", len(db.chars))
 	}
 }
@@ -67,7 +69,16 @@ func TestScripts(t *testing.T) {
 }
 
 func TestArabic(t *testing.T) {
-	db := parseUnicodeDatabase(srcs.unicodeData)
+	db, err := parseUnicodeDatabase(srcs.unicodeData)
+	check(err)
+
 	joiningTypes := parseArabicShaping(srcs.arabic)
 	generateArabicShaping(db, joiningTypes, io.Discard)
+}
+
+func TestGeneralCategories(t *testing.T) {
+	db, err := parseUnicodeDatabase(srcs.unicodeData)
+	check(err)
+
+	generateGeneralCategories(db.generalCategory, io.Discard)
 }
