@@ -269,6 +269,11 @@ func (an *Analyser) fetchInterfaces() {
 			if _, isItf := st.Underlying().(*types.Interface); isItf {
 				continue
 			}
+			// special base the simi type, not defined in the spec
+			// but usefull to unify two COLR formats
+			if st.Obj().Name() == "PaintColrLayersResolved" {
+				continue
+			}
 			if types.Implements(st, itf) {
 				an.interfaces[itf] = append(an.interfaces[itf], st)
 			}
@@ -437,7 +442,10 @@ func (an *Analyser) createFromBasic(ty types.Type, decl ast.Expr) Type {
 }
 
 func (an *Analyser) createFromStruct(ty *types.Named) Struct {
-	st := ty.Underlying().(*types.Struct)
+	st, ok := ty.Underlying().(*types.Struct)
+	if !ok {
+		panic("named type " + ty.Obj().Name() + " is not a struct")
+	}
 	cm := an.commentsMap[ty]
 	out := Struct{
 		origin:    ty,

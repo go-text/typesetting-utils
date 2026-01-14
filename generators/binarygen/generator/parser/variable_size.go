@@ -313,8 +313,7 @@ func parserForOffset(fi an.Field, parent an.Struct, cc *gen.Context) string {
 	cc.Slice = savedSlice
 	cc.Offset = savedOffset
 
-	return fmt.Sprintf(` 
-	if %s != 0 { // ignore null offset
+	return fmt.Sprintf(`if %s != 0 { // ignore null offset
 		%s
 		%s
 		%s%s
