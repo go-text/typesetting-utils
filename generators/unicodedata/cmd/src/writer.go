@@ -321,18 +321,18 @@ func generateEmojisTest(sequences [][]rune, w io.Writer) {
 
 type item struct {
 	start, end rune
-	script     uint32
+	script     string // name
 }
 
 func compactScriptLookupTable(scripts map[string][]runeRange, scriptNames map[string]uint32) []item {
 	var crible []item
 	for scriptName, runes := range scripts {
-		script, ok := scriptNames[scriptName]
+		_, ok := scriptNames[scriptName]
 		if !ok {
 			check(fmt.Errorf("unknown script name %s", scriptName))
 		}
 		for _, ra := range runes {
-			crible = append(crible, item{script: script, start: ra.Start, end: ra.End})
+			crible = append(crible, item{script: scriptName, start: ra.Start, end: ra.End})
 		}
 	}
 
@@ -404,8 +404,7 @@ func generateScriptLookupTable(scripts map[string][]runeRange, scriptNames map[s
 	// removed by the linker
 	var scriptToTag = map[string]Script{`)
 	for _, k := range sortedKeys {
-		v := scriptNames[k]
-		fmt.Fprintf(w, "%q : 0x%08x,\n", k, v)
+		fmt.Fprintf(w, "%q : %s,\n", k, k)
 	}
 	fmt.Fprintln(w, "}")
 
@@ -419,7 +418,7 @@ func generateScriptLookupTable(scripts map[string][]runeRange, scriptNames map[s
 	// ScriptRanges is a sorted list of script ranges.
 	var ScriptRanges = [...]ScriptRange{`)
 	for _, item := range crible {
-		fmt.Fprintf(w, "{0x%x, 0x%x, 0x%08x},\n", item.start, item.end, item.script)
+		fmt.Fprintf(w, "{0x%x, 0x%x, %s},\n", item.start, item.end, item.script)
 	}
 	fmt.Fprintln(w, "}")
 }
@@ -446,11 +445,10 @@ func generateGeneralCategories(m map[rune]string, w io.Writer) {
 		fmt.Fprintln(w, fmt.Sprintf("var %s = %s\n", cat, code))
 	}
 
-	// generate an array of all categories (using standard library for
-	// backward compatibility)
+	// generate an array of all categories
 	fmt.Fprintf(w, "var allCategories = [...]*unicode.RangeTable{\n")
 	for _, cat := range keys {
-		fmt.Fprintf(w, "unicode.%s,\n", cat)
+		fmt.Fprintf(w, "%s,\n", cat)
 	}
 	fmt.Fprintln(w, `}`)
 }

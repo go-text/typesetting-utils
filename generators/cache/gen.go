@@ -43,13 +43,23 @@ func (ss sizeSpec) elemType() string {
 	}
 }
 
+func (ss sizeSpec) keyType() string {
+	if ss.keyBits <= 8 {
+		return "uint8"
+	} else if ss.keyBits <= 16 {
+		return "uint16"
+	} else {
+		return "uint32"
+	}
+}
+
 func (ss sizeSpec) cacheType() string {
 	return fmt.Sprintf("cache%[1]d_%[2]d_%[3]d", ss.keyBits, ss.valueBits, ss.cacheBits)
 }
 
 func (ss sizeSpec) code() string {
 	return fmt.Sprintf(template, ss.cacheType(), ss.elemType(),
-		ss.keyBits, ss.valueBits, ss.cacheBits, ss.maxKey(), ss.maxValue(),
+		ss.keyBits, ss.valueBits, ss.cacheBits, ss.maxKey(), ss.maxValue(), ss.keyType(),
 	)
 }
 
@@ -100,16 +110,16 @@ func (c *%[1]s) clear() {
 	}
 }
 
-func (c %[1]s) get(key %[2]s) (%[2]s, bool) {
+func (c %[1]s) get(key %[8]s) (%[2]s, bool) {
 	k := key & ((1 << %[5]d) - 1)
 	v := c[k]
-	if v == ^%[2]s(0) || (v>>%[4]d) != (key>>%[5]d) {
+	if v == ^%[2]s(0) || (v>>%[4]d) != %[2]s(key>>%[5]d) {
 		return 0, false
 	}
 	return v & ((1 << %[4]d) - 1), true
 }
 
-func (c *%[1]s) set(key %[2]s, value %[2]s) {
+func (c *%[1]s) set(key %[8]s, value %[2]s) {
 	if (key>>%[3]d) != 0 || (value>>%[4]d) != 0 { /* overflows */
 		return
 	}
@@ -117,9 +127,9 @@ func (c *%[1]s) set(key %[2]s, value %[2]s) {
 }
 
 // assumes key < %[6]d and value < %[7]d
-func (c *%[1]s) setUnchecked(key %[2]s, value %[2]s) {
+func (c *%[1]s) setUnchecked(key %[8]s, value %[2]s) {
 	k := key & ((1 << %[5]d) - 1)
-	v := ((key >> %[5]d) << %[4]d) | value
+	v := (%[2]s(key >> %[5]d) << %[4]d) | value
 	c[k] = v
 }
 
@@ -145,7 +155,7 @@ func main() {
 ` + comment
 	for _, sizes := range []sizeSpec{
 		{15, 8, 7},
-		{14, 1, 7},
+		// {14, 1, 7}, // not used for now
 		{21, 3, 8},
 	} {
 		code2 += sizes.code()

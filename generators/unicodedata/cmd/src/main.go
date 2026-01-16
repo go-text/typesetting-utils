@@ -82,9 +82,7 @@ func Generate(outputDir string, dataFromCache bool) {
 	scriptsRanges, err := parseAnnexTablesAsRanges(srcs.scripts)
 	check(err)
 
-	b, err = data.Files.ReadFile("Scripts-iso15924.txt")
-	check(err)
-	scriptNames, err := parseScriptNames(b)
+	scriptNames, err := parseScriptNames(srcs.scriptNames)
 	check(err)
 
 	derivedCore, err := parseAnnexTables(srcs.derivedCore)
@@ -135,16 +133,16 @@ func Generate(outputDir string, dataFromCache bool) {
 	process(join("harfbuzz/emojis_list_test.go"), func(w io.Writer) {
 		generateEmojisTest(emojisTests, w)
 	})
-	process(join("harfbuzz/ot_use_table.go"), func(w io.Writer) {
+	process(join("harfbuzz/ot_shape_use_table.go"), func(w io.Writer) {
 		generateUSETable(db.generalCategory, indicS, indicP, blocks, indicSAdd, indicPAdd, derivedCore, scripts, joiningTypes, w)
 	})
-	process(join("harfbuzz/ot_vowels_constraints.go"), func(w io.Writer) {
+	process(join("harfbuzz/ot_shape_vowels_constraints.go"), func(w io.Writer) {
 		generateVowelConstraints(scripts, vowelsConstraints, w)
 	})
-	process(join("harfbuzz/ot_indic_table.go"), func(w io.Writer) {
+	process(join("harfbuzz/ot_shape_indic_table.go"), func(w io.Writer) {
 		generateIndicTable(indicS, indicP, blocks, w)
 	})
-	process(join("harfbuzz/ot_arabic_table.go"), func(w io.Writer) {
+	process(join("harfbuzz/ot_shape_arabic_table.go"), func(w io.Writer) {
 		generateArabicShaping(db, joiningTypes, w)
 		generateHasArabicJoining(joiningTypes, scripts, w)
 	})

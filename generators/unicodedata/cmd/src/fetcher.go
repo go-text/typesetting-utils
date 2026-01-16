@@ -12,15 +12,15 @@ import (
 // download the database files from the Unicode source
 
 const (
-	version            = "15.1.0"
-	versionEmoji       = "15.1"
+	version            = "17.0.0"
 	urlUCDXML          = "https://unicode.org/Public/" + version + "/ucdxml/ucd.nounihan.grouped.zip"
 	urlUnicodeData     = "https://unicode.org/Public/" + version + "/ucd/UnicodeData.txt"
 	urlEmoji           = "https://unicode.org/Public/" + version + "/ucd/emoji/emoji-data.txt"
-	urlEmojiTest       = "https://unicode.org/Public/emoji/" + versionEmoji + "/emoji-test.txt"
+	urlEmojiTest       = "https://unicode.org/Public/" + version + "/emoji/emoji-test.txt"
 	urlBidiMirroring   = "https://unicode.org/Public/" + version + "/ucd/BidiMirroring.txt"
 	urlArabic          = "https://unicode.org/Public/" + version + "/ucd/ArabicShaping.txt"
 	urlScripts         = "https://unicode.org/Public/" + version + "/ucd/Scripts.txt"
+	urlScriptNames     = "https://www.unicode.org/iso15924/iso15924.txt"
 	urlIndicSyllabic   = "https://unicode.org/Public/" + version + "/ucd/IndicSyllabicCategory.txt"
 	urlIndicPositional = "https://unicode.org/Public/" + version + "/ucd/IndicPositionalCategory.txt"
 	urlBlocks          = "https://unicode.org/Public/" + version + "/ucd/Blocks.txt"
@@ -64,6 +64,7 @@ type sources struct {
 	bidiMirroring   []byte
 	arabic          []byte
 	scripts         []byte
+	scriptNames     []byte
 	indicSyllabic   []byte
 	indicPositional []byte
 	blocks          []byte
@@ -83,6 +84,7 @@ func fetchAll(fromCache bool) (out sources) {
 	out.bidiMirroring = fetchData(urlBidiMirroring, fromCache)
 	out.arabic = fetchData(urlArabic, fromCache)
 	out.scripts = fetchData(urlScripts, fromCache)
+	out.scriptNames = fetchData(urlScriptNames, fromCache)
 	out.indicSyllabic = fetchData(urlIndicSyllabic, fromCache)
 	out.indicPositional = fetchData(urlIndicPositional, fromCache)
 	out.blocks = fetchData(urlBlocks, fromCache)

@@ -407,6 +407,10 @@ func isOther(U rune, UISC, UDI, UGC, AJT string) bool {
 		!isWordJoiner(U, UISC, UDI, UGC, AJT)
 }
 
+func isReorderingKiller(U rune, UISC, UDI, UGC, AJT string) bool {
+	return UISC == "Reordering_Killer"
+}
+
 func isRepha(U rune, UISC, UDI, UGC, AJT string) bool {
 	return in(UISC, "Consonant_Preceding_Repha", "Consonant_Prefixed")
 }
@@ -460,6 +464,7 @@ var useMapping = map[string]func(U rune, UISC, UDI, UGC, AJT string) bool{
 	"SE":   isHieroglyphSegmentEnd,
 	"ZWNJ": isZwnj,
 	"O":    isOther,
+	"RK":   isReorderingKiller,
 	"R":    isRepha,
 	"Sk":   isSakot,
 	"SM":   isSymMod,
@@ -512,6 +517,7 @@ var usePositions = map[string]map[string][]string{
 		"Pst": {"Not_Applicable"},
 	},
 	"R":   nil,
+	"RK":  nil,
 	"SUB": nil,
 }
 
@@ -570,7 +576,7 @@ func mapToUse(data map[rune][7]string) map[rune][2]string {
 			UIPC = "Top"
 		}
 
-		if _, inPos := usePositions[USE]; !in(UIPC, "Not_Applicable", "Visual_Order_Left") && U != 0x0F7F && !inPos {
+		if _, inPos := usePositions[USE]; !in(UIPC, "Not_Applicable", "Visual_Order_Left") && U != 0x0F7F && U != 0x11A3A && !inPos {
 			check(fmt.Errorf("in mapToUSE: %x %s %s %s %s %s %s", U, UIPC, USE, UISC, UDI, UGC, AJT))
 		}
 

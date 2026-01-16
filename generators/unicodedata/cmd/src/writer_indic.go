@@ -69,6 +69,7 @@ var indicSyllabic = map[string]uint8{
 	"CM":           16,
 	"Symbol":       17,
 	"CS":           18,
+	"SMPst":        57,
 
 	// copied from ot_khmer_machine.rl
 	"VAbv": 20,
@@ -135,6 +136,7 @@ var (
 		"Devanagari Extended",
 		"Myanmar Extended-B",
 		"Myanmar Extended-A",
+		"Myanmar Extended-C",
 	}
 )
 
@@ -547,6 +549,9 @@ func aggregateIndicTable(indicS, indicP, blocks map[string][]rune) (map[rune]ind
 	for k, v := range combined {
 		cat, pos, block := v.unpack()
 		cat = categoryMap[cat]
+		if cat == "SM" && pos == "Not_Applicable" {
+			cat = "SMPst"
+		}
 		pos = positionMap[pos]
 		indicData[k] = indicInfo{cat, pos, block}
 	}
@@ -574,7 +579,7 @@ func aggregateIndicTable(indicS, indicP, blocks map[string][]rune) (map[rune]ind
 	// Keep in sync with CONSONANT_FLAGS in the shaper
 	consonantCategories := []string{"C", "CS", "Ra", "CM", "V", "PLACEHOLDER", "DOTTEDCIRCLE"}
 	matraCategories := []string{"M", "MPst"}
-	smvdCategories := []string{"SM", "VD", "A", "Symbol"}
+	smvdCategories := []string{"SM", "SMPst", "VD", "A", "Symbol"}
 	for k, v := range indicData {
 		cat, pos, block := v.unpack()
 		if in(cat, consonantCategories...) {

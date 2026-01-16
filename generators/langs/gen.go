@@ -93,7 +93,7 @@ func expect(condition bool, message string) {
 const DEFAULT_LANGUAGE_SYSTEM = ""
 
 // from https://www-01.sil.org/iso639-3/iso-639-3.tab
-var iso_639_3_to_1 = map[string]string{
+var iso_639_3To_1 = map[string]string{
 	"aar": "aa",
 	"abk": "ab",
 	"afr": "af",
@@ -506,7 +506,7 @@ func (pr *OpenTypeRegistryParser) handleTr(n *html.Node) {
 		if len(code) > 5 {
 			continue
 		}
-		if c, ok := iso_639_3_to_1[code]; ok {
+		if c, ok := iso_639_3To_1[code]; ok {
 			code = c
 		}
 		s[code] = true
@@ -939,8 +939,6 @@ func parse() {
 	ot.removeLanguageOt("PGR")
 	ot.addLanguage("el-polyton", "PGR")
 
-	bcp47.macrolanguages["et"] = newSet("ekk")
-
 	bcp47.names["flm"] = "Falam Chin"
 	bcp47.scopes["flm"] = " (retired code)"
 	bcp47.macrolanguages["flm"] = newSet("cfm")
@@ -951,17 +949,12 @@ func parse() {
 
 	ot.addLanguage("und-fonnapa", "APPH")
 
-	ot.removeLanguageOt("IRT")
 	ot.addLanguage("ga-Latg", "IRT")
 
 	ot.addLanguage("hy-arevmda", "HYE")
 
 	ot.removeLanguageOt("KGE")
 	ot.addLanguage("und-Geok", "KGE")
-
-	bcp47.macrolanguages["id"] = newSet("in")
-
-	bcp47.macrolanguages["ijo"] = newSet("ijc")
 
 	ot.addLanguage("kht", "KHN")
 	ot.names["KHN"] = ot.names["KHT"] + " (Microsoft fonts)"
@@ -1053,8 +1046,6 @@ func parse() {
 	ot.addLanguage("lzh-Hans", "ZHS")
 	ot.addLanguage("yue", "ZHH")
 	ot.addLanguage("yue-Hans", "ZHS")
-
-	bcp47.macrolanguages["zom"] = newSet("yos")
 }
 
 // Return a delta to apply to a BCP 47 tag's rank.
@@ -1142,7 +1133,8 @@ func getVariantSet(name string) set {
 		if n == "" {
 			continue
 		}
-		n = strings.ReplaceAll(n, string('\u2019'), "'")
+		n = strings.ReplaceAll(n, "\u2019", "'")
+		n = strings.ReplaceAll(n, "\u02BC", "'")
 		var ascii []byte
 		for _, b := range norm.NFD.String(n) {
 			if b <= 127 {
@@ -1386,10 +1378,11 @@ func printAmbiguous(w io.Writer) {
 	sortedKeys := verifyDisambiguationDict()
 
 	fmt.Fprintln(w, `
-	// Converts 'tag' to a BCP 47 language tag if it is ambiguous (it corresponds to
-	// many language tags) and the best tag is not the alphabetically first, or if
-	// the best tag consists of multiple subtags, or if the best tag does not appear
-	// in 'otLanguages'.`)
+	// Converts [tag] to a BCP 47 language tag if it is ambiguous (it corresponds to
+	// many language tags) and the best tag is not the first (sorted alphabetically,
+	// with two-letter tags having priority over all three-letter tags), or if the
+	// best tag consists of multiple subtags, or if the best tag does not appear in
+	// [otLanguages].`)
 	fmt.Fprintln(w, "func ambiguousTagToLanguage (tag ot.Tag) language.Language {")
 	fmt.Fprintln(w, "  switch tag {")
 
@@ -1437,47 +1430,45 @@ func verifyDisambiguationDict() []string {
 			if strings.IndexByte(primaryTags[0], '-') != -1 {
 				disambiguation[otTag] = primaryTags[0]
 			} else {
-				var firstTag []string
+				var firstTags []string
 				for t := range bcp_47Tags {
 					if in := bcp47.grandfathered[t]; !in && ot.fromBCP47[t][otTag] {
-						firstTag = append(firstTag, t)
+						firstTags = append(firstTags, t)
 					}
 				}
-				sort.Strings(firstTag)
-				if primaryTags[0] != firstTag[0] {
+				sortStringsByLength(firstTags)
+				if primaryTags[0] != firstTags[0] {
 					disambiguation[otTag] = primaryTags[0]
 				}
 			}
 		} else if len(primaryTags) == 0 {
 			expect(!inDis, fmt.Sprintf("There is no possible valid disambiguation for %s", otTag))
 		} else {
-			var originalLanguages, macrolanguages []string
-			for _, t := range primaryTags {
-				if _, in := ot.fromBCP47Uninherited[t]; in && !strings.Contains(bcp47.scopes[t], "retired code") {
-					originalLanguages = append(originalLanguages, t)
-				}
-				if bcp47.scopes[t] == " [macrolanguage]" {
-					macrolanguages = append(macrolanguages, t)
-				}
-			}
-			if len(originalLanguages) == 1 {
-				macrolanguages = originalLanguages
+			originalLanguages := filter(primaryTags, func(t string) bool {
+				_, in := ot.fromBCP47Uninherited[t]
+				return in && !strings.Contains(bcp47.scopes[t], "retired code")
+			})
+			macrolanguages := originalLanguages
+			if len(originalLanguages) != 1 {
+				macrolanguages = filter(primaryTags, func(t string) bool { return bcp47.scopes[t] == " [macrolanguage]" })
 			}
 			if len(macrolanguages) != 1 {
-				macrolanguages = nil
-				for _, t := range primaryTags {
-					if bcp47.scopes[t] == " [collection]" {
-						macrolanguages = append(macrolanguages, t)
-					}
-				}
+				macrolanguages = filter(primaryTags, func(t string) bool { return bcp47.scopes[t] == " [collection]" })
 			}
 			if len(macrolanguages) != 1 {
-				macrolanguages = nil
-				for _, t := range primaryTags {
-					if !strings.Contains(bcp47.scopes[t], "retired code") {
-						macrolanguages = append(macrolanguages, t)
+				macrolanguages = filter(primaryTags, func(t string) bool { return !strings.Contains(bcp47.scopes[t], "retired code") })
+			}
+			if len(macrolanguages) != 1 {
+				macrolanguages = filter(primaryTags, func(t string) bool {
+					iso, ok := iso_639_3To_1[strings.ToLower(otTag)]
+					if !ok {
+						iso = strings.ToLower(otTag)
 					}
-				}
+					return strings.ToLower(t) == iso
+				})
+			}
+			if len(macrolanguages) != 1 {
+				macrolanguages = filter(primaryTags, func(t string) bool { return !strings.ContainsRune(t, '-') })
 			}
 			if len(macrolanguages) != 1 {
 				expect(inDis, fmt.Sprintf("ambiguous OT tag: %s %v", otTag, macrolanguages))
@@ -1487,16 +1478,19 @@ func verifyDisambiguationDict() []string {
 				disambiguation[otTag] = macrolanguages[0]
 			}
 
-			var differentBcp_47Tags []string
-			for t := range bcp_47Tags {
-				if !sameTag(t, sorted[t]) {
-					differentBcp_47Tags = append(differentBcp_47Tags, t)
+			if !strings.ContainsRune(disambiguation[otTag], '-') {
+				var differentBcp_47Tags []string
+				for t := range bcp_47Tags {
+					if !sameTag(t, sorted[t]) {
+						differentBcp_47Tags = append(differentBcp_47Tags, t)
+					}
+				}
+				sortStringsByLength(differentBcp_47Tags)
+				if len(differentBcp_47Tags) != 0 && disambiguation[otTag] == differentBcp_47Tags[0] && strings.IndexByte(disambiguation[otTag], '-') == -1 {
+					delete(disambiguation, otTag)
 				}
 			}
-			sort.Strings(differentBcp_47Tags)
-			if len(differentBcp_47Tags) != 0 && disambiguation[otTag] == differentBcp_47Tags[0] && strings.IndexByte(disambiguation[otTag], '-') == -1 {
-				delete(disambiguation, otTag)
-			}
+
 		}
 	}
 
@@ -1508,4 +1502,25 @@ func verifyDisambiguationDict() []string {
 	}
 	sort.Strings(sortedKeys)
 	return sortedKeys
+}
+
+func sortStringsByLength(s []string) {
+	sort.Slice(s, func(i, j int) bool {
+		if len(s[i]) < len(s[j]) {
+			return true
+		} else if len(s[i]) > len(s[j]) {
+			return false
+		}
+		return s[i] < s[j]
+	})
+}
+
+func filter(l []string, fn func(t string) bool) []string {
+	var out []string
+	for _, v := range l {
+		if fn(v) {
+			out = append(out, v)
+		}
+	}
+	return out
 }
