@@ -222,20 +222,26 @@ func isShape(s string) shapeT {
 	return 0
 }
 
+func parseRange(s string) runeRange {
+	range_ := strings.TrimSpace(s)
+	rangeS := strings.Split(range_, "..")
+	start := parseRune(rangeS[0])
+	end := start
+	if len(rangeS) > 1 {
+		end = parseRune(rangeS[1])
+	}
+	return runeRange{Start: start, End: end}
+}
+
 func parseAnnexTablesAsRanges(b []byte) (map[string][]runeRange, error) {
 	outRanges := map[string][]runeRange{}
 	for _, parts := range splitLines(b) {
 		if len(parts) < 2 {
 			return nil, fmt.Errorf("invalid line: %s", parts)
 		}
-		rang, typ := strings.TrimSpace(parts[0]), strings.TrimSpace(strings.Split(parts[1], "#")[0])
-		rangS := strings.Split(rang, "..")
-		start := parseRune(rangS[0])
-		end := start
-		if len(rangS) > 1 {
-			end = parseRune(rangS[1])
-		}
-		outRanges[typ] = append(outRanges[typ], runeRange{Start: start, End: end})
+		range_ := parseRange(parts[0])
+		typ := strings.TrimSpace(strings.Split(parts[1], "#")[0])
+		outRanges[typ] = append(outRanges[typ], range_)
 	}
 	return outRanges, nil
 }
@@ -271,6 +277,26 @@ func parseMirroring(b []byte) (map[uint16]uint16, error) {
 		out[uint16(startRune)] = uint16(endRune)
 	}
 	return out, nil
+}
+
+func parseDerivedCoreIndicCB(b []byte) (map[string][]rune, error) {
+	outRanges := map[string][]rune{}
+	for _, parts := range splitLines(b) {
+		if len(parts) < 2 {
+			return nil, fmt.Errorf("invalid line: %s", parts)
+		}
+		range_ := parseRange(parts[0])
+		typ := strings.TrimSpace(strings.Split(parts[1], "#")[0])
+		if typ != "InCB" {
+			continue
+		}
+		if len(parts) < 3 {
+			return nil, fmt.Errorf("missing value for InCB: %s", parts)
+		}
+		value := strings.TrimSpace(strings.Split(parts[2], "#")[0])
+		outRanges[value] = append(outRanges[value], range_.runes()...)
+	}
+	return outRanges, nil
 }
 
 type ucdXML struct {

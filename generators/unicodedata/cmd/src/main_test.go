@@ -82,3 +82,12 @@ func TestGeneralCategories(t *testing.T) {
 
 	generateGeneralCategories(db.generalCategory, io.Discard)
 }
+
+func TestIndicConjunctBreak(t *testing.T) {
+	derivedCore, err := parseDerivedCoreIndicCB(srcs.derivedCore)
+	check(err)
+
+	if len(derivedCore["Consonant"]) == 0 || len(derivedCore["Linker"]) == 0 || len(derivedCore["Extend"]) == 0 {
+		t.Fatal()
+	}
+}

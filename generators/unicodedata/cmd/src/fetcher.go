@@ -24,11 +24,17 @@ const (
 	urlIndicSyllabic   = "https://unicode.org/Public/" + version + "/ucd/IndicSyllabicCategory.txt"
 	urlIndicPositional = "https://unicode.org/Public/" + version + "/ucd/IndicPositionalCategory.txt"
 	urlBlocks          = "https://unicode.org/Public/" + version + "/ucd/Blocks.txt"
-	urlLineBreak       = "https://unicode.org/Public/" + version + "/ucd/LineBreak.txt"
 	urlEastAsianWidth  = "https://unicode.org/Public/" + version + "/ucd/EastAsianWidth.txt"
-	urlSentenceBreak   = "https://unicode.org/Public/" + version + "/ucd/auxiliary/SentenceBreakProperty.txt"
-	urlGraphemeBreak   = "https://unicode.org/Public/" + version + "/ucd/auxiliary/GraphemeBreakProperty.txt"
 	urlDerivedCore     = "https://unicode.org/Public/" + version + "/ucd/DerivedCoreProperties.txt"
+
+	urlLineBreak     = "https://unicode.org/Public/" + version + "/ucd/LineBreak.txt"
+	urlSentenceBreak = "https://unicode.org/Public/" + version + "/ucd/auxiliary/SentenceBreakProperty.txt"
+	urlGraphemeBreak = "https://unicode.org/Public/" + version + "/ucd/auxiliary/GraphemeBreakProperty.txt"
+
+	urlLineBreakTest     = "https://www.unicode.org/Public/" + version + "/ucd/auxiliary/LineBreakTest.txt"
+	urlGraphemeBreakTest = "https://www.unicode.org/Public/" + version + "/ucd/auxiliary/GraphemeBreakTest.txt"
+
+	urlWordBreakTest = "https://www.unicode.org/Public/" + version + "/ucd/auxiliary/WordBreakTest.txt"
 )
 
 func fetchData(url string, fromCache bool) []byte {
@@ -68,11 +74,16 @@ type sources struct {
 	indicSyllabic   []byte
 	indicPositional []byte
 	blocks          []byte
-	lineBreak       []byte
 	eastAsianWidth  []byte
-	sentenceBreak   []byte
-	graphemeBreak   []byte
 	derivedCore     []byte
+
+	lineBreak     []byte
+	sentenceBreak []byte
+	graphemeBreak []byte
+
+	lineBreakTest     []byte
+	graphemeBreakTest []byte
+	wordBreakTest     []byte
 }
 
 // download and return files in memory
@@ -88,11 +99,14 @@ func fetchAll(fromCache bool) (out sources) {
 	out.indicSyllabic = fetchData(urlIndicSyllabic, fromCache)
 	out.indicPositional = fetchData(urlIndicPositional, fromCache)
 	out.blocks = fetchData(urlBlocks, fromCache)
-	out.lineBreak = fetchData(urlLineBreak, fromCache)
 	out.eastAsianWidth = fetchData(urlEastAsianWidth, fromCache)
+	out.derivedCore = fetchData(urlDerivedCore, fromCache)
+	out.lineBreak = fetchData(urlLineBreak, fromCache)
 	out.sentenceBreak = fetchData(urlSentenceBreak, fromCache)
 	out.graphemeBreak = fetchData(urlGraphemeBreak, fromCache)
-	out.derivedCore = fetchData(urlDerivedCore, fromCache)
+	out.lineBreakTest = fetchData(urlLineBreakTest, fromCache)
+	out.wordBreakTest = fetchData(urlWordBreakTest, fromCache)
+	out.graphemeBreakTest = fetchData(urlGraphemeBreakTest, fromCache)
 
 	return out
 }
