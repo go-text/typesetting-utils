@@ -372,12 +372,20 @@ func isHieroglyphJoiner(U rune, UISC, UDI, UGC, AJT string) bool {
 	return UISC == "Hieroglyph_Joiner"
 }
 
+func isHieroglyphMirror(U rune, UISC, UDI, UGC, AJT string) bool {
+	return UISC == "Hieroglyph_Mirror"
+}
+
+func isHieroglyphMod(U rune, UISC, UDI, UGC, AJT string) bool {
+	return UISC == "Hieroglyph_Modifier"
+}
+
 func isHieroglyphSegmentBegin(U rune, UISC, UDI, UGC, AJT string) bool {
-	return UISC == "Hieroglyph_Segment_Begin"
+	return UISC == "Hieroglyph_Mark_Begin" || UISC == "Hieroglyph_Segment_Begin"
 }
 
 func isHieroglyphSegmentEnd(U rune, UISC, UDI, UGC, AJT string) bool {
-	return UISC == "Hieroglyph_Segment_End"
+	return UISC == "Hieroglyph_Mark_End" || UISC == "Hieroglyph_Segment_End"
 }
 
 func isInvisibleStacker(U rune, UISC, UDI, UGC, AJT string) bool {
@@ -397,6 +405,10 @@ func isOther(U rune, UISC, UDI, UGC, AJT string) bool {
 		!isCGJ(U, UISC, UDI, UGC, AJT) &&
 		!isSymMod(U, UISC, UDI, UGC, AJT) &&
 		!isWordJoiner(U, UISC, UDI, UGC, AJT)
+}
+
+func isReorderingKiller(U rune, UISC, UDI, UGC, AJT string) bool {
+	return UISC == "Reordering_Killer"
 }
 
 func isRepha(U rune, UISC, UDI, UGC, AJT string) bool {
@@ -445,11 +457,14 @@ var useMapping = map[string]func(U rune, UISC, UDI, UGC, AJT string) bool{
 	"HN":   isHalantNum,
 	"IS":   isInvisibleStacker,
 	"G":    isHieroglyph,
+	"HM":   isHieroglyphMod,
+	"HR":   isHieroglyphMirror,
 	"J":    isHieroglyphJoiner,
 	"SB":   isHieroglyphSegmentBegin,
 	"SE":   isHieroglyphSegmentEnd,
 	"ZWNJ": isZwnj,
 	"O":    isOther,
+	"RK":   isReorderingKiller,
 	"R":    isRepha,
 	"Sk":   isSakot,
 	"SM":   isSymMod,
@@ -491,6 +506,8 @@ var usePositions = map[string]map[string][]string{
 		"Blw": {"Bottom"},
 	},
 	"H":   nil,
+	"HM":  nil,
+	"HR":  nil,
 	"HVM": nil,
 	"IS":  nil,
 	"B":   nil,
@@ -500,6 +517,7 @@ var usePositions = map[string]map[string][]string{
 		"Pst": {"Not_Applicable"},
 	},
 	"R":   nil,
+	"RK":  nil,
 	"SUB": nil,
 }
 
@@ -558,7 +576,7 @@ func mapToUse(data map[rune][7]string) map[rune][2]string {
 			UIPC = "Top"
 		}
 
-		if _, inPos := usePositions[USE]; !in(UIPC, "Not_Applicable", "Visual_Order_Left") && U != 0x0F7F && !inPos {
+		if _, inPos := usePositions[USE]; !in(UIPC, "Not_Applicable", "Visual_Order_Left") && U != 0x0F7F && U != 0x11A3A && !inPos {
 			check(fmt.Errorf("in mapToUSE: %x %s %s %s %s %s %s", U, UIPC, USE, UISC, UDI, UGC, AJT))
 		}
 

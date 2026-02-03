@@ -102,12 +102,24 @@ type unicodeEntry struct {
 	shapingItems []rune // remaining after shape
 }
 
-// assume at least 6 fields
-func parseUnicodeEntry(chunks []string) unicodeEntry {
-	var item unicodeEntry
+// legacy range delimiters
+const (
+	noRange uint8 = iota
+	isFirst
+	isLast
+)
 
+// assume at least 6 fields
+func parseUnicodeEntry(chunks []string) (item unicodeEntry, isLegacyRange uint8) {
 	// Rune
 	item.char = parseRune(chunks[0])
+
+	// Legacy range start/stop
+	if strings.HasSuffix(chunks[1], "First>") {
+		isLegacyRange = isFirst
+	} else if strings.HasSuffix(chunks[1], "Last>") {
+		isLegacyRange = isLast
+	}
 
 	// General category
 	item.generalCategory = strings.TrimSpace(chunks[2])
@@ -122,11 +134,11 @@ func parseUnicodeEntry(chunks []string) unicodeEntry {
 
 	// we are now looking for <...> XXXX
 	if chunks[5] == "" {
-		return item
+		return item, isLegacyRange
 	}
 
 	if chunks[5][0] != '<' {
-		return item
+		return item, isLegacyRange
 	}
 
 	items := strings.Split(chunks[5], " ")
@@ -138,23 +150,51 @@ func parseUnicodeEntry(chunks []string) unicodeEntry {
 	for _, r := range items[1:] {
 		item.shapingItems = append(item.shapingItems, parseRune(r))
 	}
-	return item
+	return item, isLegacyRange
 }
 
 // rune;comment;General_Category;Canonical_Combining_Class;Bidi_Class;Decomposition_Mapping;...;Bidi_Mirrored
-func parseUnicodeDatabase(b []byte) unicodeDatabase {
+func parseUnicodeDatabase(b []byte) (unicodeDatabase, error) {
 	chars := make([]unicodeEntry, 0, 10_000)
-	for _, chunks := range splitLines(b) {
-		if len(chunks) < 6 {
+	lines := splitLines(b)
+	for i := 0; i < len(lines); i++ {
+		line := lines[i]
+		if len(line) < 6 {
 			continue
 		}
-		chars = append(chars, parseUnicodeEntry(chunks))
+		entry, rangeComment := parseUnicodeEntry(line)
+		rangeEnd := entry.char
+		if rangeComment == isFirst {
+			// parse the next line
+			if i+1 >= len(lines) {
+				return unicodeDatabase{}, errors.New("unmatched range start (EOF)")
+			}
+			nextLine := lines[i+1]
+			if len(line) < 6 {
+				return unicodeDatabase{}, errors.New("unmatched range start (next line to short)")
+			}
+			end, rangeCommentEnd := parseUnicodeEntry(nextLine)
+			if rangeCommentEnd != isLast {
+				return unicodeDatabase{}, errors.New("unmatched range start (next line is missing Last)")
+			}
+			rangeEnd = end.char
+			i++
+		} else if rangeComment == isLast {
+			return unicodeDatabase{}, errors.New("unmatched range start (spurious End)")
+		} else {
+			// regular line, nothing to do
+		}
+
+		for char := entry.char; char <= rangeEnd; char++ {
+			entry.char = char // copy
+			chars = append(chars, entry)
+		}
 	}
 
 	out := unicodeDatabase{chars: chars}
 	out.inferMaps()
 
-	return out
+	return out, nil
 }
 
 // -1 for no shapeT
@@ -182,20 +222,26 @@ func isShape(s string) shapeT {
 	return 0
 }
 
+func parseRange(s string) runeRange {
+	range_ := strings.TrimSpace(s)
+	rangeS := strings.Split(range_, "..")
+	start := parseRune(rangeS[0])
+	end := start
+	if len(rangeS) > 1 {
+		end = parseRune(rangeS[1])
+	}
+	return runeRange{Start: start, End: end}
+}
+
 func parseAnnexTablesAsRanges(b []byte) (map[string][]runeRange, error) {
 	outRanges := map[string][]runeRange{}
 	for _, parts := range splitLines(b) {
 		if len(parts) < 2 {
 			return nil, fmt.Errorf("invalid line: %s", parts)
 		}
-		rang, typ := strings.TrimSpace(parts[0]), strings.TrimSpace(strings.Split(parts[1], "#")[0])
-		rangS := strings.Split(rang, "..")
-		start := parseRune(rangS[0])
-		end := start
-		if len(rangS) > 1 {
-			end = parseRune(rangS[1])
-		}
-		outRanges[typ] = append(outRanges[typ], runeRange{Start: start, End: end})
+		range_ := parseRange(parts[0])
+		typ := strings.TrimSpace(strings.Split(parts[1], "#")[0])
+		outRanges[typ] = append(outRanges[typ], range_)
 	}
 	return outRanges, nil
 }
@@ -231,6 +277,26 @@ func parseMirroring(b []byte) (map[uint16]uint16, error) {
 		out[uint16(startRune)] = uint16(endRune)
 	}
 	return out, nil
+}
+
+func parseDerivedCoreIndicCB(b []byte) (map[string][]rune, error) {
+	outRanges := map[string][]rune{}
+	for _, parts := range splitLines(b) {
+		if len(parts) < 2 {
+			return nil, fmt.Errorf("invalid line: %s", parts)
+		}
+		range_ := parseRange(parts[0])
+		typ := strings.TrimSpace(strings.Split(parts[1], "#")[0])
+		if typ != "InCB" {
+			continue
+		}
+		if len(parts) < 3 {
+			return nil, fmt.Errorf("missing value for InCB: %s", parts)
+		}
+		value := strings.TrimSpace(strings.Split(parts[2], "#")[0])
+		outRanges[value] = append(outRanges[value], range_.runes()...)
+	}
+	return outRanges, nil
 }
 
 type ucdXML struct {

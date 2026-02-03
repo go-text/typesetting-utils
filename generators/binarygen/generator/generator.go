@@ -41,7 +41,7 @@ func (db Buffer) filterUnused(childTypes map[*types.Named]bool) []Declaration {
 			if i == j {
 				continue
 			}
-			if strings.Contains(other.Content, decl.ID) {
+			if strings.Contains(other.Content, decl.ID+"(") {
 				// the function is used, keep it
 				isUsed = true
 				break

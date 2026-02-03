@@ -2,7 +2,7 @@ package src
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"path"
@@ -12,23 +12,29 @@ import (
 // download the database files from the Unicode source
 
 const (
-	version            = "15.0.0"
-	versionEmoji       = "15.0"
+	version            = "17.0.0"
 	urlUCDXML          = "https://unicode.org/Public/" + version + "/ucdxml/ucd.nounihan.grouped.zip"
 	urlUnicodeData     = "https://unicode.org/Public/" + version + "/ucd/UnicodeData.txt"
 	urlEmoji           = "https://unicode.org/Public/" + version + "/ucd/emoji/emoji-data.txt"
-	urlEmojiTest       = "https://unicode.org/Public/emoji/" + versionEmoji + "/emoji-test.txt"
+	urlEmojiTest       = "https://unicode.org/Public/" + version + "/emoji/emoji-test.txt"
 	urlBidiMirroring   = "https://unicode.org/Public/" + version + "/ucd/BidiMirroring.txt"
 	urlArabic          = "https://unicode.org/Public/" + version + "/ucd/ArabicShaping.txt"
 	urlScripts         = "https://unicode.org/Public/" + version + "/ucd/Scripts.txt"
+	urlScriptNames     = "https://www.unicode.org/iso15924/iso15924.txt"
 	urlIndicSyllabic   = "https://unicode.org/Public/" + version + "/ucd/IndicSyllabicCategory.txt"
 	urlIndicPositional = "https://unicode.org/Public/" + version + "/ucd/IndicPositionalCategory.txt"
 	urlBlocks          = "https://unicode.org/Public/" + version + "/ucd/Blocks.txt"
-	urlLineBreak       = "https://unicode.org/Public/" + version + "/ucd/LineBreak.txt"
 	urlEastAsianWidth  = "https://unicode.org/Public/" + version + "/ucd/EastAsianWidth.txt"
-	urlSentenceBreak   = "https://unicode.org/Public/" + version + "/ucd/auxiliary/SentenceBreakProperty.txt"
-	urlGraphemeBreak   = "https://unicode.org/Public/" + version + "/ucd/auxiliary/GraphemeBreakProperty.txt"
 	urlDerivedCore     = "https://unicode.org/Public/" + version + "/ucd/DerivedCoreProperties.txt"
+
+	urlLineBreak     = "https://unicode.org/Public/" + version + "/ucd/LineBreak.txt"
+	urlSentenceBreak = "https://unicode.org/Public/" + version + "/ucd/auxiliary/SentenceBreakProperty.txt"
+	urlGraphemeBreak = "https://unicode.org/Public/" + version + "/ucd/auxiliary/GraphemeBreakProperty.txt"
+
+	urlLineBreakTest     = "https://www.unicode.org/Public/" + version + "/ucd/auxiliary/LineBreakTest.txt"
+	urlGraphemeBreakTest = "https://www.unicode.org/Public/" + version + "/ucd/auxiliary/GraphemeBreakTest.txt"
+
+	urlWordBreakTest = "https://www.unicode.org/Public/" + version + "/ucd/auxiliary/WordBreakTest.txt"
 )
 
 func fetchData(url string, fromCache bool) []byte {
@@ -45,7 +51,7 @@ func fetchData(url string, fromCache bool) []byte {
 	check(err)
 
 	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	check(err)
 
 	err = os.WriteFile(fileName, data, os.ModePerm)
@@ -64,14 +70,20 @@ type sources struct {
 	bidiMirroring   []byte
 	arabic          []byte
 	scripts         []byte
+	scriptNames     []byte
 	indicSyllabic   []byte
 	indicPositional []byte
 	blocks          []byte
-	lineBreak       []byte
 	eastAsianWidth  []byte
-	sentenceBreak   []byte
-	graphemeBreak   []byte
 	derivedCore     []byte
+
+	lineBreak     []byte
+	sentenceBreak []byte
+	graphemeBreak []byte
+
+	lineBreakTest     []byte
+	graphemeBreakTest []byte
+	wordBreakTest     []byte
 }
 
 // download and return files in memory
@@ -83,14 +95,18 @@ func fetchAll(fromCache bool) (out sources) {
 	out.bidiMirroring = fetchData(urlBidiMirroring, fromCache)
 	out.arabic = fetchData(urlArabic, fromCache)
 	out.scripts = fetchData(urlScripts, fromCache)
+	out.scriptNames = fetchData(urlScriptNames, fromCache)
 	out.indicSyllabic = fetchData(urlIndicSyllabic, fromCache)
 	out.indicPositional = fetchData(urlIndicPositional, fromCache)
 	out.blocks = fetchData(urlBlocks, fromCache)
-	out.lineBreak = fetchData(urlLineBreak, fromCache)
 	out.eastAsianWidth = fetchData(urlEastAsianWidth, fromCache)
+	out.derivedCore = fetchData(urlDerivedCore, fromCache)
+	out.lineBreak = fetchData(urlLineBreak, fromCache)
 	out.sentenceBreak = fetchData(urlSentenceBreak, fromCache)
 	out.graphemeBreak = fetchData(urlGraphemeBreak, fromCache)
-	out.derivedCore = fetchData(urlDerivedCore, fromCache)
+	out.lineBreakTest = fetchData(urlLineBreakTest, fromCache)
+	out.wordBreakTest = fetchData(urlWordBreakTest, fromCache)
+	out.graphemeBreakTest = fetchData(urlGraphemeBreakTest, fromCache)
 
 	return out
 }

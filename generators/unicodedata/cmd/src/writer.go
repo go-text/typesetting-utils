@@ -161,7 +161,7 @@ func generateDecomposition(combiningClasses map[uint8][]rune, dms map[rune][]run
 	fmt.Fprintln(w, "}")
 }
 
-// Supported line breaking classes for Unicode 12.0.0.
+// Supported line breaking classes for Unicode 17.0.0.
 // Table loading depends on this: classes not listed here aren't loaded.
 var lineBreakClasses = [][2]string{
 	{"BK", "Mandatory Break"},
@@ -180,10 +180,12 @@ var lineBreakClasses = [][2]string{
 	{"QU", "Quotation"},
 	{"HY", "Hyphen"},
 	{"SG", "Surrogate"},
-	{"GL", "Non-breaking (\"Glue\")"},
+	{"GL", `Non-breaking ("Glue")`},
 	{"NS", "Nonstarter"},
 	{"EX", "Exclamation/Interrogation"},
 	{"SY", "Symbols Allowing Break After"},
+	{"VF", "Virama Final"},
+	{"VI", "Virama"},
 	{"HL", "Hebrew Letter"},
 	{"ID", "Ideographic"},
 	{"IN", "Inseparable"},
@@ -198,12 +200,16 @@ var lineBreakClasses = [][2]string{
 	{"ZWJ", "Zero width joiner"},
 	{"H2", "Hangul LV Syllable"},
 	{"H3", "Hangul LVT Syllable"},
+	{"HH", "Unambiguous Hyphen"},
 	{"JL", "Hangul L Jamo"},
 	{"JV", "Hangul V Jamo"},
 	{"JT", "Hangul T Jamo"},
 	{"RI", "Regional Indicator"},
 	{"CB", "Contingent Break Opportunity"},
 	{"AI", "Ambiguous (Alphabetic or Ideographic)"},
+	{"AK", "Aksara"},
+	{"AP", "Aksara Pre-Base"},
+	{"AS", "Aksara Start"},
 	{"CJ", "Conditional Japanese Starter"},
 	{"SA", "Complex Context Dependent (South East Asian)"},
 	{"XX", "Unknown"},
@@ -213,6 +219,8 @@ func generateLineBreak(datas map[string][]rune, w io.Writer) {
 	dict := ""
 
 	fmt.Fprint(w, unicodedataheader)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+
 	for i, class := range lineBreakClasses {
 		className := class[0]
 		table := rangetable.New(datas[className]...)
@@ -230,6 +238,8 @@ func generateLineBreak(datas map[string][]rune, w io.Writer) {
 
 func generateEastAsianWidth(datas map[string][]rune, w io.Writer) {
 	fmt.Fprint(w, unicodedataheader)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+
 	// the table is used for UAX14 (LB30) : we group the classes
 	// F (Fullwidth), W (Wide), H (Halfwidth)
 	runes := append(append(datas["F"], datas["W"]...), datas["H"]...)
@@ -241,6 +251,33 @@ func generateEastAsianWidth(datas map[string][]rune, w io.Writer) {
 	var LargeEastAsian = %s
 
 	`, s)
+}
+
+func generateIndicConjunctBreak(derivedCore map[string][]rune, w io.Writer) {
+	fmt.Fprint(w, unicodedataheader)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+
+	// these table are used for UAX29 (GB9c)
+	linker := rangetable.New(derivedCore["Linker"]...)
+	consonnant := rangetable.New(derivedCore["Consonant"]...)
+	extend := rangetable.New(derivedCore["Extend"]...)
+	codeLinker := printTable(linker, false)
+	codeConsonant := printTable(consonnant, false)
+	codeExtend := printTable(extend, false)
+	fmt.Fprintf(w, `
+	// indicCBLinker matches runes with Indic_Conjunct_Break property of 
+	// Linker and is used for UAX29, rule GB9c.
+	var indicCBLinker = %s
+
+	// indicCBConsonant matches runes with Indic_Conjunct_Break property of 
+	// Consonant and is used for UAX29, rule GB9c.
+	var indicCBConsonant = %s
+
+	// indicCBExtend matches runes with Indic_Conjunct_Break property of 
+	// Extend and is used for UAX29, rule GB9c.
+	var indicCBExtend = %s
+
+	`, codeLinker, codeConsonant, codeExtend)
 }
 
 func generateIndicCategories(datas map[string][]rune, w io.Writer) {
@@ -255,6 +292,7 @@ func generateIndicCategories(datas map[string][]rune, w io.Writer) {
 // only generate the table for the STerm property
 func generateSTermProperty(datas map[string][]rune, w io.Writer) {
 	fmt.Fprint(w, unicodedataheader)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
 
 	className := "STerm"
 	table := rangetable.New(datas[className]...)
@@ -265,6 +303,7 @@ func generateSTermProperty(datas map[string][]rune, w io.Writer) {
 
 func generateGraphemeBreakProperty(datas map[string][]rune, w io.Writer) {
 	fmt.Fprint(w, unicodedataheader)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
 
 	var sortedClasses []string
 	for key := range datas {
@@ -321,18 +360,18 @@ func generateEmojisTest(sequences [][]rune, w io.Writer) {
 
 type item struct {
 	start, end rune
-	script     uint32
+	script     string // name
 }
 
 func compactScriptLookupTable(scripts map[string][]runeRange, scriptNames map[string]uint32) []item {
 	var crible []item
 	for scriptName, runes := range scripts {
-		script, ok := scriptNames[scriptName]
+		_, ok := scriptNames[scriptName]
 		if !ok {
 			check(fmt.Errorf("unknown script name %s", scriptName))
 		}
 		for _, ra := range runes {
-			crible = append(crible, item{script: script, start: ra.Start, end: ra.End})
+			crible = append(crible, item{script: scriptName, start: ra.Start, end: ra.End})
 		}
 	}
 
@@ -404,8 +443,7 @@ func generateScriptLookupTable(scripts map[string][]runeRange, scriptNames map[s
 	// removed by the linker
 	var scriptToTag = map[string]Script{`)
 	for _, k := range sortedKeys {
-		v := scriptNames[k]
-		fmt.Fprintf(w, "%q : 0x%08x,\n", k, v)
+		fmt.Fprintf(w, "%q : %s,\n", k, k)
 	}
 	fmt.Fprintln(w, "}")
 
@@ -419,7 +457,7 @@ func generateScriptLookupTable(scripts map[string][]runeRange, scriptNames map[s
 	// ScriptRanges is a sorted list of script ranges.
 	var ScriptRanges = [...]ScriptRange{`)
 	for _, item := range crible {
-		fmt.Fprintf(w, "{0x%x, 0x%x, 0x%08x},\n", item.start, item.end, item.script)
+		fmt.Fprintf(w, "{0x%x, 0x%x, %s},\n", item.start, item.end, item.script)
 	}
 	fmt.Fprintln(w, "}")
 }
@@ -437,10 +475,19 @@ func generateGeneralCategories(m map[rune]string, w io.Writer) {
 
 	fmt.Fprint(w, unicodedataheader)
 
+	// we can't use standard unicode package for Harfbuzz
+	// because of users using older go versions.
 	for _, cat := range keys {
 		runes := cats[cat]
 		rt := rangetable.New(runes...)
 		code := printTable(rt, false)
 		fmt.Fprintln(w, fmt.Sprintf("var %s = %s\n", cat, code))
 	}
+
+	// generate an array of all categories
+	fmt.Fprintf(w, "var allCategories = [...]*unicode.RangeTable{\n")
+	for _, cat := range keys {
+		fmt.Fprintf(w, "%s,\n", cat)
+	}
+	fmt.Fprintln(w, `}`)
 }
