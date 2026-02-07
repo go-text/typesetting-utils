@@ -12,20 +12,21 @@ import (
 // download the database files from the Unicode source
 
 const (
-	version            = "17.0.0"
-	urlUCDXML          = "https://unicode.org/Public/" + version + "/ucdxml/ucd.nounihan.grouped.zip"
-	urlUnicodeData     = "https://unicode.org/Public/" + version + "/ucd/UnicodeData.txt"
-	urlEmoji           = "https://unicode.org/Public/" + version + "/ucd/emoji/emoji-data.txt"
-	urlEmojiTest       = "https://unicode.org/Public/" + version + "/emoji/emoji-test.txt"
-	urlBidiMirroring   = "https://unicode.org/Public/" + version + "/ucd/BidiMirroring.txt"
-	urlArabic          = "https://unicode.org/Public/" + version + "/ucd/ArabicShaping.txt"
-	urlScripts         = "https://unicode.org/Public/" + version + "/ucd/Scripts.txt"
-	urlScriptNames     = "https://www.unicode.org/iso15924/iso15924.txt"
-	urlIndicSyllabic   = "https://unicode.org/Public/" + version + "/ucd/IndicSyllabicCategory.txt"
-	urlIndicPositional = "https://unicode.org/Public/" + version + "/ucd/IndicPositionalCategory.txt"
-	urlBlocks          = "https://unicode.org/Public/" + version + "/ucd/Blocks.txt"
-	urlEastAsianWidth  = "https://unicode.org/Public/" + version + "/ucd/EastAsianWidth.txt"
-	urlDerivedCore     = "https://unicode.org/Public/" + version + "/ucd/DerivedCoreProperties.txt"
+	version                 = "17.0.0"
+	urlUCDXML               = "https://unicode.org/Public/" + version + "/ucdxml/ucd.nounihan.grouped.zip"
+	urlUnicodeData          = "https://unicode.org/Public/" + version + "/ucd/UnicodeData.txt"
+	urlEmoji                = "https://unicode.org/Public/" + version + "/ucd/emoji/emoji-data.txt"
+	urlEmojiTest            = "https://unicode.org/Public/" + version + "/emoji/emoji-test.txt"
+	urlBidiMirroring        = "https://unicode.org/Public/" + version + "/ucd/BidiMirroring.txt"
+	urlArabic               = "https://unicode.org/Public/" + version + "/ucd/ArabicShaping.txt"
+	urlScripts              = "https://unicode.org/Public/" + version + "/ucd/Scripts.txt"
+	urlScriptNames          = "https://www.unicode.org/iso15924/iso15924.txt"
+	urlIndicSyllabic        = "https://unicode.org/Public/" + version + "/ucd/IndicSyllabicCategory.txt"
+	urlIndicPositional      = "https://unicode.org/Public/" + version + "/ucd/IndicPositionalCategory.txt"
+	urlBlocks               = "https://unicode.org/Public/" + version + "/ucd/Blocks.txt"
+	urlEastAsianWidth       = "https://unicode.org/Public/" + version + "/ucd/EastAsianWidth.txt"
+	urlDerivedCore          = "https://unicode.org/Public/" + version + "/ucd/DerivedCoreProperties.txt"
+	urlPropertyValueAliases = "https://unicode.org/Public/" + version + "/ucd/PropertyValueAliases.txt"
 
 	urlLineBreak     = "https://unicode.org/Public/" + version + "/ucd/LineBreak.txt"
 	urlSentenceBreak = "https://unicode.org/Public/" + version + "/ucd/auxiliary/SentenceBreakProperty.txt"
@@ -63,19 +64,20 @@ func fetchData(url string, fromCache bool) []byte {
 // sources stores all the input text files
 // defining Unicode data
 type sources struct {
-	ucdXML          []byte
-	unicodeData     []byte
-	emoji           []byte
-	emojiTest       []byte
-	bidiMirroring   []byte
-	arabic          []byte
-	scripts         []byte
-	scriptNames     []byte
-	indicSyllabic   []byte
-	indicPositional []byte
-	blocks          []byte
-	eastAsianWidth  []byte
-	derivedCore     []byte
+	ucdXML               []byte
+	unicodeData          []byte
+	emoji                []byte
+	emojiTest            []byte
+	bidiMirroring        []byte
+	arabic               []byte
+	scripts              []byte
+	scriptNames          []byte
+	indicSyllabic        []byte
+	indicPositional      []byte
+	blocks               []byte
+	eastAsianWidth       []byte
+	derivedCore          []byte
+	propertyValueAliases []byte
 
 	lineBreak     []byte
 	sentenceBreak []byte
@@ -101,6 +103,7 @@ func fetchAll(fromCache bool) (out sources) {
 	out.blocks = fetchData(urlBlocks, fromCache)
 	out.eastAsianWidth = fetchData(urlEastAsianWidth, fromCache)
 	out.derivedCore = fetchData(urlDerivedCore, fromCache)
+	out.propertyValueAliases = fetchData(urlPropertyValueAliases, fromCache)
 	out.lineBreak = fetchData(urlLineBreak, fromCache)
 	out.sentenceBreak = fetchData(urlSentenceBreak, fromCache)
 	out.graphemeBreak = fetchData(urlGraphemeBreak, fromCache)
