@@ -13,5 +13,5 @@ func TestTables(t *testing.T) {
 		-4, -4, -4, -4, -4, -4, -4, -4,
 	}, 2, 9)
 
-	fmt.Println(sol.code("gc"))
+	fmt.Println(sol.Code("gc"))
 }

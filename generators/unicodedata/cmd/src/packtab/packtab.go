@@ -2,6 +2,7 @@ package packtab
 
 import (
 	"fmt"
+	"io"
 	"math"
 	"sort"
 	"strconv"
@@ -127,12 +128,20 @@ func typeFor(minV, maxV int) string {
 	return fmt.Sprintf("uint%d", bits)
 }
 
-func cast(typ, expr string) string {
-	return fmt.Sprintf("%s(%s)", typ, expr)
-}
-
-func tertiary(cond, trueExpr, falseExpr string) string {
-	return fmt.Sprintf("if %s { %s } else { %s }", cond, trueExpr, falseExpr)
+// in bytes
+func sizeOf(typ string) int {
+	switch typ {
+	case "uint8", "int8":
+		return 1
+	case "uint16", "int16":
+		return 2
+	case "uint32", "int32":
+		return 4
+	case "uint64", "int64":
+		return 8
+	default:
+		panic(typ)
+	}
 }
 
 const (
@@ -142,7 +151,7 @@ const (
 )
 
 type innerSolution struct {
-	layer     *Layer
+	layer     *layer
 	next      *innerSolution
 	nLookups  int
 	nExtraOps int
@@ -152,7 +161,7 @@ type innerSolution struct {
 }
 
 func newInnerSolution(
-	layer *Layer,
+	layer *layer,
 	next *innerSolution,
 	nLookups int,
 	nExtraOps int,
@@ -167,7 +176,7 @@ type OuterSolution struct {
 }
 
 func newOuterSolution(
-	layer *Layer,
+	layer *layer,
 	next *innerSolution,
 	nLookups int,
 	nExtraOps int,
@@ -180,95 +189,7 @@ func (sl innerSolution) fullCost() int {
 	return sl.cost + (sl.nLookups*lookupOps+sl.nExtraOps)*bytesPerOp
 }
 
-func (self innerSolution) genCode(code *Code, name, var_ string) (string, string) {
-	inputVar := var_
-	if name != "" {
-		var_ = "u"
-	}
-	expr := var_
-
-	retType := typeFor(self.layer.minV, self.layer.maxV)
-	unitBits := self.layer.unitBits
-	if unitBits == 0 {
-		expr = fmt.Sprintf("%d", self.layer.data[0])
-		return retType, expr
-	}
-
-	shift := self.bits
-	mask := (1 << shift) - 1
-
-	if self.next != nil {
-		_, expr = self.next.genCode(code, "", fmt.Sprintf("((%s)>>%d)", var_, shift))
-	}
-	// Generate data.
-	var layers []*Layer
-	layer := self.layer
-	bits := self.bits
-	for bits != 0 {
-		layers = append(layers, layer)
-		layer = layer.next
-		bits -= 1
-	}
-
-	var data []int
-	if len(layers) == 0 {
-		data = append(data, layer.data...)
-	} else {
-		for d := 0; d < layer.maxV+1; d++ {
-			_expand(d, layers, len(layers)-1, &data)
-		}
-	}
-
-	data = _combine(data, self.layer.unitBits)
-
-	arrName, start := code.addArray(retType, data)
-
-	// Generate expression.
-	var index0 string
-	if expr == "0" {
-		index0 = ""
-	} else if shift == 0 {
-		index0 = expr
-	} else {
-		index0 = fmt.Sprintf("((%s)<<%d)", expr, shift)
-	}
-	index1 := ""
-	if mask != 0 {
-		index1 = fmt.Sprintf("((%s)&%d)", var_, mask)
-	}
-	index := index0 + index1
-	if index0 != "" && index1 != "" {
-		index = index0 + "+" + index1
-	}
-	if unitBits >= 8 {
-		if start != 0 {
-			index = fmt.Sprintf("%d+%s", start, index)
-		}
-		expr = fmt.Sprintf("%s[%s]", arrName, index)
-	} else {
-		shift1 := int(math.Round(math.Log2(float64(8 / unitBits))))
-		mask1 := (8 / unitBits) - 1
-		shift2 := int(math.Round(math.Log2(float64(unitBits))))
-		mask2 := (1 << unitBits) - 1
-		funcBody := fmt.Sprintf("return (a[i>>%d]>>((i&%d)<<%d))&%d", shift1, mask1, shift2, mask2)
-		funcName := code.addFunction("uint8", fmt.Sprintf("bits%d", unitBits), [][2]string{{"a", "[]uint8"}, {"i", "int"}}, funcBody)
-		slicedArray := fmt.Sprintf("%s[:]", arrName)
-		if start != 0 {
-			slicedArray = fmt.Sprintf("%s[%d:]", arrName, start)
-		}
-		expr = fmt.Sprintf("%s(%s,%s)", funcName, slicedArray, index)
-	}
-	// Wrap up.
-
-	if name != "" {
-		funcName := code.addFunction(retType, name, [][2]string{{"u", "uint32"}}, expr)
-		expr = fmt.Sprintf("%s(%s)", funcName, inputVar)
-	}
-
-	return retType, expr
-}
-
-func _expand(v int, stack []*Layer, i int, out *[]int) {
+func _expand(v int, stack []*layer, i int, out *[]int) {
 	if i < 0 {
 		*out = append(*out, v)
 		return
@@ -301,10 +222,10 @@ func _combine2(data []int, f func(a, b int) int) []int {
 	return data2
 }
 
-type Layer struct {
+type layer struct {
 	data       []int
 	minV, maxV int
-	next       *Layer
+	next       *layer
 	solutions  []innerSolution
 
 	extraOps, unitBits, bytes int
@@ -317,8 +238,8 @@ type Layer struct {
 // A layer that can reproduce @data passed to its constructor, by
 // using multiple lookup tables that split the domain by powers
 // of two.
-func newInnerLayer(data []int) *Layer {
-	var self Layer
+func newInnerLayer(data []int) *layer {
+	var self layer
 	self.data = data
 	self.maxV = max(data)
 	self.minV = min(data)
@@ -356,7 +277,7 @@ func newInnerLayer(data []int) *Layer {
 	return &self
 }
 
-func (self *Layer) split() {
+func (self *layer) split() {
 	if len(self.data)&1 != 0 {
 		self.data = append(self.data, 0)
 	}
@@ -369,7 +290,7 @@ func (self *Layer) split() {
 }
 
 // Remove dominated solutions.
-func (self *Layer) prune_solutions() {
+func (self *layer) prune_solutions() {
 	// Doing it the slowest, O(N^2), way for now.
 	sols := self.solutions
 	for _, a := range sols {
@@ -430,7 +351,7 @@ func newOuterLayer(data []int, default_ int) []OuterSolution {
 	for data[len(data)-1] == default_ {
 		data = data[:len(data)-1]
 	}
-	var self Layer
+	var self layer
 	self.data = data
 	self.default_ = default_
 
@@ -568,18 +489,106 @@ func pickSolution(solutions []OuterSolution, compression float64) OuterSolution 
 	return bestSol
 }
 
-const packageHeader = `// SPDX-License-Identifier: Unlicense OR BSD-3-Clause
+func (self innerSolution) genCode(code *code, name, var_ string) (string, string) {
+	inputVar := var_
+	if name != "" {
+		var_ = "u"
+	}
+	expr := var_
 
-package unicodedata
+	isVarComposite := strings.ContainsRune(var_, '(')
 
-// Code generated by typesetting-utils/generators/packtab. DO NOT EDIT
+	retType := typeFor(self.layer.minV, self.layer.maxV)
+	unitBits := self.layer.unitBits
+	if unitBits == 0 {
+		expr = fmt.Sprintf("%d", self.layer.data[0])
+		return retType, expr
+	}
 
-// Unicode version: %s
+	shift := self.bits
+	mask := (1 << shift) - 1
 
-`
+	if self.next != nil {
+		if isVarComposite {
+			_, expr = self.next.genCode(code, "", fmt.Sprintf("((%s)>>%d)", var_, shift))
+		} else {
+			_, expr = self.next.genCode(code, "", fmt.Sprintf("(%s>>%d)", var_, shift))
+		}
+	}
+	// Generate data.
+	var layers []*layer
+	layer := self.layer
+	bits := self.bits
+	for bits != 0 {
+		layers = append(layers, layer)
+		layer = layer.next
+		bits -= 1
+	}
 
-func (self OuterSolution) code(name string) string {
-	code := NewCode(name)
+	var data []int
+	if len(layers) == 0 {
+		data = append(data, layer.data...)
+	} else {
+		for d := 0; d < layer.maxV+1; d++ {
+			_expand(d, layers, len(layers)-1, &data)
+		}
+	}
+
+	data = _combine(data, self.layer.unitBits)
+
+	arrName, start := code.addArray(retType, data)
+
+	// Generate expression.
+	var index0 string
+	if expr == "0" {
+		index0 = ""
+	} else if shift == 0 {
+		index0 = expr
+	} else {
+		index0 = fmt.Sprintf("((%s)<<%d)", asUsize(expr), shift)
+	}
+	index1 := ""
+	if mask != 0 {
+		if isVarComposite {
+			index1 = fmt.Sprintf("((%s)&%d)", var_, mask)
+		} else {
+			index1 = fmt.Sprintf("(%s&%d)", var_, mask)
+		}
+	}
+	index := asUsize(index0) + asUsize(index1)
+	if index0 != "" && index1 != "" {
+		index = asUsize(index0) + "+" + asUsize(index1)
+	}
+	if unitBits >= 8 {
+		if start != 0 {
+			index = fmt.Sprintf("%d+%s", start, asUsize(index))
+		}
+		expr = fmt.Sprintf("%s[%s]", arrName, index)
+	} else {
+		shift1 := int(math.Round(math.Log2(float64(8 / unitBits))))
+		mask1 := (8 / unitBits) - 1
+		shift2 := int(math.Round(math.Log2(float64(unitBits))))
+		mask2 := (1 << unitBits) - 1
+		funcBody := fmt.Sprintf("return (a[i>>%d]>>((i&%d)<<%d))&%d", shift1, mask1, shift2, mask2)
+		funcName := code.addFunction("uint8", fmt.Sprintf("bits%d", unitBits), [][2]string{{"a", "[]uint8"}, {"i", "int"}}, funcBody)
+		slicedArray := fmt.Sprintf("%s[:]", arrName)
+		if start != 0 {
+			slicedArray = fmt.Sprintf("%s[%d:]", arrName, start)
+		}
+		expr = fmt.Sprintf("%s(%s,%s)", funcName, slicedArray, index)
+	}
+	// Wrap up.
+
+	if name != "" {
+		funcName := code.addFunction(retType, name, [][2]string{{"u", "uint32"}}, expr)
+		expr = fmt.Sprintf("%s(%s)", funcName, inputVar)
+	}
+
+	return retType, expr
+}
+
+func (self OuterSolution) Code(name string) string {
+	code := newCode(name)
 
 	var_ := "u"
 	expr := var_
@@ -603,18 +612,43 @@ func (self OuterSolution) code(name string) string {
 		}
 		expr = fmt.Sprintf("%d+%s", self.layer.bias, expr)
 	}
-	expr = tertiary(fmt.Sprintf("%s<%d", var_, len(self.layer.data)), "return "+expr, fmt.Sprintf("return %d", self.layer.default_))
+	expr = tertiary(fmt.Sprintf("0 <= %s && %s<%d", var_, var_, len(self.layer.data)), "return "+expr, fmt.Sprintf("return %d", self.layer.default_))
 	// TODO Map default?
 
-	code.addFunction(retType, "lookup", [][2]string{{"u", "int"}}, expr)
+	code.addFunction(retType, "lookup", [][2]string{{"u", "rune"}}, expr)
 
-	return code.Print()
+	return code.print()
 }
 
-// compile time know array
-type array struct {
-	typ    string // integer type
-	values []int
+// we actually use the idiomatique int type
+func asUsize(expr string) string {
+	_, err := strconv.Atoi(expr)
+	if expr == "" || err == nil {
+		return expr
+	}
+	if strings.HasPrefix(expr, "(") && strings.HasSuffix(expr, ")") {
+		return "int" + expr
+	}
+	return fmt.Sprintf("int(%s)", expr)
+}
+
+func cast(typ, expr string) string {
+	return fmt.Sprintf("%s(%s)", typ, expr)
+}
+
+func tertiary(cond, trueExpr, falseExpr string) string {
+	return fmt.Sprintf("if %s { %s } else { %s }", cond, trueExpr, falseExpr)
+}
+
+// Array is a compile time known array
+type Array struct {
+	Type   string // integer type
+	Values []int
+}
+
+func (ar Array) Size() int {
+	elemSize := sizeOf(ar.Type)
+	return elemSize * len(ar.Values)
 }
 
 type function struct {
@@ -623,62 +657,65 @@ type function struct {
 	body    string
 }
 
-// Code is an accumulator for output code
-type Code struct {
+// code is an accumulator for output code
+type code struct {
 	namespace string // prefix
 	functions map[string]function
-	arrays    map[string]array
+	arrays    map[string]Array
 }
 
-func NewCode(namespace string) *Code {
-	return &Code{namespace, make(map[string]function), make(map[string]array)}
+func newCode(namespace string) *code {
+	return &code{namespace, make(map[string]function), make(map[string]Array)}
 }
 
-func (self *Code) nameFor(name string) string {
+func (self *code) nameFor(name string) string {
 	return fmt.Sprintf("%s%s", self.namespace, strings.Title(name))
 }
 
-func (self *Code) addFunction(retType, name string, args [][2]string, body string) string {
+func (self *code) addFunction(retType, name string, args [][2]string, body string) string {
 	name = self.nameFor(name)
 	self.functions[name] = function{retType, args, body}
 	return name
 }
 
-func (self *Code) addArray(typ string, values []int) (_ string, start int) {
+func (self *code) addArray(typ string, values []int) (_ string, start int) {
 	name := self.nameFor(typ)
 	var existing []int
 	if ar, has := self.arrays[name]; has {
-		existing = ar.values
+		existing = ar.Values
 	}
 	// extends existing values
 	start = len(existing)
-	self.arrays[name] = array{typ, append(existing, values...)}
+	self.arrays[name] = Array{typ, append(existing, values...)}
 	return name, start
 }
 
-func (self Code) Print() string {
+func PrintArray(w io.Writer, name string, array Array, hex bool) {
+	fmt.Fprintf(w, "var %s = [%d]%s{", name, len(array.Values), array.Type)
+	for i, v := range array.Values {
+		if i%20 == 0 {
+			fmt.Fprintln(w, "")
+		}
+		if hex {
+			fmt.Fprintf(w, "0x%x,", v)
+		} else {
+			fmt.Fprintf(w, "%d,", v)
+		}
+	}
+	fmt.Fprintln(w, "\n}")
+	fmt.Fprintln(w)
+}
+
+func (self code) print() string {
 	var out strings.Builder
 
-	out.WriteString(`// SPDX-License-Identifier: Unlicense OR BSD-3-Clause
-
-		package unicodedata
-	
-		// Code generated by typesetting-utils/generators/packtab. DO NOT EDIT
-
-		// Unicode version: %s
-
-		`)
-
+	totalSize := 0
 	for name, array := range self.arrays {
-		out.WriteString(fmt.Sprintf("var %s = [%d]%s{", name, len(array.values), array.typ))
-		for i, v := range array.values {
-			if i%20 == 0 {
-				out.WriteString("\n")
-			}
-			out.WriteString(strconv.Itoa(v) + ",")
-		}
-		out.WriteString("\n}\n\n")
+		totalSize += array.Size()
+		PrintArray(&out, name, array, false)
 	}
+
+	out.WriteString(fmt.Sprintf("// Total size %d B.\n\n", totalSize))
 
 	for name, function := range self.functions {
 		var code string
