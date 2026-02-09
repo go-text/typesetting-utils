@@ -7,8 +7,10 @@ import (
 	"io"
 	"log"
 	"sort"
+	"strings"
 	"unicode"
 
+	"github.com/go-text/typesetting-utils/generators/unicodedata/cmd/src/packtab"
 	"golang.org/x/text/unicode/rangetable"
 )
 
@@ -24,6 +26,18 @@ package unicodedata
 
 func sortRunes(rs []rune) {
 	sort.Slice(rs, func(i, j int) bool { return rs[i] < rs[j] })
+}
+
+// runesToTable returns a crible where runes in [rs]
+// have value 1, consumable by packtab
+func runesToTable(rs []rune) []int {
+	sortRunes(rs)
+	maxRune := rs[len(rs)-1]
+	table := make([]int, maxRune+1)
+	for _, r := range rs {
+		table[r] = 1
+	}
+	return table
 }
 
 // compacts the code more than a "%#v" directive
@@ -62,31 +76,63 @@ func generateCombiningClasses(classes map[uint8][]rune, w io.Writer) {
 	var out [256]*unicode.RangeTable
 	for k, v := range classes {
 		if len(v) == 0 {
-			return
+			panic("empty combining class")
 		}
 		out[k] = rangetable.New(v...)
 	}
 
 	// print them
+	totalSize := 0
 	fmt.Fprintln(w, "var combiningClasses = [256]*unicode.RangeTable{")
-	for i, t := range out {
-		if t == nil {
+	for i, rt := range out {
+		if rt == nil {
 			continue
 		}
-		fmt.Fprintf(w, "%d : %s,\n", i, printTable(t, true))
+		size := tableSize(rt)
+		fmt.Fprintf(w, "%d : %s, // size %d B. \n", i, printTable(rt, true), size)
+
+		totalSize += size
 	}
 	fmt.Fprintln(w, "}")
+	fmt.Fprintf(w, "// Total size %d KB.", totalSize/1000)
 }
 
-func generateEmojis(runes map[string][]rune, w io.Writer) {
+func generateCombiningClassesPacktab(db unicodeDatabase, w io.Writer) {
+	table := make([]int, db.maxUnicode+1) // default to 0
+	for _, char := range db.chars {
+		table[char.char] = int(char.combiningClass)
+	}
+	code := packtab.PackTable(table, 0, 9).Code("ccc")
+
+	fmt.Fprint(w, unicodedataheader)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+
+	fmt.Fprintln(w, code)
+}
+
+func generateEmojis(classes map[string][]rune, w io.Writer) {
 	// among "Emoji", "Emoji_Presentation", "Emoji_Modifier", "Emoji_Modifier_Base", "Extended_Pictographic"
 	// only Extended_Pictographic is actually used
+	table := classes["Extended_Pictographic"]
+	rt := rangetable.New(table...)
+
 	fmt.Fprint(w, unicodedataheader)
-	for _, class := range [...]string{"Extended_Pictographic"} {
-		table := rangetable.New(runes[class]...)
-		s := printTable(table, false)
-		fmt.Fprintf(w, "var %s = %s\n\n", class, s)
-	}
+	s := printTable(rt, false)
+	fmt.Fprintf(w, "var Extended_Pictographic = %s\n\n", s)
+	fmt.Fprintf(w, "// Total size %d B.", tableSize(rt))
+}
+
+func generateEmojisPacktab(classes map[string][]rune, w io.Writer) {
+	// among "Emoji", "Emoji_Presentation", "Emoji_Modifier", "Emoji_Modifier_Base", "Extended_Pictographic"
+	// only Extended_Pictographic is actually used
+
+	table := runesToTable(classes["Extended_Pictographic"])
+
+	fmt.Fprint(w, unicodedataheader)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+
+	code := packtab.PackTable(table, 0, 9).Code("emoji")
+	fmt.Fprintln(w, code)
 }
 
 func generateMirroring(runes map[uint16]uint16, w io.Writer) {
@@ -102,6 +148,21 @@ func generateMirroring(runes map[uint16]uint16, w io.Writer) {
 		fmt.Fprintf(w, "0x%04x: 0x%04x,\n", r1, r2)
 	}
 	fmt.Fprintln(w, "}")
+}
+
+// Mirroring character is encoded as difference from
+// the original character.
+func generateMirroringPacktab(db unicodeDatabase, runes map[uint16]uint16, w io.Writer) {
+	table := make([]int, db.maxUnicode+1) // default to 0
+	for u, v := range runes {
+		table[u] = int(v) - int(u)
+	}
+
+	fmt.Fprint(w, unicodedataheader)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+
+	code := packtab.PackTable(table, 0, 9).Code("mir")
+	fmt.Fprintln(w, code)
 }
 
 func generateDecomposition(combiningClasses map[uint8][]rune, dms map[rune][]rune, compExp map[rune]bool, w io.Writer) {
@@ -159,6 +220,118 @@ func generateDecomposition(combiningClasses map[uint8][]rune, dms map[rune][]run
 		fmt.Fprintf(w, "{0x%04x,0x%04x}: 0x%04x,\n", vals[0], vals[1], vals[2])
 	}
 	fmt.Fprintln(w, "}")
+}
+
+func codepointEncode3_11_7_14(x, y, z rune) int {
+	return int((uint32(x)&0x07FF)<<21 | (uint32(y)&0x007F)<<14 | uint32(z)&0x3FFF)
+}
+
+func codepointEncode3(x, y, z rune) int {
+	return int((uint64(x) << 42) | (uint64(y) << 21) | uint64(z))
+}
+
+func generateDecompositionPacktab(combiningClasses map[uint8][]rune, dms map[rune][]rune, compExp map[rune]bool, w io.Writer) {
+	var (
+		decompose1  [][2]rune         // length 1 mappings {from, to}
+		decompose2  [][3]rune         // length 2 mappings {from, to1, to2}
+		compose     [][3]rune         // length 2 mappings {from1, from2, to}
+		ccc         = map[rune]bool{} // has combining class
+		uniqDm1     = map[rune]bool{}
+		maxRuneInDm rune
+	)
+	for c, runes := range combiningClasses {
+		for _, r := range runes {
+			ccc[r] = c != 0
+		}
+	}
+	for r, v := range dms {
+		if r > maxRuneInDm {
+			maxRuneInDm = r
+		}
+
+		switch len(v) {
+		case 1:
+			decompose1 = append(decompose1, [2]rune{r, v[0]})
+			uniqDm1[v[0]] = true
+		case 2:
+			decompose2 = append(decompose2, [3]rune{r, v[0], v[1]})
+			var composed rune
+			if !compExp[r] && !ccc[r] {
+				composed = r
+			}
+			compose = append(compose, [3]rune{v[0], v[1], composed})
+		default:
+			log.Fatalf("unexpected runes for decomposition: %d, %v", r, v)
+		}
+	}
+
+	// sort for determinisme
+	sort.Slice(decompose1, func(i, j int) bool { return decompose1[i][0] < decompose1[j][0] })
+	sort.Slice(decompose2, func(i, j int) bool { return decompose2[i][0] < decompose2[j][0] })
+	sort.Slice(compose, func(i, j int) bool {
+		return compose[i][0] < compose[j][0] ||
+			compose[i][0] == compose[j][0] && compose[i][1] < compose[j][1] ||
+			compose[i][0] == compose[j][0] && compose[i][1] == compose[j][1] && compose[i][2] < compose[j][2]
+	})
+
+	var dm1 []rune
+	for r := range uniqDm1 {
+		dm1 = append(dm1, r)
+	}
+	sortRunes(dm1)
+	var (
+		dm1P0Array  []int
+		dm1P2Array  []int
+		dm2U32Array []int
+		dm2U64Array []int
+		dm1Order    = map[rune]int{}
+		dm2Order    = map[[2]rune]int{}
+	)
+	for i, v := range dm1 {
+		switch v >> 16 {
+		case 0:
+			dm1P0Array = append(dm1P0Array, int(v&0xFFFF))
+		case 2:
+			dm1P2Array = append(dm1P2Array, int(v&0xFFFF))
+		default:
+			log.Fatalf("unexpected rune %0x", v)
+		}
+		dm1Order[v] = i + 1
+	}
+	for i, v := range compose {
+		if v[0]&0x7FFFF800 == 0x0000 && v[1]&0x7FFFFF80 == 0x0300 && v[2]&0x7FF0C000 == 0x0000 {
+			dm2U32Array = append(dm2U32Array, codepointEncode3_11_7_14(v[0], v[1], v[2]))
+		} else {
+			dm2U64Array = append(dm2U64Array, codepointEncode3(v[0], v[1], v[2]))
+		}
+		dm2Order[[2]rune{v[0], v[1]}] = i + 1 + len(dm1P0Array) + len(dm1P2Array)
+	}
+
+	// final mapping using order
+	table := make([]int, maxRuneInDm+1)
+	for _, v := range decompose1 {
+		table[v[0]] = dm1Order[v[1]]
+	}
+	for _, v := range decompose2 {
+		table[v[0]] = dm2Order[[2]rune{v[1], v[2]}]
+	}
+
+	fmt.Fprint(w, unicodedataheader)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+
+	dm1P0Map := packtab.Array{Type: "uint16", Values: dm1P0Array}
+	dm1P2Map := packtab.Array{Type: "uint16", Values: dm1P2Array}
+	dm2U32Map := packtab.Array{Type: "uint32", Values: dm2U32Array}
+	dm2U64Map := packtab.Array{Type: "uint64", Values: dm2U64Array}
+	packtab.PrintArray(w, "dm1P0Map", dm1P0Map, true)
+	packtab.PrintArray(w, "dm1P2Map", dm1P2Map, true)
+	packtab.PrintArray(w, "dm2U32Map", dm2U32Map, true)
+	packtab.PrintArray(w, "dm2U64Map", dm2U64Map, true)
+
+	fmt.Fprintf(w, "// Total size : %d B.\n\n", dm1P0Map.Size()+dm1P2Map.Size()+dm2U32Map.Size()+dm2U64Map.Size())
+
+	dmCode := packtab.PackTable(table, 0, 9).Code("dm")
+	fmt.Fprintln(w, dmCode)
 }
 
 // Supported line breaking classes for Unicode 17.0.0.
@@ -250,7 +423,20 @@ func generateEastAsianWidth(datas map[string][]rune, w io.Writer) {
 	// F, W or H, and is used for UAX14, rule LB30.
 	var LargeEastAsian = %s
 
-	`, s)
+	// Size %d B.`, s, tableSize(table))
+}
+
+func generateEastAsianWidthPacktab(datas map[string][]rune, w io.Writer) {
+	// the table is used for UAX14 (LB30) : we group the classes
+	// F (Fullwidth), W (Wide), H (Halfwidth)
+	runes := append(append(datas["F"], datas["W"]...), datas["H"]...)
+	table := runesToTable(runes)
+
+	fmt.Fprint(w, unicodedataheader)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+
+	dmCode := packtab.PackTable(table, 0, 9).Code("eastAsianWidth")
+	fmt.Fprintln(w, dmCode)
 }
 
 func generateIndicConjunctBreak(derivedCore map[string][]rune, w io.Writer) {
@@ -278,15 +464,6 @@ func generateIndicConjunctBreak(derivedCore map[string][]rune, w io.Writer) {
 	var indicCBExtend = %s
 
 	`, codeLinker, codeConsonant, codeExtend)
-}
-
-func generateIndicCategories(datas map[string][]rune, w io.Writer) {
-	fmt.Fprint(w, unicodedataheader)
-	for _, className := range []string{"Virama", "Vowel_Dependent"} {
-		table := rangetable.New(datas[className]...)
-		s := printTable(table, false)
-		fmt.Fprintf(w, "var Indic%s = %s\n\n", className, s)
-	}
 }
 
 // only generate the table for the STerm property
@@ -462,10 +639,15 @@ func generateScriptLookupTable(scripts map[string][]runeRange, scriptNames map[s
 	fmt.Fprintln(w, "}")
 }
 
+func tableSize(rt *unicode.RangeTable) int {
+	return 12*2 + 4 + len(rt.R16)*6 + len(rt.R32)*12
+}
+
 func generateGeneralCategories(m map[rune]string, w io.Writer) {
 	// reverse the rune->category mapping
 	cats, keys := map[string][]rune{}, []string{}
 	for r, cat := range m {
+		cat = strings.ToLower(cat)
 		cats[cat] = append(cats[cat], r)
 	}
 	for key := range cats {
@@ -477,12 +659,18 @@ func generateGeneralCategories(m map[rune]string, w io.Writer) {
 
 	// we can't use standard unicode package for Harfbuzz
 	// because of users using older go versions.
+	totalSize := 0
 	for _, cat := range keys {
 		runes := cats[cat]
 		rt := rangetable.New(runes...)
 		code := printTable(rt, false)
-		fmt.Fprintln(w, fmt.Sprintf("var %s = %s\n", cat, code))
+		size := tableSize(rt)
+		fmt.Fprintln(w, fmt.Sprintf("var %s = %s // size %d B.\n", cat, code, size))
+
+		totalSize += size
 	}
+
+	fmt.Fprintf(w, "// Total size %d KB. \n\n", totalSize/1000)
 
 	// generate an array of all categories
 	fmt.Fprintf(w, "var allCategories = [...]*unicode.RangeTable{\n")
@@ -490,4 +678,30 @@ func generateGeneralCategories(m map[rune]string, w io.Writer) {
 		fmt.Fprintf(w, "%s,\n", cat)
 	}
 	fmt.Fprintln(w, `}`)
+}
+
+func generateGeneralCategoriesPacktab(db unicodeDatabase, valueAliases map[string]string, w io.Writer) {
+	// build the mapping string -> int
+	enum := map[string]int{}
+	for i, cat := range db.generalCategoryNames {
+		enum[cat] = i + 1 // 0 if for unassigned
+	}
+	table := make([]int, db.maxUnicode+1) // default to 0
+	for _, char := range db.chars {
+		table[char.char] = enum[char.generalCategory]
+	}
+	code := packtab.PackTable(table, 0, 9).Code("gc")
+
+	fmt.Fprint(w, unicodedataheader)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+
+	fmt.Fprintln(w, `
+	const (
+		Unassigned GeneralCategory = iota`)
+	for _, cat := range db.generalCategoryNames {
+		fmt.Fprintf(w, "%s // %s \n", cat, valueAliases[cat])
+	}
+	fmt.Fprintln(w, ")")
+
+	fmt.Fprintln(w, code)
 }

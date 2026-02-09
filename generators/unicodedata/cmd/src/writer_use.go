@@ -3,190 +3,91 @@ package src
 import (
 	"fmt"
 	"io"
-	"sort"
-	"strings"
+
+	"github.com/go-text/typesetting-utils/generators/unicodedata/cmd/src/packtab"
 )
+
+// The following values are copied from harfbuzz/ot_shape_use_machine.go
+// When upgrading :
+//	1) change harfbuzz/ot_shape_use_machine.rl,
+//	2) generate harfbuzz/ot_shape_use_machine.go
+//	3) copy the value below
+//	4) finally run this generator
+
+var useCategoriesToInt = map[string]int{
+	"B":     1,
+	"CGJ":   6,
+	"CMAbv": 31,
+	"CMBlw": 32,
+	"CS":    43,
+	"FAbv":  24,
+	"FBlw":  25,
+	"FMAbv": 45,
+	"FMBlw": 46,
+	"FMPst": 47,
+	"FPst":  26,
+	"G":     49,
+	"GB":    5,
+	"H":     12,
+	"HM":    54,
+	"HN":    13,
+	"HR":    55,
+	"HVM":   53,
+	"IS":    44,
+	"J":     50,
+	"MAbv":  27,
+	"MBlw":  28,
+	"MPre":  30,
+	"MPst":  29,
+	"N":     4,
+	"O":     0,
+	"R":     18,
+	"RK":    56,
+	"SB":    51,
+	"SE":    52,
+	"SMAbv": 41,
+	"SMBlw": 42,
+	"SUB":   11,
+	"Sk":    48,
+	"VAbv":  33,
+	"VBlw":  34,
+	"VMAbv": 37,
+	"VMBlw": 38,
+	"VMPre": 23,
+	"VMPst": 39,
+	"VPre":  22,
+	"VPst":  35,
+	"WJ":    16,
+	"ZWNJ":  14,
+}
 
 func generateUSETable(generalCategory map[rune]string, indicS, indicP, blocks, indicSAdd, indicPAdd, derivedCoreProperties, scripts map[string][]rune,
 	joining map[rune]ArabicJoining, w io.Writer,
 ) {
 	data := aggregateUSETable(generalCategory, indicS, indicP, blocks, indicSAdd, indicPAdd, derivedCoreProperties, scripts, joining)
 
-	fmt.Fprintln(w, harfbuzzHeader)
-
-	var total int
-	used := 0
-	lastBlock := ""
-	printBlock := func(block string, start, end rune) {
-		if block != "" && block != lastBlock {
-			fmt.Fprintln(w)
-			fmt.Fprintln(w)
-			fmt.Fprintf(w, "  /* %s */\n", block)
-			if start%16 != 0 {
-				fmt.Fprint(w, strings.Repeat(" ", int(20+(start%16*6))))
-			}
-		}
-		num := 0
-		if start%8 != 0 {
-			check(fmt.Errorf("in printBlock, expected start%%8 == 0, got %d", start))
-		}
-		if (end+1)%8 != 0 {
-			check(fmt.Errorf("in printBlock, expected (end+1)%%8 == 0, got %d", end+1))
-		}
-		for u := start; u <= end; u++ {
-			if u%16 == 0 {
-				fmt.Fprintln(w)
-				fmt.Fprintf(w, "  /* %04X */", u)
-			}
-			d, in := data[u]
-			var ds string
-			if in {
-				num += 1
-				ds = d[0]
-			} else if _, has := generalCategory[u]; has {
-				ds = "O"
-			} else {
-				ds = "WJ"
-			}
-			fmt.Fprintf(w, "%6s,", "_"+ds)
-		}
-		total += int(end - start + 1)
-		used += num
-		if block != "" {
-			lastBlock = block
-		}
-	}
-
+	// build the packtab compatible array
 	var uu []rune
 	for u := range data {
 		uu = append(uu, u)
 	}
 	sortRunes(uu)
-
-	last := rune(-100000)
-	// num := 0
-	offset := 0
-	var starts, ends []rune
-	var useMappingKeys []string
-	for k := range useMapping {
-		useMappingKeys = append(useMappingKeys, k)
+	table := make([]int, uu[len(uu)-1]+1)
+	for u, v := range data {
+		i, ok := useCategoriesToInt[v[0]]
+		if !ok {
+			panic("missing category" + v[0])
+		}
+		table[u] = i
 	}
-	sort.Strings(useMappingKeys)
+	default_ := useCategoriesToInt["O"]
 
-	fmt.Fprintln(w, "const (")
-	for _, k := range useMappingKeys {
-		if len(usePositions[k]) != 0 {
-			continue
-		}
-		fmt.Fprintf(w, "_%s	 = useSM_ex_%s\n", k, k)
-	}
-	fmt.Fprintln(w, ")")
-
-	var usePositionKeys []string
-	for k := range usePositions {
-		usePositionKeys = append(usePositionKeys, k)
-	}
-	sort.Strings(usePositionKeys)
-	fmt.Fprintln(w, "const (")
-	for _, k := range usePositionKeys {
-		v := usePositions[k]
-		if len(v) == 0 {
-			continue
-		}
-		var sortedVKeys []string
-		for k := range v {
-			sortedVKeys = append(sortedVKeys, k)
-		}
-		sort.Strings(sortedVKeys)
-		for _, suf := range sortedVKeys {
-			tag := k + suf
-			fmt.Fprintf(w, "_%s = useSM_ex_%s\n", tag, tag)
-		}
-	}
-	fmt.Fprintln(w, ")")
-
-	offsetsDef := ""
-	fmt.Fprintln(w, "var  useTable = [...]uint8{")
-	for _, u := range uu {
-		if u <= last {
-			continue
-		}
-		if data[u][0] == "O" {
-			continue
-		}
-		block := data[u][1]
-
-		start := u / 8 * 8
-		end := start + 1
-		for inR(end, uu...) && block == data[end][1] {
-			end += 1
-		}
-		end = (end-1)/8*8 + 7
-
-		if start != last+1 {
-			if start-last <= 1+16*3 {
-				printBlock("", last+1, start-1)
-			} else {
-				if last >= 0 {
-					ends = append(ends, last+1)
-					offset += int(ends[len(ends)-1] - starts[len(starts)-1])
-				}
-				fmt.Fprintln(w)
-				fmt.Fprintln(w)
-				offsetsDef += fmt.Sprintf("offsetUSE0x%04xu = %d \n", start, offset)
-				starts = append(starts, start)
-			}
-
-			printBlock(block, start, end)
-			last = end
-		}
-	}
-	ends = append(ends, last+1)
-	offset += int(ends[len(ends)-1] - starts[len(starts)-1])
-	fmt.Fprintln(w)
-	fmt.Fprintln(w)
-	occupancy := used * 100. / total
-	pageBits := 12
-	fmt.Fprintf(w, "}; /* Table items: %d; occupancy: %d%% */\n", offset, occupancy)
+	fmt.Fprintln(w, harfbuzzHeader)
+	fmt.Fprintln(w, "// Unicode version", version)
 	fmt.Fprintln(w)
 
-	fmt.Fprintln(w, "const (")
-	fmt.Fprintln(w, offsetsDef)
-	fmt.Fprintln(w, ")")
-
-	fmt.Fprintln(w, "func getUSECategory (u rune) uint8 {")
-	fmt.Fprintf(w, "  switch u >> %d {", pageBits)
-
-	pagesSet := map[rune]bool{}
-	for _, u := range append(starts, ends...) {
-		pagesSet[u>>pageBits] = true
-	}
-	var pages []rune
-	for p := range pagesSet {
-		pages = append(pages, p)
-	}
-	sortRunes(pages)
-	for _, p := range pages {
-		fmt.Fprintf(w, "    case 0x%0X:\n", p)
-		for i, start := range starts {
-			end := ends[i]
-			if p != start>>pageBits && p != end>>pageBits {
-				continue
-			}
-			offset := fmt.Sprintf("offsetUSE0x%04xu", start)
-			fmt.Fprintf(w, "      if  0x%04X <= u && u <= 0x%04X { return useTable[u - 0x%04X + %s]}; \n", start, end-1, start, offset)
-		}
-		fmt.Fprintln(w)
-	}
-	fmt.Fprintln(w, "  }")
-	fmt.Fprintln(w, "  return useSM_ex_O;")
-	fmt.Fprintln(w, "}")
-	fmt.Fprintln(w)
-
-	// maintain at least 50% occupancy in the table */
-	if occupancy < 50 {
-		check(fmt.Errorf("table too sparse, please investigate: %d", occupancy))
-	}
+	code := packtab.PackTable(table, default_, 5).Code("use")
+	fmt.Fprintln(w, code)
 }
 
 func aggregateUSETable(generalCategory map[rune]string, indicS, indicP, blocks, indicSAdd, indicPAdd, derivedCoreProperties, scripts map[string][]rune,

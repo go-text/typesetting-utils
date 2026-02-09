@@ -7,6 +7,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -46,7 +47,8 @@ func (r runeRange) runes() []rune {
 	return out
 }
 
-// split the file by line, ignore comments #
+// split the file by line, ignore comments #,
+// and trimming field spaces
 func getLines(b []byte) (out []string) {
 	for _, l := range bytes.Split(b, []byte{'\n'}) {
 		line := string(bytes.TrimSpace(l))
@@ -74,8 +76,10 @@ type unicodeDatabase struct {
 	chars []unicodeEntry
 
 	// deduced from [chars]
-	generalCategory  map[rune]string
-	combiningClasses map[uint8][]rune // class -> runes
+	generalCategory      map[rune]string
+	combiningClasses     map[uint8][]rune // class -> runes
+	generalCategoryNames []string
+	maxUnicode           rune
 }
 
 func (db *unicodeDatabase) inferMaps() {
@@ -83,13 +87,25 @@ func (db *unicodeDatabase) inferMaps() {
 	db.generalCategory = make(map[rune]string)
 	db.combiningClasses = make(map[uint8][]rune)
 
+	uniqNames := make(map[string]bool)
 	for _, item := range db.chars {
 		c := item.char
 		// general category
 		db.generalCategory[c] = item.generalCategory
+		uniqNames[item.generalCategory] = true
 		// Combining class
 		db.combiningClasses[item.combiningClass] = append(db.combiningClasses[item.combiningClass], c)
+		// Limit
+		if c > db.maxUnicode {
+			db.maxUnicode = c
+		}
 	}
+
+	db.generalCategoryNames = make([]string, 0, len(uniqNames))
+	for n := range uniqNames {
+		db.generalCategoryNames = append(db.generalCategoryNames, n)
+	}
+	sort.Strings(db.generalCategoryNames)
 }
 
 type unicodeEntry struct {
@@ -297,6 +313,21 @@ func parseDerivedCoreIndicCB(b []byte) (map[string][]rune, error) {
 		outRanges[value] = append(outRanges[value], range_.runes()...)
 	}
 	return outRanges, nil
+}
+
+func parseValueAliases(b []byte) (map[string]string, error) {
+	out := make(map[string]string)
+	for _, parts := range splitLines(b) {
+		if len(parts) < 3 {
+			return nil, fmt.Errorf("invalid line: %s", parts)
+		}
+		kind, short, long := parts[0], parts[1], parts[2]
+		if kind != "gc" {
+			continue
+		}
+		out[short] = long
+	}
+	return out, nil
 }
 
 type ucdXML struct {

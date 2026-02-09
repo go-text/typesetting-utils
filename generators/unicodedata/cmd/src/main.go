@@ -88,6 +88,9 @@ func Generate(outputDir string, dataFromCache bool) {
 	derivedCore, err := parseAnnexTables(srcs.derivedCore)
 	check(err)
 
+	valueAliases, err := parseValueAliases(srcs.propertyValueAliases)
+	check(err)
+
 	indicConjunctBreak, err := parseDerivedCoreIndicCB(srcs.derivedCore)
 	check(err)
 
@@ -101,62 +104,75 @@ func Generate(outputDir string, dataFromCache bool) {
 	// generate
 	join := func(path string) string { return filepath.Join(outputDir, path) }
 
-	process(join("internal/unicodedata/combining_classes.go"), func(w io.Writer) {
+	process(join("internal/unicodedata/combining_classes_test.go"), false, func(w io.Writer) {
 		generateCombiningClasses(db.combiningClasses, w)
 	})
-	process(join("internal/unicodedata/emojis.go"), func(w io.Writer) {
+	process(join("internal/unicodedata/combining_classes.go"), true, func(w io.Writer) {
+		generateCombiningClassesPacktab(db, w)
+	})
+	process(join("internal/unicodedata/emojis.go"), false, func(w io.Writer) {
+		generateEmojisPacktab(emojis, w)
+	})
+	process(join("internal/unicodedata/emojis_test.go"), false, func(w io.Writer) {
 		generateEmojis(emojis, w)
 	})
 
-	process(join("internal/unicodedata/mirroring.go"), func(w io.Writer) {
+	process(join("internal/unicodedata/mirroring_test.go"), false, func(w io.Writer) {
 		generateMirroring(mirrors, w)
 	})
-	process(join("internal/unicodedata/decomposition.go"), func(w io.Writer) {
+	process(join("internal/unicodedata/mirroring.go"), true, func(w io.Writer) {
+		generateMirroringPacktab(db, mirrors, w)
+	})
+	process(join("internal/unicodedata/decomposition.go"), true, func(w io.Writer) {
+		generateDecompositionPacktab(db.combiningClasses, dms, compEx, w)
+	})
+	process(join("internal/unicodedata/decomposition_test.go"), false, func(w io.Writer) {
 		generateDecomposition(db.combiningClasses, dms, compEx, w)
 	})
-	process(join("internal/unicodedata/east_asian_width.go"), func(w io.Writer) {
+	process(join("internal/unicodedata/east_asian_width.go"), false, func(w io.Writer) {
+		generateEastAsianWidthPacktab(eastAsianWidth, w)
+	})
+	process(join("internal/unicodedata/east_asian_width_test.go"), false, func(w io.Writer) {
 		generateEastAsianWidth(eastAsianWidth, w)
 	})
-	process(join("internal/unicodedata/indic_conjunct_break.go"), func(w io.Writer) {
+	process(join("internal/unicodedata/indic_conjunct_break.go"), false, func(w io.Writer) {
 		generateIndicConjunctBreak(indicConjunctBreak, w)
 	})
-	process(join("internal/unicodedata/indic.go"), func(w io.Writer) {
-		generateIndicCategories(indicS, w)
-	})
-	process(join("internal/unicodedata/sentence_break.go"), func(w io.Writer) {
+
+	process(join("internal/unicodedata/sentence_break.go"), false, func(w io.Writer) {
 		generateSTermProperty(sentenceBreaks, w)
 	})
-	process(join("internal/unicodedata/line_break.go"), func(w io.Writer) {
+	process(join("internal/unicodedata/line_break.go"), false, func(w io.Writer) {
 		generateLineBreak(lineBreak, w)
 	})
-	process(join("internal/unicodedata/grapheme_break.go"), func(w io.Writer) {
+	process(join("internal/unicodedata/grapheme_break.go"), false, func(w io.Writer) {
 		generateGraphemeBreakProperty(graphemeBreaks, w)
 	})
-	process(join("internal/unicodedata/general_category.go"), func(w io.Writer) {
-		generateGeneralCategories(db.generalCategory, w)
+	process(join("internal/unicodedata/general_category.go"), true, func(w io.Writer) {
+		generateGeneralCategoriesPacktab(db, valueAliases, w)
 	})
 
-	process(join("harfbuzz/emojis_list_test.go"), func(w io.Writer) {
+	process(join("harfbuzz/emojis_list_test.go"), false, func(w io.Writer) {
 		generateEmojisTest(emojisTests, w)
 	})
-	process(join("harfbuzz/ot_shape_use_table.go"), func(w io.Writer) {
+	process(join("harfbuzz/ot_shape_use_table.go"), false, func(w io.Writer) {
 		generateUSETable(db.generalCategory, indicS, indicP, blocks, indicSAdd, indicPAdd, derivedCore, scripts, joiningTypes, w)
 	})
-	process(join("harfbuzz/ot_shape_vowels_constraints.go"), func(w io.Writer) {
+	process(join("harfbuzz/ot_shape_vowels_constraints.go"), false, func(w io.Writer) {
 		generateVowelConstraints(scripts, vowelsConstraints, w)
 	})
-	process(join("harfbuzz/ot_shape_indic_table.go"), func(w io.Writer) {
+	process(join("harfbuzz/ot_shape_indic_table.go"), false, func(w io.Writer) {
 		generateIndicTable(indicS, indicP, blocks, w)
 	})
-	process(join("harfbuzz/ot_shape_arabic_table.go"), func(w io.Writer) {
+	process(join("harfbuzz/ot_shape_arabic_table.go"), false, func(w io.Writer) {
 		generateArabicShaping(db, joiningTypes, w)
 		generateHasArabicJoining(joiningTypes, scripts, w)
 	})
-	process(join("font/cmap_arabic_pua_table.go"), func(w io.Writer) {
+	process(join("font/cmap_arabic_pua_table.go"), false, func(w io.Writer) {
 		generateArabicPUAMapping(puaSimp, puaTrad, w)
 	})
 
-	process(join("language/scripts_table.go"), func(w io.Writer) {
+	process(join("language/scripts_table.go"), false, func(w io.Writer) {
 		generateScriptLookupTable(scriptsRanges, scriptNames, w)
 	})
 
@@ -173,7 +189,7 @@ func Generate(outputDir string, dataFromCache bool) {
 }
 
 // write into filename
-func process(filename string, generator func(w io.Writer)) {
+func process(filename string, unconvert bool, generator func(w io.Writer)) {
 	fmt.Println("Generating", filename, "...")
 	file, err := os.Create(filename)
 	check(err)
@@ -184,6 +200,14 @@ func process(filename string, generator func(w io.Writer)) {
 	check(err)
 
 	cmd := exec.Command("goimports", "-w", filename)
+	cmd.Stderr = os.Stderr
+	err = cmd.Run()
+	check(err)
+
+	if !unconvert {
+		return
+	}
+	cmd = exec.Command("unconvert", "-apply", filename)
 	cmd.Stderr = os.Stderr
 	err = cmd.Run()
 	check(err)
