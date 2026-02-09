@@ -171,49 +171,35 @@ func newInnerSolution(
 	return innerSolution{layer, next, nLookups, nExtraOps, cost, bits}
 }
 
-type OuterSolution struct {
-	innerSolution
-}
-
-func newOuterSolution(
-	layer *layer,
-	next *innerSolution,
-	nLookups int,
-	nExtraOps int,
-	cost int,
-) OuterSolution {
-	return OuterSolution{innerSolution{layer, next, nLookups, nExtraOps, cost, 0}}
-}
-
 func (sl innerSolution) fullCost() int {
 	return sl.cost + (sl.nLookups*lookupOps+sl.nExtraOps)*bytesPerOp
 }
 
-func _expand(v int, stack []*layer, i int, out *[]int) {
+func expand(v int, stack []*layer, i int, out *[]int) {
 	if i < 0 {
 		*out = append(*out, v)
 		return
 	}
 	v2 := stack[i].mapping.getBack(v)
 	i -= 1
-	_expand(v2[0], stack, i, out)
-	_expand(v2[1], stack, i, out)
+	expand(v2[0], stack, i, out)
+	expand(v2[1], stack, i, out)
 }
 
-func _combine(data []int, bits int) []int {
+func combine(data []int, bits int) []int {
 	if bits <= 1 {
-		return _combine2(data, func(a, b int) int { return (b << 1) | a })
+		data = combineBy2(data, func(a, b int) int { return (b << 1) | a })
 	}
 	if bits <= 2 {
-		return _combine2(data, func(a, b int) int { return (b << 2) | a })
+		data = combineBy2(data, func(a, b int) int { return (b << 2) | a })
 	}
 	if bits <= 4 {
-		return _combine2(data, func(a, b int) int { return (b << 4) | a })
+		data = combineBy2(data, func(a, b int) int { return (b << 4) | a })
 	}
 	return data
 }
 
-func _combine2(data []int, f func(a, b int) int) []int {
+func combineBy2(data []int, f func(a, b int) int) []int {
 	data2 := make([]int, len(data)/2)
 	for i := range data2 {
 		a, b := data[2*i], data[2*i+1]
@@ -284,7 +270,7 @@ func (self *layer) split() {
 
 	mapping := newAutoMapping()
 	self.mapping = mapping
-	data2 := _combine2(self.data, mapping.get)
+	data2 := combineBy2(self.data, mapping.get)
 
 	self.next = newInnerLayer(data2)
 }
@@ -425,54 +411,10 @@ func newOuterLayer(data []int, default_ int) []OuterSolution {
 	return solutions
 }
 
-// @data is either a dictionary mapping integer keys to values, of an
-// iterable containing values for keys starting at zero. Values must
-// all be integers, or all strings.
-//
-// @mapping, if set, should be either a mapping from integer keys to
-// string values, or vice versa.  Either way, it's first augmented by its
-// own inverse.  After that it's used to map any value in @data that is
-// not an integer.  If @mapping is not provided and data values are
-// strings, the strings are written out verbatim.
-//
-// If mapping is not provided and values are strings, it is assumed that they
-// all fit in an unsigned char.
-//
 // @default is value to be used for keys not specified in @data.  Defaults
 // to zero.
 // default=0, compression=1, mapping=nil
 func PackTable(data []int, default_ int, compression float64) OuterSolution {
-	// // Set up mapping.  See docstring.
-	// if mapping is not nil:
-	//     // assert (all(isinstance(k, int) and not isinstance(v, int) for k,v in mapping.items()) or
-	//     //        all(not isinstance(k, int) and isinstance(v, int) for k,v in mapping.items()))
-	//     mapping2 = mapping.copy()
-	//     for k, v in mapping.items():
-	//         mapping2[v] = k
-	//     mapping = mapping2
-	//     del mapping2
-
-	// // Set up data as a list.
-	// if isinstance(data, dict):
-	//     assert all(isinstance(k, int) for k, v in data.items())
-	//     minK = min(data.keys())
-	//     maxK = max(data.keys())
-	//     assert minK >= 0
-	//     data2 = [default] * (maxK + 1)
-	//     for k, v in data.items():
-	//         data2[k] = v
-	//     data = data2
-	//     del data2
-
-	// // Convert all to integers
-	// assert all(isinstance(v, int) for v in data) or all(
-	//     not isinstance(v, int) for v in data
-	// )
-	// if not isinstance(data[0], int) and mapping is not nil:
-	//     data = [mapping[v] for v in data]
-	// if not isinstance(default, int) and mapping is not nil:
-	//     default = mapping[default]
-
 	solutions := newOuterLayer(data, default_)
 	return pickSolution(solutions, compression)
 }
@@ -530,11 +472,11 @@ func (self innerSolution) genCode(code *code, name, var_ string) (string, string
 		data = append(data, layer.data...)
 	} else {
 		for d := 0; d < layer.maxV+1; d++ {
-			_expand(d, layers, len(layers)-1, &data)
+			expand(d, layers, len(layers)-1, &data)
 		}
 	}
 
-	data = _combine(data, self.layer.unitBits)
+	data = combine(data, self.layer.unitBits)
 
 	arrName, start := code.addArray(retType, data)
 
@@ -569,7 +511,7 @@ func (self innerSolution) genCode(code *code, name, var_ string) (string, string
 		mask1 := (8 / unitBits) - 1
 		shift2 := int(math.Round(math.Log2(float64(unitBits))))
 		mask2 := (1 << unitBits) - 1
-		funcBody := fmt.Sprintf("return (a[i>>%d]>>((i&%d)<<%d))&%d", shift1, mask1, shift2, mask2)
+		funcBody := fmt.Sprintf("return (a[i>>%d]>>((i&%d)<<%d))&0b%b", shift1, mask1, shift2, mask2)
 		funcName := code.addFunction("uint8", fmt.Sprintf("bits%d", unitBits), [][2]string{{"a", "[]uint8"}, {"i", "int"}}, funcBody)
 		slicedArray := fmt.Sprintf("%s[:]", arrName)
 		if start != 0 {
@@ -585,6 +527,29 @@ func (self innerSolution) genCode(code *code, name, var_ string) (string, string
 	}
 
 	return retType, expr
+}
+
+type OuterSolution struct {
+	innerSolution
+}
+
+func newOuterSolution(
+	layer *layer,
+	next *innerSolution,
+	nLookups int,
+	nExtraOps int,
+	cost int,
+) OuterSolution {
+	return OuterSolution{innerSolution{layer, next, nLookups, nExtraOps, cost, 0}}
+}
+
+func (self OuterSolution) String() string {
+	var buf strings.Builder
+	fmt.Fprintf(&buf, "%d %d %d\n", self.nLookups, self.nExtraOps, self.cost)
+	for next := self.next; next != nil; next = next.next {
+		fmt.Fprintf(&buf, "\t%d %d %d\n", next.nLookups, next.nExtraOps, next.cost)
+	}
+	return buf.String()
 }
 
 func (self OuterSolution) Code(name string) string {
