@@ -617,6 +617,8 @@ func (ar Array) Size() int {
 }
 
 type function struct {
+	name string
+
 	retType string
 	args    [][2]string // (name, type) pairs
 	body    string
@@ -625,12 +627,12 @@ type function struct {
 // code is an accumulator for output code
 type code struct {
 	namespace string // prefix
-	functions map[string]function
+	functions []function
 	arrays    map[string]Array
 }
 
 func newCode(namespace string) *code {
-	return &code{namespace, make(map[string]function), make(map[string]Array)}
+	return &code{namespace, nil, make(map[string]Array)}
 }
 
 func (self *code) nameFor(name string) string {
@@ -639,7 +641,13 @@ func (self *code) nameFor(name string) string {
 
 func (self *code) addFunction(retType, name string, args [][2]string, body string) string {
 	name = self.nameFor(name)
-	self.functions[name] = function{retType, args, body}
+	for _, existing := range self.functions {
+		if existing.name == name {
+			return name
+		}
+	}
+
+	self.functions = append(self.functions, function{name, retType, args, body})
 	return name
 }
 
@@ -674,20 +682,27 @@ func PrintArray(w io.Writer, name string, array Array, hex bool) {
 func (self code) print() string {
 	var out strings.Builder
 
+	var arrayKeys []string
+	for key := range self.arrays {
+		arrayKeys = append(arrayKeys, key)
+	}
+	sort.Strings(arrayKeys)
+
 	totalSize := 0
-	for name, array := range self.arrays {
+	for _, name := range arrayKeys {
+		array := self.arrays[name]
 		totalSize += array.Size()
 		PrintArray(&out, name, array, false)
 	}
 
 	out.WriteString(fmt.Sprintf("// Total size %d B.\n\n", totalSize))
 
-	for name, function := range self.functions {
+	for _, function := range self.functions {
 		var code string
 		for _, arg := range function.args {
 			code += fmt.Sprintf("%s %s,", arg[0], arg[1])
 		}
-		out.WriteString(fmt.Sprintf("func %s(%s) %s {\n", name, code, function.retType))
+		out.WriteString(fmt.Sprintf("func %s(%s) %s {\n", function.name, code, function.retType))
 		out.WriteString(function.body)
 		out.WriteString("\n}\n")
 	}
