@@ -67,13 +67,13 @@ func Generate(outputDir string, dataFromCache bool) {
 	check(err)
 	vowelsConstraints := parseUSEInvalidCluster(b)
 
-	lineBreak, err := parseAnnexTables(srcs.lineBreak)
+	lineBreaks, err := parseAnnexTables(srcs.lineBreak)
 	check(err)
 
 	eastAsianWidth, err := parseAnnexTables(srcs.eastAsianWidth)
 	check(err)
 
-	sentenceBreaks, err := parseAnnexTables(srcs.sentenceBreak)
+	_, err = parseAnnexTables(srcs.sentenceBreak)
 	check(err)
 
 	graphemeBreaks, err := parseAnnexTables(srcs.graphemeBreak)
@@ -91,7 +91,7 @@ func Generate(outputDir string, dataFromCache bool) {
 	valueAliases, err := parseValueAliases(srcs.propertyValueAliases)
 	check(err)
 
-	indicConjunctBreak, err := parseDerivedCoreIndicCB(srcs.derivedCore)
+	indicConjunctBreaks, err := parseDerivedCoreIndicCB(srcs.derivedCore)
 	check(err)
 
 	b, err = data.Files.ReadFile("ArabicPUASimplified.txt")
@@ -135,19 +135,7 @@ func Generate(outputDir string, dataFromCache bool) {
 	process(join("internal/unicodedata/east_asian_width_test.go"), false, func(w io.Writer) {
 		generateEastAsianWidth(eastAsianWidth, w)
 	})
-	process(join("internal/unicodedata/indic_conjunct_break.go"), false, func(w io.Writer) {
-		generateIndicConjunctBreak(indicConjunctBreak, w)
-	})
 
-	process(join("internal/unicodedata/sentence_break.go"), false, func(w io.Writer) {
-		generateSTermProperty(sentenceBreaks, w)
-	})
-	process(join("internal/unicodedata/line_break.go"), false, func(w io.Writer) {
-		generateLineBreak(lineBreak, w)
-	})
-	process(join("internal/unicodedata/grapheme_break.go"), false, func(w io.Writer) {
-		generateGraphemeBreakProperty(graphemeBreaks, w)
-	})
 	process(join("internal/unicodedata/general_category.go"), true, func(w io.Writer) {
 		generateGeneralCategoriesPacktab(db, valueAliases, w)
 	})
@@ -174,6 +162,22 @@ func Generate(outputDir string, dataFromCache bool) {
 
 	process(join("language/scripts_table.go"), false, func(w io.Writer) {
 		generateScriptLookupTable(scriptsRanges, scriptNames, w)
+	})
+
+	process(join("internal/unicodedata/line_break.go"), false, func(w io.Writer) {
+		generateLineBreak(lineBreaks, w)
+	})
+	process(join("internal/unicodedata/grapheme_break.go"), false, func(w io.Writer) {
+		generateGraphemeBreakPacktab(graphemeBreaks, w)
+	})
+	process(join("internal/unicodedata/grapheme_break_test.go"), false, func(w io.Writer) {
+		generateGraphemeBreak(graphemeBreaks, w)
+	})
+	process(join("internal/unicodedata/indic_conjunct_break_test.go"), true, func(w io.Writer) {
+		generateIndicConjunctBreak(indicConjunctBreaks, w)
+	})
+	process(join("internal/unicodedata/indic_conjunct_break.go"), true, func(w io.Writer) {
+		generateIndicConjunctBreakPacktab(indicConjunctBreaks, w)
 	})
 
 	// just copy test files

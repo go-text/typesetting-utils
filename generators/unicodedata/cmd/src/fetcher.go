@@ -29,13 +29,12 @@ const (
 	urlPropertyValueAliases = "https://unicode.org/Public/" + version + "/ucd/PropertyValueAliases.txt"
 
 	urlLineBreak     = "https://unicode.org/Public/" + version + "/ucd/LineBreak.txt"
-	urlSentenceBreak = "https://unicode.org/Public/" + version + "/ucd/auxiliary/SentenceBreakProperty.txt"
 	urlGraphemeBreak = "https://unicode.org/Public/" + version + "/ucd/auxiliary/GraphemeBreakProperty.txt"
+	urlSentenceBreak = "https://unicode.org/Public/" + version + "/ucd/auxiliary/SentenceBreakProperty.txt"
 
 	urlLineBreakTest     = "https://www.unicode.org/Public/" + version + "/ucd/auxiliary/LineBreakTest.txt"
 	urlGraphemeBreakTest = "https://www.unicode.org/Public/" + version + "/ucd/auxiliary/GraphemeBreakTest.txt"
-
-	urlWordBreakTest = "https://www.unicode.org/Public/" + version + "/ucd/auxiliary/WordBreakTest.txt"
+	urlWordBreakTest     = "https://www.unicode.org/Public/" + version + "/ucd/auxiliary/WordBreakTest.txt"
 )
 
 func fetchData(url string, fromCache bool) []byte {

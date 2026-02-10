@@ -71,8 +71,7 @@ func generateUSETable(generalCategory map[rune]string, indicS, indicP, blocks, i
 	for u := range data {
 		uu = append(uu, u)
 	}
-	sortRunes(uu)
-	table := make([]int, uu[len(uu)-1]+1)
+	table := make([]int, maxRunes(uu)+1)
 	for u, v := range data {
 		i, ok := useCategoriesToInt[v[0]]
 		if !ok {
