@@ -60,6 +60,8 @@
     - IBM3161-bitmap.otb : Copyright © 2017-2020 Wyatt Ward
 
     - unifont-15.1.05.otf : SIL Open Font License, Version 1.1. https://unifoundry.com/unifont/index.html
+
+    - cherry-10.r.otb : Copyright (C) 2023 by camille <camille@lzr.pw>
     
 - toys/gpos, toys/gsub: Copyright 2000-2016 Adobe Systems Incorporated. All Rights Reserved.
 
