@@ -7,7 +7,6 @@ import (
 	"io"
 	"log"
 	"sort"
-	"strings"
 	"unicode"
 
 	"github.com/go-text/typesetting-utils/generators/unicodedata/cmd/src/packtab"
@@ -372,7 +371,8 @@ func generateEastAsianWidthPacktab(datas map[string][]rune, w io.Writer) {
 	fmt.Fprint(w, unicodedataheader)
 	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
 
-	dmCode := packtab.PackTable(table, 0, 9).Code("eastAsianWidth")
+	// this table is not so large, favour speed over size here
+	dmCode := packtab.PackTable(table, 0, 1).Code("eastAsianWidth")
 	fmt.Fprintln(w, dmCode)
 }
 
@@ -489,8 +489,9 @@ func generateScriptLookupTable(scripts map[string][]runeRange, scriptNames map[s
 	}
 	fmt.Fprintln(w, "}")
 
-	fmt.Fprintln(w, `// ScriptRange is an inclusive range of runes
-	// with constant script.
+	fmt.Fprintln(w, `
+	// ScriptRange is an inclusive range of runes
+ 	// with constant script.
 	type ScriptRange struct {
 		Start, End rune
 		Script     Script
@@ -502,43 +503,6 @@ func generateScriptLookupTable(scripts map[string][]runeRange, scriptNames map[s
 		fmt.Fprintf(w, "{0x%x, 0x%x, %s},\n", item.start, item.end, item.script)
 	}
 	fmt.Fprintln(w, "}")
-}
-
-func generateGeneralCategories(m map[rune]string, w io.Writer) {
-	// reverse the rune->category mapping
-	cats, keys := map[string][]rune{}, []string{}
-	for r, cat := range m {
-		cat = strings.ToLower(cat)
-		cats[cat] = append(cats[cat], r)
-	}
-	for key := range cats {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
-
-	fmt.Fprint(w, unicodedataheader)
-
-	// we can't use standard unicode package for Harfbuzz
-	// because of users using older go versions.
-	totalSize := 0
-	for _, cat := range keys {
-		runes := cats[cat]
-		rt := rangetable.New(runes...)
-		code := printTable(rt, false)
-		size := tableSize(rt)
-		fmt.Fprintln(w, fmt.Sprintf("var %s = %s // size %d B.\n", cat, code, size))
-
-		totalSize += size
-	}
-
-	fmt.Fprintf(w, "// Total size %d KB. \n\n", totalSize/1000)
-
-	// generate an array of all categories
-	fmt.Fprintf(w, "var allCategories = [...]*unicode.RangeTable{\n")
-	for _, cat := range keys {
-		fmt.Fprintf(w, "%s,\n", cat)
-	}
-	fmt.Fprintln(w, `}`)
 }
 
 func generateGeneralCategoriesPacktab(db unicodeDatabase, valueAliases map[string]string, w io.Writer) {

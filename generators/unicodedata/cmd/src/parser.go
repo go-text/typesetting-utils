@@ -108,6 +108,20 @@ func (db *unicodeDatabase) inferMaps() {
 	sort.Strings(db.generalCategoryNames)
 }
 
+func (db *unicodeDatabase) generalCategories() (map[string][]rune, []string) {
+	// reverse the rune->category mapping
+	cats, keys := map[string][]rune{}, []string{}
+	for r, cat := range db.generalCategory {
+		cats[cat] = append(cats[cat], r)
+	}
+	for key := range cats {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+
+	return cats, keys
+}
+
 type unicodeEntry struct {
 	char            rune
 	generalCategory string
@@ -315,19 +329,20 @@ func parseDerivedCoreIndicCB(b []byte) (map[string][]rune, error) {
 	return outRanges, nil
 }
 
-func parseValueAliases(b []byte) (map[string]string, error) {
-	out := make(map[string]string)
+func parseValueAliases(b []byte) (gc, lb map[string]string, _ error) {
+	gcOut, lbOut := make(map[string]string), make(map[string]string)
 	for _, parts := range splitLines(b) {
 		if len(parts) < 3 {
-			return nil, fmt.Errorf("invalid line: %s", parts)
+			return nil, nil, fmt.Errorf("invalid line: %s", parts)
 		}
 		kind, short, long := parts[0], parts[1], parts[2]
-		if kind != "gc" {
-			continue
+		if kind == "gc" {
+			gcOut[short] = long
+		} else if kind == "lb" {
+			lbOut[short] = long
 		}
-		out[short] = long
 	}
-	return out, nil
+	return gcOut, lbOut, nil
 }
 
 type ucdXML struct {

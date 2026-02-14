@@ -31,6 +31,7 @@ const (
 	urlLineBreak     = "https://unicode.org/Public/" + version + "/ucd/LineBreak.txt"
 	urlGraphemeBreak = "https://unicode.org/Public/" + version + "/ucd/auxiliary/GraphemeBreakProperty.txt"
 	urlSentenceBreak = "https://unicode.org/Public/" + version + "/ucd/auxiliary/SentenceBreakProperty.txt"
+	urlWordBreak     = "https://unicode.org/Public/" + version + "/ucd/auxiliary/WordBreakProperty.txt"
 
 	urlLineBreakTest     = "https://www.unicode.org/Public/" + version + "/ucd/auxiliary/LineBreakTest.txt"
 	urlGraphemeBreakTest = "https://www.unicode.org/Public/" + version + "/ucd/auxiliary/GraphemeBreakTest.txt"
@@ -81,6 +82,7 @@ type sources struct {
 	lineBreak     []byte
 	sentenceBreak []byte
 	graphemeBreak []byte
+	wordBreak     []byte
 
 	lineBreakTest     []byte
 	graphemeBreakTest []byte
@@ -106,6 +108,7 @@ func fetchAll(fromCache bool) (out sources) {
 	out.lineBreak = fetchData(urlLineBreak, fromCache)
 	out.sentenceBreak = fetchData(urlSentenceBreak, fromCache)
 	out.graphemeBreak = fetchData(urlGraphemeBreak, fromCache)
+	out.wordBreak = fetchData(urlWordBreak, fromCache)
 	out.lineBreakTest = fetchData(urlLineBreakTest, fromCache)
 	out.wordBreakTest = fetchData(urlWordBreakTest, fromCache)
 	out.graphemeBreakTest = fetchData(urlGraphemeBreakTest, fromCache)

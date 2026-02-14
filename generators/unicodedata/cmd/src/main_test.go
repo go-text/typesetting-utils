@@ -76,13 +76,6 @@ func TestArabic(t *testing.T) {
 	generateArabicShaping(db, joiningTypes, io.Discard)
 }
 
-func TestGeneralCategories(t *testing.T) {
-	db, err := parseUnicodeDatabase(srcs.unicodeData)
-	check(err)
-
-	generateGeneralCategories(db.generalCategory, io.Discard)
-}
-
 func TestIndicConjunctBreak(t *testing.T) {
 	derivedCore, err := parseDerivedCoreIndicCB(srcs.derivedCore)
 	check(err)

@@ -79,6 +79,9 @@ func Generate(outputDir string, dataFromCache bool) {
 	graphemeBreaks, err := parseAnnexTables(srcs.graphemeBreak)
 	check(err)
 
+	wordBreaks, err := parseAnnexTables(srcs.wordBreak)
+	check(err)
+
 	scriptsRanges, err := parseAnnexTablesAsRanges(srcs.scripts)
 	check(err)
 
@@ -88,7 +91,7 @@ func Generate(outputDir string, dataFromCache bool) {
 	derivedCore, err := parseAnnexTables(srcs.derivedCore)
 	check(err)
 
-	valueAliases, err := parseValueAliases(srcs.propertyValueAliases)
+	gcAliases, lbAliases, err := parseValueAliases(srcs.propertyValueAliases)
 	check(err)
 
 	indicConjunctBreaks, err := parseDerivedCoreIndicCB(srcs.derivedCore)
@@ -137,7 +140,7 @@ func Generate(outputDir string, dataFromCache bool) {
 	})
 
 	process(join("internal/unicodedata/general_category.go"), true, func(w io.Writer) {
-		generateGeneralCategoriesPacktab(db, valueAliases, w)
+		generateGeneralCategoriesPacktab(db, gcAliases, w)
 	})
 
 	process(join("harfbuzz/emojis_list_test.go"), false, func(w io.Writer) {
@@ -164,14 +167,23 @@ func Generate(outputDir string, dataFromCache bool) {
 		generateScriptLookupTable(scriptsRanges, scriptNames, w)
 	})
 
+	process(join("internal/unicodedata/line_break_test.go"), false, func(w io.Writer) {
+		generateLineBreak(lineBreaks, lbAliases, w)
+	})
 	process(join("internal/unicodedata/line_break.go"), false, func(w io.Writer) {
-		generateLineBreak(lineBreaks, w)
+		generateLineBreakPacktab(lineBreaks, lbAliases, w)
 	})
 	process(join("internal/unicodedata/grapheme_break.go"), false, func(w io.Writer) {
 		generateGraphemeBreakPacktab(graphemeBreaks, w)
 	})
 	process(join("internal/unicodedata/grapheme_break_test.go"), false, func(w io.Writer) {
 		generateGraphemeBreak(graphemeBreaks, w)
+	})
+	process(join("internal/unicodedata/word_break.go"), true, func(w io.Writer) {
+		generateWordBreakPropertyPacktab(db, wordBreaks, derivedCore, w)
+	})
+	process(join("internal/unicodedata/word_break_test.go"), false, func(w io.Writer) {
+		generateWordBreakProperty(db, wordBreaks, derivedCore, w)
 	})
 	process(join("internal/unicodedata/indic_conjunct_break_test.go"), true, func(w io.Writer) {
 		generateIndicConjunctBreak(indicConjunctBreaks, w)
