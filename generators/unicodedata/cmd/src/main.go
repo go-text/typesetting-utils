@@ -53,6 +53,9 @@ func Generate(outputDir string, dataFromCache bool) {
 	indicP, err := parseAnnexTables(srcs.indicPositional)
 	check(err)
 
+	bidiBrackets, err := parseBidiBrackets(srcs.bidiBrackets)
+	check(err)
+
 	b, err := data.Files.ReadFile("ms-use/IndicSyllabicCategory-Additional.txt")
 	check(err)
 	indicSAdd, err := parseAnnexTables(b)
@@ -141,6 +144,10 @@ func Generate(outputDir string, dataFromCache bool) {
 
 	process(join("internal/unicodedata/general_category.go"), true, func(w io.Writer) {
 		generateGeneralCategoriesPacktab(db, gcAliases, w)
+	})
+
+	process(join("internal/unicodedata/bidi_class.go"), true, func(w io.Writer) {
+		generateBidiClassPacktab(db, bidiBrackets, w)
 	})
 
 	process(join("harfbuzz/emojis_list_test.go"), false, func(w io.Writer) {

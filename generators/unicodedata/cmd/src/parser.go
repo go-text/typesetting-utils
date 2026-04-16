@@ -122,10 +122,19 @@ func (db *unicodeDatabase) generalCategories() (map[string][]rune, []string) {
 	return cats, keys
 }
 
+func (db *unicodeDatabase) bidiClasses() map[string][]rune {
+	out := make(map[string][]rune)
+	for _, item := range db.chars {
+		out[item.bidiClass] = append(out[item.bidiClass], item.char)
+	}
+	return out
+}
+
 type unicodeEntry struct {
 	char            rune
 	generalCategory string
 	combiningClass  uint8
+	bidiClass       string
 
 	// optional
 	shape        shapeT
@@ -140,6 +149,7 @@ const (
 )
 
 // assume at least 6 fields
+// rune;comment;General_Category;Canonical_Combining_Class;Bidi_Class;Decomposition_Mapping;...;Bidi_Mirrored
 func parseUnicodeEntry(chunks []string) (item unicodeEntry, isLegacyRange uint8) {
 	// Rune
 	item.char = parseRune(chunks[0])
@@ -161,6 +171,9 @@ func parseUnicodeEntry(chunks []string) (item unicodeEntry, isLegacyRange uint8)
 		check(fmt.Errorf("combining class too high %d", cc))
 	}
 	item.combiningClass = uint8(cc)
+
+	// Bidi class
+	item.bidiClass = strings.TrimSpace(chunks[4])
 
 	// we are now looking for <...> XXXX
 	if chunks[5] == "" {
@@ -305,6 +318,33 @@ func parseMirroring(b []byte) (map[uint16]uint16, error) {
 			return nil, fmt.Errorf("rune %d overflows implementation limit", endRune)
 		}
 		out[uint16(startRune)] = uint16(endRune)
+	}
+	return out, nil
+}
+
+type bracketPair struct{ open, close rune }
+
+func parseBidiBrackets(b []byte) ([]bracketPair, error) {
+	var (
+		out         []bracketPair
+		closeNumber int
+	)
+	for _, parts := range splitLines(b) {
+		if len(parts) < 3 {
+			return nil, fmt.Errorf("invalid line: %s", parts)
+		}
+		openS, closeS, kind := strings.TrimSpace(parts[0]), strings.TrimSpace(parts[1]), strings.TrimSpace(strings.Split(parts[2], "#")[0])
+		open, close := parseRune(openS), parseRune(closeS)
+		if kind == "o" {
+			out = append(out, bracketPair{open, close})
+		} else if kind == "c" { // sanity check
+			closeNumber += 1
+		} else {
+			return nil, fmt.Errorf("unexpected kind %s", kind)
+		}
+	}
+	if closeNumber != len(out) {
+		return nil, fmt.Errorf("inconsistent number of closing brackets %d", closeNumber)
 	}
 	return out, nil
 }

@@ -530,3 +530,100 @@ func generateGeneralCategoriesPacktab(db unicodeDatabase, valueAliases map[strin
 
 	fmt.Fprintln(w, code)
 }
+
+func bracketMasks(bidiBrackets []bracketPair) ([]rune, map[rune]int) {
+	// bracket handling :
+	// for each bracket, we compute a mask to apply to the rune
+	// to retrieve the matching one
+	// This works since the number of masks is actually small
+	xorMasks := map[rune]bool{0: true} // insert 0 as a no-op
+	for _, pair := range bidiBrackets {
+		xor := pair.open ^ pair.close
+		xorMasks[xor] = true
+	}
+	if len(xorMasks) > 8 {
+		panic("too many different masks")
+	}
+	var sortedMasks []rune
+	for k := range xorMasks {
+		sortedMasks = append(sortedMasks, k)
+	}
+	sortRunes(sortedMasks)
+	// finally build the mask -> index reverse mapping
+	xorToIndex := map[rune]int{}
+	for i, mask := range sortedMasks {
+		xorToIndex[mask] = i
+	}
+	return sortedMasks, xorToIndex
+}
+
+func generateBidiClassPacktab(db unicodeDatabase, bidiBrackets []bracketPair, w io.Writer) {
+	datas := db.bidiClasses()
+	sortedClasses, maxRune := sortedKeys(datas)
+
+	bracketMasks, bracketMasksMapping := bracketMasks(bidiBrackets)
+
+	// map name to int (also generating flag constants and String method)...
+	flags := ""
+	stringCases := ""
+	bidiClassToInt := map[string]int{}
+	for i, c := range sortedClasses {
+		// 0 is reserved for undefined,
+		// but the first defined flag is still 1 << 0
+		bidiClassToInt[c] = i + 1
+		flags += fmt.Sprintf("BD_%s BidiClass = 1 << %d\n", c, i)
+		stringCases += fmt.Sprintf("case BD_%s: return %q\n", c, c)
+	}
+	if maxClass := len(sortedClasses); maxClass > 0xFF {
+		panic("too many bidi classes")
+	}
+	// ... and build packab compatible table
+	// We use 5 additional bits for the brackets props :
+	// two bits for open/close info
+	// three bits for the xor mask index
+	table := make([]int, maxRune+1)
+	for className, runes := range datas {
+		for _, r := range runes {
+			table[r] = bidiClassToInt[className]
+		}
+	}
+
+	const (
+		maskBracket = 0b10000 // 3 bits for xor index
+		maskOpen    = 0b01000 // 3 bits for xor index
+	)
+	for _, pair := range bidiBrackets {
+		xor := pair.open ^ pair.close
+		xorIndex := bracketMasksMapping[xor]
+		table[pair.open] |= (maskBracket | maskOpen | xorIndex) << 8
+		table[pair.close] |= (maskBracket | xorIndex) << 8
+	}
+
+	code := packtab.PackTable(table, 0, 3).Code("bidi")
+
+	fmt.Fprint(w, unicodedataheader)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+
+	fmt.Fprintf(w, `
+	const (
+		%s
+	)
+
+	func (b BidiClass) String() string {
+		switch b {
+			%s
+			default: return "<invalid bidi class>"
+		}
+	}
+
+	const (
+		bidiBracketMask = 0b%b
+		bidiBracketOpenMask = 0b%b
+		bidiBracketReverseMask = 0b111
+	)
+
+	var bracketsXORMasks = [...]rune%s
+	
+	`, flags, stringCases, maskBracket, maskOpen, fmt.Sprintf("%#v", bracketMasks)[7:])
+	fmt.Fprintln(w, code)
+}
