@@ -116,7 +116,7 @@ func (c *%[1]s) clear() {
 	}
 }
 
-func (c %[1]s) get(key %[8]s) (%[2]s, bool) {
+func (c *%[1]s) get(key %[8]s) (%[2]s, bool) {
 	k := key & ((1 << %[5]d) - 1)
 	v := c[k]
 	if v == ^%[2]s(0) || (v>>%[4]d) != %[2]s(key>>%[5]d) {
@@ -153,7 +153,7 @@ func (c *%[1]s) clear() {
 	}
 }
 
-func (c %[1]s) get(key %[8]s) (bool) {
+func (c *%[1]s) get(key %[8]s) (bool) {
 	k := key & ((1 << %[5]d) - 1)
 	v := c[k]
 	return v != ^%[2]s(0) && v == %[2]s(key>>%[5]d)
