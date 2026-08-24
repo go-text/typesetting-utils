@@ -119,11 +119,9 @@ func parserForFixedSize(fs an.StaticSizedFields, cc *gen.Context) string {
 	totalSize := fs.Size()
 	return fmt.Sprintf(`%s
 		%s
-		%s
 		`,
 		staticLengthCheckAt(*cc, totalSize),
 		mustParserFields(fs, cc),
-		cc.Offset.UpdateStatement(totalSize),
 	)
 }
 
