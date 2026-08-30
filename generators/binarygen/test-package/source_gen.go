@@ -47,10 +47,8 @@ func ParseElement(src []byte, parentSrc []byte) (Element, int, error) {
 	item.A = int32(binary.BigEndian.Uint32(src[0:]))
 	offsetV := int(binary.BigEndian.Uint32(src[4:]))
 	arrayLengthVarSizes := int(binary.BigEndian.Uint16(src[8:]))
-	n += 10
 
 	{
-
 		if offsetV != 0 { // ignore null offset
 			if L := len(parentSrc); L < offsetV {
 				return item, 0, fmt.Errorf("reading Element: "+"EOF: expected length: %d, got %d", offsetV, L)
@@ -94,11 +92,10 @@ func ParseElement(src []byte, parentSrc []byte) (Element, int, error) {
 		return item, 0, fmt.Errorf("reading Element: "+"EOF: expected length: n + 4, got %d", L)
 	}
 	arrayLengthSl := int(binary.BigEndian.Uint32(src[n:]))
-	n += 4
 
 	{
 
-		offset := n
+		offset := n + 4
 		for i := 0; i < arrayLengthSl; i++ {
 			elem, read, err := ParseSubElement(src[offset:], parentSrc)
 			if err != nil {
@@ -183,7 +180,6 @@ func ParsePassArg(src []byte) (PassArg, int, error) {
 	item.kind = binary.BigEndian.Uint16(src[0:])
 	item.version = binary.BigEndian.Uint16(src[2:])
 	item.count = int32(binary.BigEndian.Uint32(src[4:]))
-	n += 8
 
 	{
 		var (
@@ -208,10 +204,8 @@ func ParseRootTable(src []byte) (RootTable, int, error) {
 	_ = src[3] // early bound checking
 	offsetE := int(binary.BigEndian.Uint16(src[0:]))
 	arrayLengthEs := int(binary.BigEndian.Uint16(src[2:]))
-	n += 4
 
 	{
-
 		if offsetE != 0 { // ignore null offset
 			if L := len(src); L < offsetE {
 				return item, 0, fmt.Errorf("reading RootTable: "+"EOF: expected length: %d, got %d", offsetE, L)
@@ -250,7 +244,6 @@ func ParseS1(src []byte) (S1, int, error) {
 	_ = src[4] // early bound checking
 	item.format = src[0]
 	item.v = int32(binary.BigEndian.Uint32(src[1:]))
-	n += 5
 
 	{
 		var (
@@ -310,10 +303,8 @@ func ParseSubElement(src []byte, grandParentSrc []byte) (SubElement, int, error)
 		return item, 0, fmt.Errorf("reading SubElement: "+"EOF: expected length: 2, got %d", L)
 	}
 	offsetV := int(binary.BigEndian.Uint16(src[0:]))
-	n += 2
 
 	{
-
 		if offsetV != 0 { // ignore null offset
 			if L := len(grandParentSrc); L < offsetV {
 				return item, 0, fmt.Errorf("reading SubElement: "+"EOF: expected length: %d, got %d", offsetV, L)
@@ -355,7 +346,6 @@ func ParseVariableThenFixed(src []byte) (VariableThenFixed, int, error) {
 	item.c[2] = src[n+8]
 	item.c[3] = src[n+9]
 	item.c[4] = src[n+10]
-	n += 11
 
 	return item, n, nil
 }
@@ -417,7 +407,6 @@ func ParseWithImplicitITF(src []byte) (WithImplicitITF, int, error) {
 		return item, 0, fmt.Errorf("reading WithImplicitITF: "+"EOF: expected length: 4, got %d", L)
 	}
 	item.field1 = binary.BigEndian.Uint32(src[0:])
-	n += 4
 
 	{
 		var (
@@ -449,10 +438,8 @@ func ParseWithOffset(src []byte, offsetToSliceCount int) (WithOffset, int, error
 	offsetOffsetToUnbounded := int(binary.BigEndian.Uint16(src[13:]))
 	offsetOptional := int(binary.BigEndian.Uint32(src[15:]))
 	offsetOffset24 := int(readUint24(src[19:]))
-	n += 22
 
 	{
-
 		if offsetOffsetToSlice != 0 { // ignore null offset
 			if L := len(src); L < offsetOffsetToSlice {
 				return item, 0, fmt.Errorf("reading WithOffset: "+"EOF: expected length: %d, got %d", offsetOffsetToSlice, L)
@@ -470,7 +457,6 @@ func ParseWithOffset(src []byte, offsetToSliceCount int) (WithOffset, int, error
 		}
 	}
 	{
-
 		if offsetOffsetToStruct != 0 { // ignore null offset
 			if L := len(src); L < offsetOffsetToStruct {
 				return item, 0, fmt.Errorf("reading WithOffset: "+"EOF: expected length: %d, got %d", offsetOffsetToStruct, L)
@@ -485,7 +471,6 @@ func ParseWithOffset(src []byte, offsetToSliceCount int) (WithOffset, int, error
 		}
 	}
 	{
-
 		if offsetOffsetToUnbounded != 0 { // ignore null offset
 			if L := len(src); L < offsetOffsetToUnbounded {
 				return item, 0, fmt.Errorf("reading WithOffset: "+"EOF: expected length: %d, got %d", offsetOffsetToUnbounded, L)
@@ -495,7 +480,6 @@ func ParseWithOffset(src []byte, offsetToSliceCount int) (WithOffset, int, error
 		}
 	}
 	{
-
 		if offsetOptional != 0 { // ignore null offset
 			if L := len(src); L < offsetOptional {
 				return item, 0, fmt.Errorf("reading WithOffset: "+"EOF: expected length: %d, got %d", offsetOptional, L)
@@ -512,7 +496,6 @@ func ParseWithOffset(src []byte, offsetToSliceCount int) (WithOffset, int, error
 		}
 	}
 	{
-
 		if offsetOffset24 != 0 { // ignore null offset
 			if L := len(src); L < offsetOffset24 {
 				return item, 0, fmt.Errorf("reading WithOffset: "+"EOF: expected length: %d, got %d", offsetOffset24, L)
@@ -536,7 +519,6 @@ func ParseWithOffsetArray(src []byte) (WithOffsetArray, int, error) {
 		return item, 0, fmt.Errorf("reading WithOffsetArray: "+"EOF: expected length: 2, got %d", L)
 	}
 	arrayLengthArray := int(binary.BigEndian.Uint16(src[0:]))
-	n += 2
 
 	{
 
@@ -574,7 +556,6 @@ func ParseWithOpaque(src []byte) (WithOpaque, int, error) {
 		return item, 0, fmt.Errorf("reading WithOpaque: "+"EOF: expected length: 2, got %d", L)
 	}
 	item.f = binary.BigEndian.Uint16(src[0:])
-	n += 2
 
 	{
 
@@ -601,7 +582,6 @@ func ParseWithRawdata(src []byte, defautCount int, startToCount int) (WithRawdat
 		return item, 0, fmt.Errorf("reading WithRawdata: "+"EOF: expected length: 4, got %d", L)
 	}
 	item.length = binary.BigEndian.Uint32(src[0:])
-	n += 4
 
 	{
 
@@ -650,7 +630,6 @@ func ParseWithSlices(src []byte) (WithSlices, int, error) {
 		return item, 0, fmt.Errorf("reading WithSlices: "+"EOF: expected length: 2, got %d", L)
 	}
 	item.length = binary.BigEndian.Uint16(src[0:])
-	n += 2
 
 	{
 		arrayLength := int(item.length)
@@ -678,7 +657,6 @@ func ParseWithUnion(src []byte) (WithUnion, int, error) {
 	_ = src[2] // early bound checking
 	item.version = subtableFlagVersion(binary.BigEndian.Uint16(src[0:]))
 	item.otherField = src[2]
-	n += 3
 
 	{
 		var (
@@ -753,7 +731,6 @@ func parseToBeEmbeded(src []byte) (toBeEmbeded, int, error) {
 	item.a = src[0]
 	item.b = src[1]
 	arrayLengthC := int(binary.BigEndian.Uint16(src[2:]))
-	n += 4
 
 	{
 
@@ -779,7 +756,6 @@ func parseVarSize(src []byte) (varSize, int, error) {
 	_ = src[5] // early bound checking
 	item.f1 = binary.BigEndian.Uint32(src[0:])
 	arrayLengthArray := int(binary.BigEndian.Uint16(src[4:]))
-	n += 6
 
 	{
 
@@ -797,17 +773,16 @@ func parseVarSize(src []byte) (varSize, int, error) {
 		return item, 0, fmt.Errorf("reading varSize: "+"EOF: expected length: n + 4, got %d", L)
 	}
 	arrayLengthStucts := int(binary.BigEndian.Uint32(src[n:]))
-	n += 4
 
 	{
 
-		if L := len(src); L < n+arrayLengthStucts*4 {
-			return item, 0, fmt.Errorf("reading varSize: "+"EOF: expected length: %d, got %d", n+arrayLengthStucts*4, L)
+		if L := len(src); L < n+4+arrayLengthStucts*4 {
+			return item, 0, fmt.Errorf("reading varSize: "+"EOF: expected length: %d, got %d", n+4+arrayLengthStucts*4, L)
 		}
 
 		item.stucts = make([]WithAlias, arrayLengthStucts) // allocation guarded by the previous check
 		for i := range item.stucts {
-			item.stucts[i].mustParse(src[n+i*4:])
+			item.stucts[i].mustParse(src[n+4+i*4:])
 		}
 		n += arrayLengthStucts * 4
 	}
