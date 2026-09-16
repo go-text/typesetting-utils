@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"sort"
+	"strings"
 	"unicode"
 
 	"github.com/go-text/typesetting-utils/generators/unicodedata/cmd/src/packtab"
@@ -601,6 +602,14 @@ func generateBidiClassPacktab(db unicodeDatabase, bidiBrackets []bracketPair, w 
 
 	code := packtab.PackTable(table, 0, 3).Code("bidi")
 
+	// generate a fast lookup function for B class, used
+	// before the full BIDI algorithm
+	bClass := datas["B"]
+	bTests := make([]string, len(bClass))
+	for i, r := range bClass {
+		bTests[i] = fmt.Sprintf("r == 0x%x", r)
+	}
+
 	fmt.Fprint(w, unicodedataheader)
 	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
 
@@ -616,6 +625,11 @@ func generateBidiClassPacktab(db unicodeDatabase, bidiBrackets []bracketPair, w 
 		}
 	}
 
+	// IsBidiB returns true for paragraph separators (BIDI class = 'B').
+	func IsBidiB(r rune) bool {
+		return %s
+	}
+
 	const (
 		bidiBracketMask = 0b%b
 		bidiBracketOpenMask = 0b%b
@@ -624,6 +638,6 @@ func generateBidiClassPacktab(db unicodeDatabase, bidiBrackets []bracketPair, w 
 
 	var bracketsXORMasks = [...]rune%s
 	
-	`, flags, stringCases, maskBracket, maskOpen, fmt.Sprintf("%#v", bracketMasks)[7:])
+	`, flags, stringCases, strings.Join(bTests, " || "), maskBracket, maskOpen, fmt.Sprintf("%#v", bracketMasks)[7:])
 	fmt.Fprintln(w, code)
 }

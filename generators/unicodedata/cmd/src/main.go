@@ -110,36 +110,21 @@ func Generate(outputDir string, dataFromCache bool) {
 	// generate
 	join := func(path string) string { return filepath.Join(outputDir, path) }
 
-	process(join("internal/unicodedata/combining_classes_test.go"), false, func(w io.Writer) {
-		generateCombiningClasses(db.combiningClasses, w)
-	})
 	process(join("internal/unicodedata/combining_classes.go"), true, func(w io.Writer) {
 		generateCombiningClassesPacktab(db, w)
 	})
 	process(join("internal/unicodedata/emojis.go"), false, func(w io.Writer) {
 		generateEmojisPacktab(emojis, w)
 	})
-	process(join("internal/unicodedata/emojis_test.go"), false, func(w io.Writer) {
-		generateEmojis(emojis, w)
-	})
 
-	process(join("internal/unicodedata/mirroring_test.go"), false, func(w io.Writer) {
-		generateMirroring(mirrors, w)
-	})
 	process(join("internal/unicodedata/mirroring.go"), true, func(w io.Writer) {
 		generateMirroringPacktab(db, mirrors, w)
 	})
 	process(join("internal/unicodedata/decomposition.go"), true, func(w io.Writer) {
 		generateDecompositionPacktab(db.combiningClasses, dms, compEx, w)
 	})
-	process(join("internal/unicodedata/decomposition_test.go"), false, func(w io.Writer) {
-		generateDecomposition(db.combiningClasses, dms, compEx, w)
-	})
 	process(join("internal/unicodedata/east_asian_width.go"), false, func(w io.Writer) {
 		generateEastAsianWidthPacktab(eastAsianWidth, w)
-	})
-	process(join("internal/unicodedata/east_asian_width_test.go"), false, func(w io.Writer) {
-		generateEastAsianWidth(eastAsianWidth, w)
 	})
 
 	process(join("internal/unicodedata/general_category.go"), true, func(w io.Writer) {
@@ -174,26 +159,14 @@ func Generate(outputDir string, dataFromCache bool) {
 		generateScriptLookupTable(scriptsRanges, scriptNames, w)
 	})
 
-	process(join("internal/unicodedata/line_break_test.go"), false, func(w io.Writer) {
-		generateLineBreak(lineBreaks, lbAliases, w)
-	})
 	process(join("internal/unicodedata/line_break.go"), false, func(w io.Writer) {
 		generateLineBreakPacktab(lineBreaks, lbAliases, w)
 	})
 	process(join("internal/unicodedata/grapheme_break.go"), false, func(w io.Writer) {
 		generateGraphemeBreakPacktab(graphemeBreaks, w)
 	})
-	process(join("internal/unicodedata/grapheme_break_test.go"), false, func(w io.Writer) {
-		generateGraphemeBreak(graphemeBreaks, w)
-	})
 	process(join("internal/unicodedata/word_break.go"), true, func(w io.Writer) {
 		generateWordBreakPropertyPacktab(db, wordBreaks, derivedCore, w)
-	})
-	process(join("internal/unicodedata/word_break_test.go"), false, func(w io.Writer) {
-		generateWordBreakProperty(db, wordBreaks, derivedCore, w)
-	})
-	process(join("internal/unicodedata/indic_conjunct_break_test.go"), true, func(w io.Writer) {
-		generateIndicConjunctBreak(indicConjunctBreaks, w)
 	})
 	process(join("internal/unicodedata/indic_conjunct_break.go"), true, func(w io.Writer) {
 		generateIndicConjunctBreakPacktab(indicConjunctBreaks, w)
