@@ -48,6 +48,9 @@
 
     - Lmmono-italic.otf : GUST font license (GFL)
 
+    - NotoSansSymbols.ttf : SIL Open Font License, Version 1.1 (https://github.com/notofonts/symbols)
+
+
 - color:
     - NotoColorEmoji-Regular.ttf: Copyright 2021 Google Inc. All Rights Reserved. SIL Open Font License, Version 1.1.
 
