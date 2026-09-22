@@ -27,6 +27,7 @@ const (
 	urlEastAsianWidth       = "https://unicode.org/Public/" + version + "/ucd/EastAsianWidth.txt"
 	urlDerivedCore          = "https://unicode.org/Public/" + version + "/ucd/DerivedCoreProperties.txt"
 	urlPropertyValueAliases = "https://unicode.org/Public/" + version + "/ucd/PropertyValueAliases.txt"
+	urlBidiBrackets         = "https://unicode.org/Public/" + version + "/ucd/BidiBrackets.txt"
 
 	urlLineBreak     = "https://unicode.org/Public/" + version + "/ucd/LineBreak.txt"
 	urlGraphemeBreak = "https://unicode.org/Public/" + version + "/ucd/auxiliary/GraphemeBreakProperty.txt"
@@ -78,6 +79,7 @@ type sources struct {
 	eastAsianWidth       []byte
 	derivedCore          []byte
 	propertyValueAliases []byte
+	bidiBrackets         []byte
 
 	lineBreak     []byte
 	sentenceBreak []byte
@@ -105,6 +107,7 @@ func fetchAll(fromCache bool) (out sources) {
 	out.eastAsianWidth = fetchData(urlEastAsianWidth, fromCache)
 	out.derivedCore = fetchData(urlDerivedCore, fromCache)
 	out.propertyValueAliases = fetchData(urlPropertyValueAliases, fromCache)
+	out.bidiBrackets = fetchData(urlBidiBrackets, fromCache)
 	out.lineBreak = fetchData(urlLineBreak, fromCache)
 	out.sentenceBreak = fetchData(urlSentenceBreak, fromCache)
 	out.graphemeBreak = fetchData(urlGraphemeBreak, fromCache)
