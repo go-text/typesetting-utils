@@ -50,6 +50,8 @@
 
     - NotoSansSymbols.ttf : SIL Open Font License, Version 1.1 (https://github.com/notofonts/symbols)
 
+    - NotoSansArabic-v2.ttf : Noto Sans Arabic version 2.012, Copyright 2022 The Noto Project Authors (https://github.com/notofonts/arabic), SIL Open Font License, Version 1.1.
+
 
 - color:
     - NotoColorEmoji-Regular.ttf: Copyright 2021 Google Inc. All Rights Reserved. SIL Open Font License, Version 1.1.
