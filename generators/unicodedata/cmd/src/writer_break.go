@@ -23,7 +23,7 @@ func sortedKeys(classes map[string][]rune) (sortedClasses []string, maxRune rune
 
 func generateIndicConjunctBreak(derivedCore map[string][]rune, w io.Writer) {
 	fmt.Fprint(w, unicodedataheader)
-	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", unicodeVersion)
 
 	// these table are used for UAX29 (GB9c)
 	linker := rangetable.New(derivedCore["Linker"]...)
@@ -53,7 +53,7 @@ func generateIndicConjunctBreak(derivedCore map[string][]rune, w io.Writer) {
 
 func generateIndicConjunctBreakPacktab(derivedCore map[string][]rune, w io.Writer) {
 	fmt.Fprint(w, unicodedataheader)
-	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", unicodeVersion)
 
 	fmt.Fprintf(w, `
 	const (
@@ -83,7 +83,7 @@ func generateIndicConjunctBreakPacktab(derivedCore map[string][]rune, w io.Write
 
 func generateGraphemeBreak(datas map[string][]rune, w io.Writer) {
 	fmt.Fprint(w, unicodedataheader)
-	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", unicodeVersion)
 
 	sortedClasses, _ := sortedKeys(datas)
 
@@ -139,7 +139,7 @@ func generateGraphemeBreakPacktab(datas map[string][]rune, w io.Writer) {
 	code := packtab.PackTable(table, 0, 9).Code("gb")
 
 	fmt.Fprint(w, unicodedataheader)
-	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", unicodeVersion)
 	fmt.Fprintf(w, `
 	const (
 		%s
@@ -150,7 +150,7 @@ func generateGraphemeBreakPacktab(datas map[string][]rune, w io.Writer) {
 
 func generateWordBreakProperty(db unicodeDatabase, wbClasses map[string][]rune, derivedCore map[string][]rune, w io.Writer) {
 	fmt.Fprint(w, unicodedataheader)
-	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", unicodeVersion)
 
 	// some classes are always used together : merge them to simplify
 	wbClasses["ExtendFormat"] = append(append(append(wbClasses["ExtendFormat"], wbClasses["Extend"]...), wbClasses["Format"]...), wbClasses["ZWJ"]...)
@@ -249,7 +249,7 @@ func generateWordBreakPropertyPacktab(db unicodeDatabase, datas map[string][]run
 	code := packtab.PackTable(table1, 0, 9).Code("wb")
 
 	fmt.Fprint(w, unicodedataheader)
-	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", unicodeVersion)
 	fmt.Fprintf(w, `
 	const (
 		%s
@@ -294,7 +294,7 @@ func generateLineBreak(datas map[string][]rune, aliases map[string]string, w io.
 	sortedClasses, _ := sortedKeys(datas)
 
 	fmt.Fprint(w, unicodedataheader)
-	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", unicodeVersion)
 
 	totalSize := 0
 	dict := ""
@@ -341,7 +341,7 @@ func generateLineBreakPacktab(datas map[string][]rune, aliases map[string]string
 	code := packtab.PackTable(table1, 0, 9).Code("lb")
 
 	fmt.Fprint(w, unicodedataheader)
-	fmt.Fprintf(w, "// Unicode version: %s\n\n", version)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", unicodeVersion)
 	fmt.Fprintf(w, `
 	const (
 		%s

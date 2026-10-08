@@ -636,6 +636,7 @@ func generateIndicTable(indicS, indicP, blocks map[string][]rune, w io.Writer) (
 	data, singles, defaults := aggregateIndicTable(indicS, indicP, blocks)
 
 	fmt.Fprintln(w, harfbuzzHeader)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", unicodeVersion)
 
 	total := 0
 	used := 0

@@ -107,6 +107,7 @@ func generateArabicShaping(db unicodeDatabase, joining map[rune]ArabicJoining, w
 	shapingTable, ligatures := db.arabicShaping()
 
 	fmt.Fprintln(w, harfbuzzHeader)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", unicodeVersion)
 
 	fmt.Fprintln(w, `
 	

@@ -303,21 +303,15 @@ func parseAnnexTables(b []byte) (map[string][]rune, error) {
 	return outRanges, nil
 }
 
-func parseMirroring(b []byte) (map[uint16]uint16, error) {
-	out := make(map[uint16]uint16)
+func parseMirroring(b []byte) (map[rune]rune, error) {
+	out := make(map[rune]rune)
 	for _, parts := range splitLines(b) {
 		if len(parts) < 2 {
 			return nil, fmt.Errorf("invalid line: %s", parts)
 		}
 		start, end := strings.TrimSpace(parts[0]), strings.TrimSpace(strings.Split(parts[1], "#")[0])
 		startRune, endRune := parseRune(start), parseRune(end)
-		if startRune > 0xFFFF {
-			return nil, fmt.Errorf("rune %d overflows implementation limit", startRune)
-		}
-		if endRune > 0xFFFF {
-			return nil, fmt.Errorf("rune %d overflows implementation limit", endRune)
-		}
-		out[uint16(startRune)] = uint16(endRune)
+		out[startRune] = endRune
 	}
 	return out, nil
 }
@@ -601,6 +595,15 @@ func parseScriptNames(b []byte) (map[string]uint32, error) {
 			// use English name as default
 			name = strings.ReplaceAll(chunks[2], " ", "_")
 		}
+		switch code {
+		case "Seal":
+			name = "Seal" // not (Small)_Seal
+		case "Pcun":
+			name = "Proto_Cuneiform"
+		case "Pelm":
+			name = "Proto_Elamite"
+		}
+
 		if strings.ContainsAny(name, "(-") {
 			continue
 		}

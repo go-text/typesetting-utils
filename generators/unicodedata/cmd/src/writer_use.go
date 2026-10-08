@@ -82,7 +82,7 @@ func generateUSETable(generalCategory map[rune]string, indicS, indicP, blocks, i
 	default_ := useCategoriesToInt["O"]
 
 	fmt.Fprintln(w, harfbuzzHeader)
-	fmt.Fprintln(w, "// Unicode version", version)
+	fmt.Fprintln(w, "// Unicode version", unicodeVersion)
 	fmt.Fprintln(w)
 
 	code := packtab.PackTable(table, default_, 5).Code("use")
