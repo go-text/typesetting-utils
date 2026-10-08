@@ -39,9 +39,7 @@ func runesKey(rs []rune) (out [3]rune) {
 	if L := len(rs); L != 2 && L != 3 {
 		check(fmt.Errorf("unsupported number of items %d", L))
 	}
-	for i, r := range rs {
-		out[i] = r
-	}
+	copy(out[:], rs)
 	return out
 }
 

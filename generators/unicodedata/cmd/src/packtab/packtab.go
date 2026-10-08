@@ -51,19 +51,19 @@ func newAutoMapping() *autoMapping {
 	return &autoMapping{dict: make(map[[2]int]int), reverse: make(map[int][2]int)}
 }
 
-func (self *autoMapping) get(a, b int) int {
+func (am *autoMapping) get(a, b int) int {
 	key := [2]int{a, b}
-	if v, ok := self.dict[key]; ok {
+	if v, ok := am.dict[key]; ok {
 		return v
 	}
-	v := self.next
-	self.next += 1
-	self.dict[key] = v
-	self.reverse[v] = key
+	v := am.next
+	am.next += 1
+	am.dict[key] = v
+	am.reverse[v] = key
 	return v
 }
 
-func (self *autoMapping) getBack(v int) [2]int { return self.reverse[v] }
+func (am *autoMapping) getBack(v int) [2]int { return am.reverse[v] }
 
 // Returns smallest power-of-two number of bits needed to represent n different values.
 // binaryBitsFor(0, 0) == 0
@@ -111,10 +111,7 @@ func binaryBitsFor(minV, maxV int) int {
 	if 0 <= minV && maxV <= math.MaxInt {
 		return 64
 	}
-	if -9223372036854775808 <= minV && maxV <= 9223372036854775807 {
-		return 64
-	}
-	panic("unreachable")
+	return 64
 }
 
 func typeFor(minV, maxV int) string {
@@ -171,8 +168,8 @@ func newInnerSolution(
 	return innerSolution{layer, next, nLookups, nExtraOps, cost, bits}
 }
 
-func (sl innerSolution) fullCost() int {
-	return sl.cost + (sl.nLookups*lookupOps+sl.nExtraOps)*bytesPerOp
+func (is innerSolution) fullCost() int {
+	return is.cost + (is.nLookups*lookupOps+is.nExtraOps)*bytesPerOp
 }
 
 func expand(v int, stack []*layer, i int, out *[]int) {
@@ -263,22 +260,22 @@ func newInnerLayer(data []int) *layer {
 	return &self
 }
 
-func (self *layer) split() {
-	if len(self.data)&1 != 0 {
-		self.data = append(self.data, 0)
+func (l *layer) split() {
+	if len(l.data)&1 != 0 {
+		l.data = append(l.data, 0)
 	}
 
 	mapping := newAutoMapping()
-	self.mapping = mapping
-	data2 := combineBy2(self.data, mapping.get)
+	l.mapping = mapping
+	data2 := combineBy2(l.data, mapping.get)
 
-	self.next = newInnerLayer(data2)
+	l.next = newInnerLayer(data2)
 }
 
 // Remove dominated solutions.
-func (self *layer) prune_solutions() {
+func (l *layer) prune_solutions() {
 	// Doing it the slowest, O(N^2), way for now.
-	sols := self.solutions
+	sols := l.solutions
 	for _, a := range sols {
 		if a.cost == -1 {
 			continue
@@ -299,13 +296,13 @@ func (self *layer) prune_solutions() {
 		}
 	}
 	var tmp []innerSolution
-	for _, s := range self.solutions {
+	for _, s := range l.solutions {
 		if s.cost != -1 {
 			tmp = append(tmp, s)
 		}
 	}
 	sort.Slice(tmp, func(i, j int) bool { return tmp[i].nLookups < tmp[j].nLookups })
-	self.solutions = tmp
+	l.solutions = tmp
 }
 
 // gcd([]) == 		1
@@ -380,7 +377,6 @@ func newOuterLayer(data []int, default_ int) []OuterSolution {
 	for i, d := range self.data {
 		data[i] = (d - bias) / mult
 	}
-	default_ = (self.default_ - bias) / mult
 
 	self.unitBits = unitBits
 	if self.unitBits < 8 {
@@ -431,7 +427,7 @@ func pickSolution(solutions []OuterSolution, compression float64) OuterSolution 
 	return bestSol
 }
 
-func (self innerSolution) genCode(code *code, name, var_ string) (string, string) {
+func (is innerSolution) genCode(code *code, name, var_ string) (string, string) {
 	inputVar := var_
 	if name != "" {
 		var_ = "u"
@@ -440,27 +436,27 @@ func (self innerSolution) genCode(code *code, name, var_ string) (string, string
 
 	isVarComposite := strings.ContainsRune(var_, '(')
 
-	retType := typeFor(self.layer.minV, self.layer.maxV)
-	unitBits := self.layer.unitBits
+	retType := typeFor(is.layer.minV, is.layer.maxV)
+	unitBits := is.layer.unitBits
 	if unitBits == 0 {
-		expr = fmt.Sprintf("%d", self.layer.data[0])
+		expr = fmt.Sprintf("%d", is.layer.data[0])
 		return retType, expr
 	}
 
-	shift := self.bits
+	shift := is.bits
 	mask := (1 << shift) - 1
 
-	if self.next != nil {
+	if is.next != nil {
 		if isVarComposite {
-			_, expr = self.next.genCode(code, "", fmt.Sprintf("((%s)>>%d)", var_, shift))
+			_, expr = is.next.genCode(code, "", fmt.Sprintf("((%s)>>%d)", var_, shift))
 		} else {
-			_, expr = self.next.genCode(code, "", fmt.Sprintf("(%s>>%d)", var_, shift))
+			_, expr = is.next.genCode(code, "", fmt.Sprintf("(%s>>%d)", var_, shift))
 		}
 	}
 	// Generate data.
 	var layers []*layer
-	layer := self.layer
-	bits := self.bits
+	layer := is.layer
+	bits := is.bits
 	for bits != 0 {
 		layers = append(layers, layer)
 		layer = layer.next
@@ -476,7 +472,7 @@ func (self innerSolution) genCode(code *code, name, var_ string) (string, string
 		}
 	}
 
-	data = combine(data, self.layer.unitBits)
+	data = combine(data, is.layer.unitBits)
 
 	arrName, start := code.addArray(retType, data)
 
@@ -543,41 +539,41 @@ func newOuterSolution(
 	return OuterSolution{innerSolution{layer, next, nLookups, nExtraOps, cost, 0}}
 }
 
-func (self OuterSolution) String() string {
+func (os OuterSolution) String() string {
 	var buf strings.Builder
-	fmt.Fprintf(&buf, "%d %d %d\n", self.nLookups, self.nExtraOps, self.cost)
-	for next := self.next; next != nil; next = next.next {
+	fmt.Fprintf(&buf, "%d %d %d\n", os.nLookups, os.nExtraOps, os.cost)
+	for next := os.next; next != nil; next = next.next {
 		fmt.Fprintf(&buf, "\t%d %d %d\n", next.nLookups, next.nExtraOps, next.cost)
 	}
 	return buf.String()
 }
 
-func (self OuterSolution) Code(name string) string {
+func (os OuterSolution) Code(name string) string {
 	code := newCode(name)
 
 	var_ := "u"
 	expr := var_
 
-	retType := typeFor(self.layer.minV, self.layer.maxV)
-	unitBits := self.layer.unitBits
+	retType := typeFor(os.layer.minV, os.layer.maxV)
+	unitBits := os.layer.unitBits
 	if unitBits == 0 {
 		panic("TODO")
 	}
 
-	if self.next != nil {
-		_, expr = self.next.genCode(code, "", var_)
+	if os.next != nil {
+		_, expr = os.next.genCode(code, "", var_)
 	}
 
-	if self.layer.mult != 1 {
-		expr = fmt.Sprintf("%d*%s", self.layer.mult, expr)
+	if os.layer.mult != 1 {
+		expr = fmt.Sprintf("%d*%s", os.layer.mult, expr)
 	}
-	if self.layer.bias != 0 {
-		if self.layer.bias < 0 {
+	if os.layer.bias != 0 {
+		if os.layer.bias < 0 {
 			expr = cast(retType, expr)
 		}
-		expr = fmt.Sprintf("%d+%s", self.layer.bias, expr)
+		expr = fmt.Sprintf("%d+%s", os.layer.bias, expr)
 	}
-	expr = tertiary(fmt.Sprintf("0 <= %s && %s<%d", var_, var_, len(self.layer.data)), "return "+expr, fmt.Sprintf("return %d", self.layer.default_))
+	expr = tertiary(fmt.Sprintf("0 <= %s && %s<%d", var_, var_, len(os.layer.data)), "return "+expr, fmt.Sprintf("return %d", os.layer.default_))
 	// TODO Map default?
 
 	code.addFunction(retType, "lookup", [][2]string{{"u", "rune"}}, expr)
@@ -635,31 +631,31 @@ func newCode(namespace string) *code {
 	return &code{namespace, nil, make(map[string]Array)}
 }
 
-func (self *code) nameFor(name string) string {
-	return fmt.Sprintf("%s%s", self.namespace, strings.Title(name))
+func (co *code) nameFor(name string) string {
+	return fmt.Sprintf("%s%s", co.namespace, strings.Title(name))
 }
 
-func (self *code) addFunction(retType, name string, args [][2]string, body string) string {
-	name = self.nameFor(name)
-	for _, existing := range self.functions {
+func (co *code) addFunction(retType, name string, args [][2]string, body string) string {
+	name = co.nameFor(name)
+	for _, existing := range co.functions {
 		if existing.name == name {
 			return name
 		}
 	}
 
-	self.functions = append(self.functions, function{name, retType, args, body})
+	co.functions = append(co.functions, function{name, retType, args, body})
 	return name
 }
 
-func (self *code) addArray(typ string, values []int) (_ string, start int) {
-	name := self.nameFor(typ)
+func (co *code) addArray(typ string, values []int) (_ string, start int) {
+	name := co.nameFor(typ)
 	var existing []int
-	if ar, has := self.arrays[name]; has {
+	if ar, has := co.arrays[name]; has {
 		existing = ar.Values
 	}
 	// extends existing values
 	start = len(existing)
-	self.arrays[name] = Array{typ, append(existing, values...)}
+	co.arrays[name] = Array{typ, append(existing, values...)}
 	return name, start
 }
 
@@ -679,25 +675,25 @@ func PrintArray(w io.Writer, name string, array Array, hex bool) {
 	fmt.Fprintln(w)
 }
 
-func (self code) print() string {
+func (co code) print() string {
 	var out strings.Builder
 
 	var arrayKeys []string
-	for key := range self.arrays {
+	for key := range co.arrays {
 		arrayKeys = append(arrayKeys, key)
 	}
 	sort.Strings(arrayKeys)
 
 	totalSize := 0
 	for _, name := range arrayKeys {
-		array := self.arrays[name]
+		array := co.arrays[name]
 		totalSize += array.Size()
 		PrintArray(&out, name, array, false)
 	}
 
 	out.WriteString(fmt.Sprintf("// Total size %d B.\n\n", totalSize))
 
-	for _, function := range self.functions {
+	for _, function := range co.functions {
 		var code string
 		for _, arg := range function.args {
 			code += fmt.Sprintf("%s %s,", arg[0], arg[1])
