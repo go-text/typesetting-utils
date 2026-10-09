@@ -253,8 +253,6 @@ var (
 		// The following act like consonants.
 		0x0A72: "C",
 		0x0A73: "C",
-		0x1CF5: "C",
-		0x1CF6: "C",
 
 		// TODO: The following should only be allowed after a Visarga.
 		// For now, just treat them like regular tone marks.
@@ -636,6 +634,7 @@ func generateIndicTable(indicS, indicP, blocks map[string][]rune, w io.Writer) (
 	data, singles, defaults := aggregateIndicTable(indicS, indicP, blocks)
 
 	fmt.Fprintln(w, harfbuzzHeader)
+	fmt.Fprintf(w, "// Unicode version: %s\n\n", unicodeVersion)
 
 	total := 0
 	used := 0
